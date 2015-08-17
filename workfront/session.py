@@ -26,8 +26,10 @@ class Session(object):
     session_id = None
     user_id = None
 
-    def __init__(self, url, api_key=None, ssl_context=None):
-        self.url = url
+    def __init__(self, domain, api_key=None,
+                 ssl_context=None, protocol='https', api_version='unsupported',
+                 url_template='{protocol}://{domain}.attask-ondemand.com/attask/api/{api_version}'):
+        self.url = url_template.format(protocol=protocol, domain=domain, api_version=api_version)
         self.api_key = api_key
         self.ssl_context = ssl_context
 
