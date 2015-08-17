@@ -21,6 +21,10 @@ class WorkfrontAPIError(Exception):
         return repr(self.data)
 
 
+def pretty_json(data):
+    return json.dumps(data, sort_keys=True, indent=4)
+
+
 class Session(object):
 
     session_id = None
@@ -43,6 +47,7 @@ class Session(object):
             params['sessionID'] = self.session_id
 
         url = self.url + path
+
         logger.info('url:%s params:%s', url, params)
 
         try:
@@ -50,6 +55,8 @@ class Session(object):
         except urllib2.HTTPError as e:
             response = e
         json_response = json.load(response)
+
+        logger.debug('returned: %s', pretty_json(json_response))
 
         if 'error' in json_response:
             raise WorkfrontAPIError(json_response['error'])
