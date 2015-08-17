@@ -46,7 +46,10 @@ class Session(object):
         elif self.session_id:
             params['sessionID'] = self.session_id
 
-        url = self.url + path
+        if path.startswith(self.url):
+            url = path
+        else:
+            url = self.url + path
 
         logger.info('url:%s params:%s', url, params)
 
