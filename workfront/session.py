@@ -77,3 +77,9 @@ class Session(object):
         params = dict(action='getApiKey', username=username, password=password)
         return self.request(PUT, '/user', params)['result']
 
+    def search(self, object_type, **parameters):
+        results = []
+        for result in self.request(GET, '/{}/search'.format(object_type.code), parameters):
+            results.append(object_type(self, **result))
+        return results
+
