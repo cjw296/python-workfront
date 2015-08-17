@@ -2,6 +2,7 @@
 Usage: python -m workfront.generate --help
 """
 from argparse import ArgumentParser
+import logging
 from os import path
 import ssl
 
@@ -43,6 +44,7 @@ def parse_args():
                         default=path.join(path.split(__file__)[0], 'generated_objects.py'))
 
     parser.add_argument('--unsafe-certs', action='store_true')
+    parser.add_argument('--log-level', default=logging.WARNING, type=int)
     return parser.parse_args()
 
 
@@ -66,4 +68,5 @@ class_name_override = dict(
 
 if __name__=='__main__':
     args = parse_args()
+    logging.basicConfig(level=args.log_level)
     generate(args.protocol, args.domain, args.version, args.unsafe_certs, args.output_path)
