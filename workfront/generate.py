@@ -37,7 +37,7 @@ def parse_args():
     parser = ArgumentParser()
     parser.add_argument('--domain', default='api-cl01')
     parser.add_argument('--protocol', default='https')
-    parser.add_argument('--version', default='unsupported')
+    parser.add_argument('--version', default='v4.0')
 
     parser.add_argument('--output-path',
                         default=path.join(path.split(__file__)[0], 'generated_objects.py'))
