@@ -63,23 +63,35 @@ class Session(object):
 
         return json_response['data']
 
+    def get(self, path, params=None):
+        return self.request(GET, path, params)
+
+    def post(self, path, params=None):
+        return self.request(POST, path, params)
+
+    def put(self, path, params=None):
+        return self.request(PUT, path, params)
+
+    def delete(self, path, params=None):
+        return self.request(DELETE, path, params)
+
     def login(self, username, password):
-        data = self.request(GET, '/login', dict(username=username, password=password))
+        data = self.get('/login', dict(username=username, password=password))
         self.session_id = data['sessionID']
         self.user_id = data['userID']
 
     def logout(self):
-        self.request(GET, '/logout')
+        self.get('/logout')
         del self.session_id
         del self.user_id
 
     def get_api_key(self, username, password):
         params = dict(action='getApiKey', username=username, password=password)
-        return self.request(PUT, '/user', params)['result']
+        return self.put('/user', params)['result']
 
     def search(self, object_type, **parameters):
         results = []
-        for result in self.request(GET, '/{}/search'.format(object_type.code), parameters):
+        for result in self.get('/{}/search'.format(object_type.code), parameters):
             results.append(object_type(self, **result))
         return results
 

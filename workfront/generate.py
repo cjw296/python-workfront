@@ -6,14 +6,12 @@ from os import path
 import ssl
 
 from workfront import Session
-from workfront.session import GET
 
 
 def decorated_object_types(session):
-    for object_type in session.request(GET, '/metadata')['objects'].values():
+    for object_type in session.get('/metadata')['objects'].values():
         class_name = class_name_override.get(object_type['objCode'], object_type['name'])
         yield class_name, object_type
-
 
 
 def generate(protocol, domain, version, unsafe_certs, output_path):
