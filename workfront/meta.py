@@ -26,16 +26,20 @@ class Object(object):
         return '<{0}: {1}>'.format(self.__class__.__name__,
                                    self.__dict__)
 
-    def load(self, *fields):
+    @classmethod
+    def field_spec(cls, *field_names):
         workfront_fields = []
-        for field_name in fields:
-            field = getattr(self.__class__, field_name, None)
+        for field_name in field_names:
+            field = getattr(cls, field_name, None)
             if field is None:
                 workfront_fields.append(field_name)
             else:
                 workfront_fields.append(field.workfront_name)
+        return ','.join(workfront_fields)
+
+    def load(self, *field_names):
         fields = self.session.get('/{0}/{1}'.format(self.code, self.id),
-                                  dict(fields=','.join(workfront_fields)))
+                                  dict(fields=self.field_spec(*field_names)))
         self.fields.update(fields)
 
 

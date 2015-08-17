@@ -92,7 +92,9 @@ class Session(object):
         params = dict(action='getApiKey', username=username, password=password)
         return self.put('/user', params)['result']
 
-    def search(self, object_type, **parameters):
+    def search(self, object_type, fields=None, **parameters):
+        if fields:
+            parameters['fields'] = object_type.field_spec(*fields)
         results = []
         for result in self.get('/{}/search'.format(object_type.code), parameters):
             results.append(object_type(self, **result))
