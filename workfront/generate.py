@@ -5,8 +5,22 @@ from argparse import ArgumentParser
 import logging
 from os import path
 import ssl
+import re
 
 from workfront import Session
+
+name_re = re.compile('([a-z]|^)([A-Z]+)')
+
+def name_subber(match):
+    if match.group(1):
+        start = match.group(1)+'_'
+    else:
+        start = ''
+    return start+match.group(2).lower()
+
+def dehump(name):
+    "SomeThing -> some_thing"
+    return name_re.sub(name_subber, name).lower()
 
 
 def decorated_object_types(session):
@@ -28,10 +42,19 @@ def generate(protocol, domain, version, unsafe_certs, output_path):
         output.write(header.format(url=session.url))
 
         for class_name, object_type in sorted(decorated_object_types(session)):
+
             output.write(class_template.format(
                 class_name=class_name,
                 obj_code=object_type['objCode']
             ))
+
+            type_detail = session.get(object_type['url'])
+
+            for workfront_name in sorted(type_detail['fields']):
+                output.write(field_template.format(
+                    python_name=dehump(workfront_name),
+                    workfront_name=workfront_name
+                ))
 
 
 def parse_args():
@@ -50,7 +73,7 @@ def parse_args():
 
 header = """\
 # generated from {url}
-from .meta import Object
+from .meta import Object, Field
 """
 
 
@@ -58,6 +81,11 @@ class_template = """
 
 class {class_name}(Object):
     code = "{obj_code}"
+"""
+
+
+field_template = """\
+    {python_name} = Field('{workfront_name}')
 """
 
 
