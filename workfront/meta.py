@@ -46,9 +46,12 @@ class Object(object):
         return ','.join(workfront_fields)
 
     def load(self, *field_names):
-        fields = self.session.get('/{0}/{1}'.format(self.code, self.id),
+        fields = self.session.get(self.api_url(),
                                   dict(fields=self.field_spec(*field_names)))
         self.fields.update(fields)
+
+    def api_url(self):
+        return '/{0}/{1}'.format(self.code, self.id)
 
 
 class FieldNotLoaded(AttributeError):
