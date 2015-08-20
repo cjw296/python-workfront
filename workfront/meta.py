@@ -11,12 +11,16 @@ class ObjectMeta(type):
 
         cls = super(ObjectMeta, meta).__new__(meta, name, bases, __dict__)
 
+        if name != 'Object':
+            cls.registry[cls.code] = cls
+
         return cls
 
 
 class Object(object):
 
     __metaclass__ = ObjectMeta
+    registry = {}
 
     def __init__(self, session=None, **fields):
         self.session = session
@@ -24,7 +28,11 @@ class Object(object):
 
     def __repr__(self):
         return '<{0}: {1}>'.format(self.__class__.__name__,
-                                   self.__dict__)
+                                   self.fields)
+
+    @classmethod
+    def from_data(cls, session, data):
+        return cls.registry[data['objCode']](session, **data)
 
     @classmethod
     def field_spec(cls, *field_names):
