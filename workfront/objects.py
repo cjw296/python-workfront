@@ -1,5 +1,6 @@
 from .generated_objects import *
 
+
 class Issue(Issue):
 
     def convert_to_task(self):
@@ -16,3 +17,11 @@ class Issue(Issue):
                               )
             )))
         return Task(self.session, ID=data['result'])
+
+
+class Update(Update):
+
+    @property
+    def update_obj(self):
+        return Object.from_data(self.session, dict(ID=self.update_obj_id,
+                                                   objCode=self.update_obj_code))
