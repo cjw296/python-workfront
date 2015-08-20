@@ -125,18 +125,27 @@ class Field(object):
         instance.fields[self.workfront_name] = value
 
 
-class Reference(object):
+class LoadingAttribute(object):
 
-    def __init__(self, workfront_name, code):
+    def __init__(self, workfront_name):
         self.workfront_name = workfront_name
-        self.code = code
 
     def __get__(self, instance, owner):
         if instance is None:
             return self
         if self.workfront_name not in instance.fields:
             instance.load(self.workfront_name)
-        result = instance.fields[self.workfront_name]
-        if result is None:
-            return None
-        return Object.from_data(instance.session, result)
+        return self.process(instance, instance.fields[self.workfront_name])
+
+
+class Reference(LoadingAttribute):
+
+    def process(self, instance, data):
+        return Object.from_data(instance.session, data)
+
+
+class Collection(LoadingAttribute):
+
+    def process(self, instance, data):
+        return [Object.from_data(instance.session, object_data)
+                for object_data in data]
