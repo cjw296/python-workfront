@@ -134,15 +134,9 @@ class Reference(object):
     def __get__(self, instance, owner):
         if instance is None:
             return self
-        result = instance.fields.get(self.workfront_name, missing)
-        if result is missing:
-            id_ = instance.fields.get(self.workfront_name+'ID', missing)
-            if id_ is missing:
-                raise FieldNotLoaded(self.workfront_name)
-            if id_ is None:
-                result = None
-            else:
-                result = dict(ID=id_, objCode=self.code)
+        if self.workfront_name not in instance.fields:
+            instance.load(self.workfront_name)
+        result = instance.fields[self.workfront_name]
         if result is None:
             return None
         return Object.from_data(instance.session, result)
