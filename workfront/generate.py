@@ -51,6 +51,10 @@ def generate(protocol, domain, version, unsafe_certs, output_path):
             type_detail = session.get(object_type['url'])
 
             for workfront_name in sorted(type_detail['fields']):
+
+                if workfront_name == 'ID':
+                    continue
+
                 output.write(field_template.format(
                     python_name=dehump(workfront_name),
                     workfront_name=workfront_name

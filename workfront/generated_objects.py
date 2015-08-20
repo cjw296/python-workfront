@@ -4,7 +4,6 @@ from .meta import Object, Field, Reference
 
 class AccessRule(Object):
     code = "ACSRUL"
-    id = Field('ID')
     accessor_id = Field('accessorID')
     accessor_obj_code = Field('accessorObjCode')
     ancestor_id = Field('ancestorID')
@@ -22,7 +21,6 @@ class AccessRule(Object):
 class Approval(Object):
     code = "APPROVAL"
     bccompletion_state = Field('BCCompletionState')
-    id = Field('ID')
     url = Field('URL')
     actual_benefit = Field('actualBenefit')
     actual_completion_date = Field('actualCompletionDate')
@@ -313,7 +311,6 @@ class Approval(Object):
 
 class ApprovalPath(Object):
     code = "ARVPTH"
-    id = Field('ID')
     approval_process_id = Field('approvalProcessID')
     customer_id = Field('customerID')
     duration_minutes = Field('durationMinutes')
@@ -329,7 +326,6 @@ class ApprovalPath(Object):
 
 class ApprovalProcess(Object):
     code = "ARVPRC"
-    id = Field('ID')
     approval_obj_code = Field('approvalObjCode')
     approval_statuses = Field('approvalStatuses')
     customer_id = Field('customerID')
@@ -351,7 +347,6 @@ class ApprovalProcess(Object):
 
 class ApprovalStep(Object):
     code = "ARVSTP"
-    id = Field('ID')
     approval_path_id = Field('approvalPathID')
     approval_type = Field('approvalType')
     customer_id = Field('customerID')
@@ -363,7 +358,6 @@ class ApprovalStep(Object):
 
 class ApproverStatus(Object):
     code = "ARVSTS"
-    id = Field('ID')
     approvable_obj_code = Field('approvableObjCode')
     approvable_obj_id = Field('approvableObjID')
     approval_step_id = Field('approvalStepID')
@@ -390,7 +384,6 @@ class ApproverStatus(Object):
 
 class Assignment(Object):
     code = "ASSGN"
-    id = Field('ID')
     assigned_by_id = Field('assignedByID')
     assigned_to_id = Field('assignedToID')
     assignment_percent = Field('assignmentPercent')
@@ -423,7 +416,6 @@ class Assignment(Object):
 
 class Avatar(Object):
     code = "AVATAR"
-    id = Field('ID')
     allowed_actions = Field('allowedActions')
     avatar_date = Field('avatarDate')
     avatar_download_url = Field('avatarDownloadURL')
@@ -435,7 +427,6 @@ class Avatar(Object):
 
 class BackgroundJob(Object):
     code = "BKGJOB"
-    id = Field('ID')
     access_count = Field('accessCount')
     changed_objects = Field('changedObjects')
     customer_id = Field('customerID')
@@ -453,7 +444,6 @@ class BackgroundJob(Object):
 
 class Baseline(Object):
     code = "BLIN"
-    id = Field('ID')
     actual_completion_date = Field('actualCompletionDate')
     actual_cost = Field('actualCost')
     actual_duration_minutes = Field('actualDurationMinutes')
@@ -488,7 +478,6 @@ class Baseline(Object):
 
 class BaselineTask(Object):
     code = "BSTSK"
-    id = Field('ID')
     actual_completion_date = Field('actualCompletionDate')
     actual_cost = Field('actualCost')
     actual_duration_minutes = Field('actualDurationMinutes')
@@ -523,7 +512,6 @@ class BaselineTask(Object):
 
 class BillingRecord(Object):
     code = "BILL"
-    id = Field('ID')
     amount = Field('amount')
     billing_date = Field('billingDate')
     customer_id = Field('customerID')
@@ -541,7 +529,6 @@ class BillingRecord(Object):
 
 class Category(Object):
     code = "CTGY"
-    id = Field('ID')
     cat_obj_code = Field('catObjCode')
     customer_id = Field('customerID')
     description = Field('description')
@@ -580,7 +567,6 @@ class CategoryParameter(Object):
 
 class CategoryParameterExpression(Object):
     code = "CTGPEX"
-    id = Field('ID')
     custom_expression = Field('customExpression')
     customer_id = Field('customerID')
     has_finance_fields = Field('hasFinanceFields')
@@ -590,7 +576,6 @@ class CategoryParameterExpression(Object):
 
 class Company(Object):
     code = "CMPY"
-    id = Field('ID')
     category_id = Field('categoryID')
     customer_id = Field('customerID')
     entered_by_id = Field('enteredByID')
@@ -608,7 +593,6 @@ class Company(Object):
 
 class CustomEnum(Object):
     code = "CSTEM"
-    id = Field('ID')
     color = Field('color')
     customer_id = Field('customerID')
     description = Field('description')
@@ -625,7 +609,6 @@ class CustomEnum(Object):
 
 class Customer(Object):
     code = "CUST"
-    id = Field('ID')
     account_rep_id = Field('accountRepID')
     address = Field('address')
     address2 = Field('address2')
@@ -722,7 +705,6 @@ class CustomerPreferences(Object):
 
 class Document(Object):
     code = "DOCU"
-    id = Field('ID')
     category_id = Field('categoryID')
     checked_out_by_id = Field('checkedOutByID')
     current_version_id = Field('currentVersionID')
@@ -785,7 +767,6 @@ class Document(Object):
 
 class DocumentApproval(Object):
     code = "DOCAPL"
-    id = Field('ID')
     approval_date = Field('approvalDate')
     approver_id = Field('approverID')
     auto_document_share_id = Field('autoDocumentShareID')
@@ -804,7 +785,6 @@ class DocumentApproval(Object):
 
 class DocumentFolder(Object):
     code = "DOCFDR"
-    id = Field('ID')
     customer_id = Field('customerID')
     entered_by_id = Field('enteredByID')
     entry_date = Field('entryDate')
@@ -837,7 +817,6 @@ class DocumentFolder(Object):
 
 class DocumentVersion(Object):
     code = "DOCV"
-    id = Field('ID')
     customer_id = Field('customerID')
     doc_size = Field('docSize')
     document_id = Field('documentID')
@@ -865,7 +844,6 @@ class DocumentVersion(Object):
 
 class ExchangeRate(Object):
     code = "EXRATE"
-    id = Field('ID')
     currency = Field('currency')
     customer_id = Field('customerID')
     ext_ref_id = Field('extRefID')
@@ -879,7 +857,6 @@ class ExchangeRate(Object):
 
 class Expense(Object):
     code = "EXPNS"
-    id = Field('ID')
     actual_amount = Field('actualAmount')
     actual_unit_amount = Field('actualUnitAmount')
     billing_record_id = Field('billingRecordID')
@@ -929,7 +906,6 @@ class Expense(Object):
 
 class ExpenseType(Object):
     code = "EXPTYP"
-    id = Field('ID')
     app_global_id = Field('appGlobalID')
     customer_id = Field('customerID')
     description = Field('description')
@@ -948,7 +924,6 @@ class ExpenseType(Object):
 
 class Favorite(Object):
     code = "FVRITE"
-    id = Field('ID')
     customer_id = Field('customerID')
     name = Field('name')
     obj_id = Field('objID')
@@ -960,7 +935,6 @@ class Favorite(Object):
 
 class FinancialData(Object):
     code = "FINDAT"
-    id = Field('ID')
     actual_expense_cost = Field('actualExpenseCost')
     actual_fixed_revenue = Field('actualFixedRevenue')
     actual_labor_cost = Field('actualLaborCost')
@@ -992,7 +966,6 @@ class FinancialData(Object):
 
 class Group(Object):
     code = "GROUP"
-    id = Field('ID')
     customer_id = Field('customerID')
     description = Field('description')
     entered_by_id = Field('enteredByID')
@@ -1005,7 +978,6 @@ class Group(Object):
 
 class Hour(Object):
     code = "HOUR"
-    id = Field('ID')
     actual_cost = Field('actualCost')
     approved_by_id = Field('approvedByID')
     approved_on_date = Field('approvedOnDate')
@@ -1049,7 +1021,6 @@ class Hour(Object):
 
 class HourType(Object):
     code = "HOURT"
-    id = Field('ID')
     app_global_id = Field('appGlobalID')
     count_as_revenue = Field('countAsRevenue')
     customer_id = Field('customerID')
@@ -1069,7 +1040,6 @@ class HourType(Object):
 
 class Issue(Object):
     code = "OPTASK"
-    id = Field('ID')
     actual_completion_date = Field('actualCompletionDate')
     actual_cost = Field('actualCost')
     actual_start_date = Field('actualStartDate')
@@ -1179,7 +1149,6 @@ class Issue(Object):
 
 class Iteration(Object):
     code = "ITRN"
-    id = Field('ID')
     url = Field('URL')
     capacity = Field('capacity')
     category_id = Field('categoryID')
@@ -1213,7 +1182,6 @@ class Iteration(Object):
 
 class JournalEntry(Object):
     code = "JRNLE"
-    id = Field('ID')
     assignment_id = Field('assignmentID')
     aux1 = Field('aux1')
     aux2 = Field('aux2')
@@ -1276,7 +1244,6 @@ class JournalEntry(Object):
 
 class LayoutTemplate(Object):
     code = "LYTMPL"
-    id = Field('ID')
     app_global_id = Field('appGlobalID')
     customer_id = Field('customerID')
     default_nav_item = Field('defaultNavItem')
@@ -1298,7 +1265,6 @@ class LayoutTemplate(Object):
 
 class MessageArg(Object):
     code = "MSGARG"
-    id = Field('ID')
     allowed_actions = Field('allowedActions')
     color = Field('color')
     href = Field('href')
@@ -1310,7 +1276,6 @@ class MessageArg(Object):
 
 class Milestone(Object):
     code = "MILE"
-    id = Field('ID')
     color = Field('color')
     customer_id = Field('customerID')
     description = Field('description')
@@ -1324,7 +1289,6 @@ class Milestone(Object):
 
 class MilestonePath(Object):
     code = "MPATH"
-    id = Field('ID')
     customer_id = Field('customerID')
     description = Field('description')
     entered_by_id = Field('enteredByID')
@@ -1337,7 +1301,6 @@ class MilestonePath(Object):
 
 class NonWorkDay(Object):
     code = "NONWKD"
-    id = Field('ID')
     customer_id = Field('customerID')
     non_work_date = Field('nonWorkDate')
     obj_id = Field('objID')
@@ -1352,7 +1315,6 @@ class NonWorkDay(Object):
 
 class Note(Object):
     code = "NOTE"
-    id = Field('ID')
     attach_document_id = Field('attachDocumentID')
     attach_obj_code = Field('attachObjCode')
     attach_obj_id = Field('attachObjID')
@@ -1420,7 +1382,6 @@ class Note(Object):
 
 class NoteTag(Object):
     code = "NTAG"
-    id = Field('ID')
     customer_id = Field('customerID')
     length = Field('length')
     note_id = Field('noteID')
@@ -1438,7 +1399,6 @@ class NoteTag(Object):
 
 class Parameter(Object):
     code = "PARAM"
-    id = Field('ID')
     customer_id = Field('customerID')
     data_type = Field('dataType')
     description = Field('description')
@@ -1456,7 +1416,6 @@ class Parameter(Object):
 
 class ParameterGroup(Object):
     code = "PGRP"
-    id = Field('ID')
     customer_id = Field('customerID')
     description = Field('description')
     display_order = Field('displayOrder')
@@ -1471,7 +1430,6 @@ class ParameterGroup(Object):
 
 class ParameterOption(Object):
     code = "POPT"
-    id = Field('ID')
     customer_id = Field('customerID')
     display_order = Field('displayOrder')
     ext_ref_id = Field('extRefID')
@@ -1486,7 +1444,6 @@ class ParameterOption(Object):
 
 class Portfolio(Object):
     code = "PORT"
-    id = Field('ID')
     aligned = Field('aligned')
     alignment_score_card_id = Field('alignmentScoreCardID')
     audit_types = Field('auditTypes')
@@ -1520,7 +1477,6 @@ class Portfolio(Object):
 
 class Predecessor(Object):
     code = "PRED"
-    id = Field('ID')
     customer_id = Field('customerID')
     is_cp = Field('isCP')
     is_enforced = Field('isEnforced')
@@ -1536,7 +1492,6 @@ class Predecessor(Object):
 
 class Program(Object):
     code = "PRGM"
-    id = Field('ID')
     audit_types = Field('auditTypes')
     category_id = Field('categoryID')
     customer_id = Field('customerID')
@@ -1565,7 +1520,6 @@ class Program(Object):
 class Project(Object):
     code = "PROJ"
     bccompletion_state = Field('BCCompletionState')
-    id = Field('ID')
     url = Field('URL')
     actual_benefit = Field('actualBenefit')
     actual_completion_date = Field('actualCompletionDate')
@@ -1768,7 +1722,6 @@ class ProjectUserRole(Object):
 
 class QueueDef(Object):
     code = "QUED"
-    id = Field('ID')
     add_op_task_style = Field('addOpTaskStyle')
     allowed_op_task_types = Field('allowedOpTaskTypes')
     allowed_queue_topic_ids = Field('allowedQueueTopicIDs')
@@ -1799,7 +1752,6 @@ class QueueDef(Object):
 
 class QueueTopic(Object):
     code = "QUET"
-    id = Field('ID')
     allowed_op_task_types = Field('allowedOpTaskTypes')
     customer_id = Field('customerID')
     default_approval_process_id = Field('defaultApprovalProcessID')
@@ -1825,7 +1777,6 @@ class QueueTopic(Object):
 
 class Rate(Object):
     code = "RATE"
-    id = Field('ID')
     company_id = Field('companyID')
     customer_id = Field('customerID')
     ext_ref_id = Field('extRefID')
@@ -1842,7 +1793,6 @@ class Rate(Object):
 
 class ReservedTime(Object):
     code = "RESVT"
-    id = Field('ID')
     customer_id = Field('customerID')
     end_date = Field('endDate')
     start_date = Field('startDate')
@@ -1855,7 +1805,6 @@ class ReservedTime(Object):
 
 class ResourceAllocation(Object):
     code = "RSALLO"
-    id = Field('ID')
     allocation_date = Field('allocationDate')
     budgeted_hours = Field('budgetedHours')
     customer_id = Field('customerID')
@@ -1876,7 +1825,6 @@ class ResourceAllocation(Object):
 
 class ResourcePool(Object):
     code = "RSPOOL"
-    id = Field('ID')
     customer_id = Field('customerID')
     description = Field('description')
     display_order = Field('displayOrder')
@@ -1887,7 +1835,6 @@ class ResourcePool(Object):
 
 class Risk(Object):
     code = "RISK"
-    id = Field('ID')
     actual_cost = Field('actualCost')
     customer_id = Field('customerID')
     description = Field('description')
@@ -1910,7 +1857,6 @@ class Risk(Object):
 
 class RiskType(Object):
     code = "RSKTYP"
-    id = Field('ID')
     customer_id = Field('customerID')
     description = Field('description')
     ext_ref_id = Field('extRefID')
@@ -1920,7 +1866,6 @@ class RiskType(Object):
 
 class Role(Object):
     code = "ROLE"
-    id = Field('ID')
     billing_per_hour = Field('billingPerHour')
     cost_per_hour = Field('costPerHour')
     customer_id = Field('customerID')
@@ -1938,7 +1883,6 @@ class Role(Object):
 
 class RoutingRule(Object):
     code = "RRUL"
-    id = Field('ID')
     customer_id = Field('customerID')
     default_assigned_to_id = Field('defaultAssignedToID')
     default_project_id = Field('defaultProjectID')
@@ -1961,7 +1905,6 @@ class RoutingRule(Object):
 
 class Schedule(Object):
     code = "SCHED"
-    id = Field('ID')
     customer_id = Field('customerID')
     entered_by_id = Field('enteredByID')
     entry_date = Field('entryDate')
@@ -1985,7 +1928,6 @@ class Schedule(Object):
 
 class ScoreCard(Object):
     code = "SCORE"
-    id = Field('ID')
     customer_id = Field('customerID')
     description = Field('description')
     entered_by_id = Field('enteredByID')
@@ -2010,7 +1952,6 @@ class ScoreCard(Object):
 
 class ScoreCardAnswer(Object):
     code = "SCANS"
-    id = Field('ID')
     customer_id = Field('customerID')
     number_val = Field('numberVal')
     obj_id = Field('objID')
@@ -2031,7 +1972,6 @@ class ScoreCardAnswer(Object):
 
 class ScoreCardOption(Object):
     code = "SCOPT"
-    id = Field('ID')
     customer_id = Field('customerID')
     display_order = Field('displayOrder')
     is_default = Field('isDefault')
@@ -2045,7 +1985,6 @@ class ScoreCardOption(Object):
 
 class ScoreCardQuestion(Object):
     code = "SCOREQ"
-    id = Field('ID')
     customer_id = Field('customerID')
     description = Field('description')
     display_order = Field('displayOrder')
@@ -2059,7 +1998,6 @@ class ScoreCardQuestion(Object):
 
 class StepApprover(Object):
     code = "SPAPVR"
-    id = Field('ID')
     approval_step_id = Field('approvalStepID')
     customer_id = Field('customerID')
     role_id = Field('roleID')
@@ -2075,7 +2013,6 @@ class StepApprover(Object):
 
 class Task(Object):
     code = "TASK"
-    id = Field('ID')
     url = Field('URL')
     actual_completion_date = Field('actualCompletionDate')
     actual_cost = Field('actualCost')
@@ -2247,7 +2184,6 @@ class Task(Object):
 
 class Team(Object):
     code = "TEAMOB"
-    id = Field('ID')
     customer_id = Field('customerID')
     description = Field('description')
     estimate_by_hours = Field('estimateByHours')
@@ -2285,7 +2221,6 @@ class TeamMember(Object):
 
 class Template(Object):
     code = "TMPL"
-    id = Field('ID')
     approval_process_id = Field('approvalProcessID')
     auto_baseline_recur_on = Field('autoBaselineRecurOn')
     auto_baseline_recurrence_type = Field('autoBaselineRecurrenceType')
@@ -2343,7 +2278,6 @@ class Template(Object):
 
 class TemplateAssignment(Object):
     code = "TASSGN"
-    id = Field('ID')
     assigned_to_id = Field('assignedToID')
     assignment_percent = Field('assignmentPercent')
     customer_id = Field('customerID')
@@ -2382,7 +2316,6 @@ class TemplatePredecessor(Object):
 
 class TemplateTask(Object):
     code = "TTSK"
-    id = Field('ID')
     url = Field('URL')
     approval_process_id = Field('approvalProcessID')
     assigned_to_id = Field('assignedToID')
@@ -2486,7 +2419,6 @@ class TemplateUserRole(Object):
 
 class Timesheet(Object):
     code = "TSHET"
-    id = Field('ID')
     approver_id = Field('approverID')
     available_actions = Field('availableActions')
     customer_id = Field('customerID')
@@ -2515,7 +2447,6 @@ class Timesheet(Object):
 
 class UIFilter(Object):
     code = "UIFT"
-    id = Field('ID')
     app_global_id = Field('appGlobalID')
     customer_id = Field('customerID')
     definition = Field('definition')
@@ -2546,7 +2477,6 @@ class UIFilter(Object):
 
 class UIGroupBy(Object):
     code = "UIGB"
-    id = Field('ID')
     app_global_id = Field('appGlobalID')
     customer_id = Field('customerID')
     definition = Field('definition')
@@ -2575,7 +2505,6 @@ class UIGroupBy(Object):
 
 class UIView(Object):
     code = "UIVW"
-    id = Field('ID')
     app_global_id = Field('appGlobalID')
     customer_id = Field('customerID')
     definition = Field('definition')
@@ -2608,7 +2537,6 @@ class UIView(Object):
 
 class Update(Object):
     code = "UPDATE"
-    id = Field('ID')
     allowed_actions = Field('allowedActions')
     entered_by_id = Field('enteredByID')
     entered_by_name = Field('enteredByName')
@@ -2637,7 +2565,6 @@ class Update(Object):
 
 class User(Object):
     code = "USER"
-    id = Field('ID')
     access_level_id = Field('accessLevelID')
     address = Field('address')
     address2 = Field('address2')
@@ -2738,7 +2665,6 @@ class User(Object):
 
 class UserActivity(Object):
     code = "USERAC"
-    id = Field('ID')
     customer_id = Field('customerID')
     entry_date = Field('entryDate')
     last_update_date = Field('lastUpdateDate')
@@ -2751,7 +2677,6 @@ class UserActivity(Object):
 
 class UserNote(Object):
     code = "USRNOT"
-    id = Field('ID')
     customer_id = Field('customerID')
     document_approval_id = Field('documentApprovalID')
     document_request_id = Field('documentRequestID')
@@ -2782,7 +2707,6 @@ class UserPrefValue(Object):
 
 class Work(Object):
     code = "WORK"
-    id = Field('ID')
     url = Field('URL')
     actual_completion_date = Field('actualCompletionDate')
     actual_cost = Field('actualCost')
@@ -2985,7 +2909,6 @@ class Work(Object):
 
 class WorkItem(Object):
     code = "WRKITM"
-    id = Field('ID')
     assignment_id = Field('assignmentID')
     customer_id = Field('customerID')
     done_date = Field('doneDate')

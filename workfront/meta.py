@@ -30,6 +30,10 @@ class Object(object):
         return '<{0}: {1}>'.format(self.__class__.__name__,
                                    self.fields)
 
+    @property
+    def id(self):
+        return self.fields.get('ID')
+
     @classmethod
     def from_data(cls, session, data):
         return cls.registry[data['objCode']](session, **data)
