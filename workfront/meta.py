@@ -73,3 +73,26 @@ class Field(object):
         if result is missing:
             raise FieldNotLoaded(self.workfront_name)
         return result
+
+
+class Reference(Field):
+
+    def __init__(self, workfront_name, code):
+        super(Reference, self).__init__(workfront_name)
+        self.code = code
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        result = instance.fields.get(self.workfront_name, missing)
+        if result is missing:
+            id_ = instance.fields.get(self.workfront_name+'ID', missing)
+            if id_ is missing:
+                raise FieldNotLoaded(self.workfront_name)
+            if id_ is None:
+                result = None
+            else:
+                result = dict(ID=id_, objCode=self.code)
+        if result is None:
+            return None
+        return Object.from_data(instance.session, result)

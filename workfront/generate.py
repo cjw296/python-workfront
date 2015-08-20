@@ -56,6 +56,15 @@ def generate(protocol, domain, version, unsafe_certs, output_path):
                     workfront_name=workfront_name
                 ))
 
+            for workfront_name, reference_type in sorted(
+                    type_detail['references'].items()
+            ):
+                output.write(reference_template.format(
+                    python_name=dehump(workfront_name),
+                    workfront_name=workfront_name,
+                    code=reference_type['typeObjCode'],
+                ))
+
 
 def parse_args():
     parser = ArgumentParser()
@@ -72,8 +81,8 @@ def parse_args():
 
 
 header = """\
-# generated from {url}
-from .meta import Object, Field
+# generated from {url}/metadata
+from .meta import Object, Field, Reference
 """
 
 
@@ -86,6 +95,11 @@ class {class_name}(Object):
 
 field_template = """\
     {python_name} = Field('{workfront_name}')
+"""
+
+
+reference_template = """\
+    {python_name} = Reference('{workfront_name}', '{code}')
 """
 
 

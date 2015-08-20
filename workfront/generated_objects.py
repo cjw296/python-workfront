@@ -1,5 +1,5 @@
-# generated from https://jumptrading.attask-ondemand.com/attask/api/v4.0
-from .meta import Object, Field
+# generated from https://api-cl01.attask-ondemand.com/attask/api/v4.0/metadata
+from .meta import Object, Field, Reference
 
 
 class AccessRule(Object):
@@ -16,6 +16,7 @@ class AccessRule(Object):
     secondary_actions = Field('secondaryActions')
     security_obj_code = Field('securityObjCode')
     security_obj_id = Field('securityObjID')
+    customer = Reference('customer', 'CUST')
 
 
 class Approval(Object):
@@ -263,6 +264,51 @@ class Approval(Object):
     work_required = Field('workRequired')
     work_required_expression = Field('workRequiredExpression')
     work_unit = Field('workUnit')
+    alignment_score_card = Reference('alignmentScoreCard', 'SCORE')
+    approval_process = Reference('approvalProcess', 'ARVPRC')
+    assigned_to = Reference('assignedTo', 'USER')
+    billing_record = Reference('billingRecord', 'BILL')
+    category = Reference('category', 'CTGY')
+    company = Reference('company', 'CMPY')
+    converted_op_task_originator = Reference('convertedOpTaskOriginator', 'USER')
+    current_approval_step = Reference('currentApprovalStep', 'ARVSTP')
+    customer = Reference('customer', 'CUST')
+    default_baseline = Reference('defaultBaseline', 'BLIN')
+    default_baseline_task = Reference('defaultBaselineTask', 'BSTSK')
+    deliverable_score_card = Reference('deliverableScoreCard', 'SCORE')
+    entered_by = Reference('enteredBy', 'USER')
+    exchange_rate = Reference('exchangeRate', 'EXRATE')
+    group = Reference('group', 'GROUP')
+    iteration = Reference('iteration', 'ITRN')
+    last_condition_note = Reference('lastConditionNote', 'NOTE')
+    last_note = Reference('lastNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    milestone = Reference('milestone', 'MILE')
+    milestone_path = Reference('milestonePath', 'MPATH')
+    owner = Reference('owner', 'USER')
+    parent = Reference('parent', 'TASK')
+    portfolio = Reference('portfolio', 'PORT')
+    primary_assignment = Reference('primaryAssignment', 'ASSGN')
+    program = Reference('program', 'PRGM')
+    project = Reference('project', 'PROJ')
+    queue_def = Reference('queueDef', 'QUED')
+    queue_topic = Reference('queueTopic', 'QUET')
+    rejection_issue = Reference('rejectionIssue', 'OPTASK')
+    reserved_time = Reference('reservedTime', 'RESVT')
+    resolve_op_task = Reference('resolveOpTask', 'OPTASK')
+    resolve_project = Reference('resolveProject', 'PROJ')
+    resolve_task = Reference('resolveTask', 'TASK')
+    resource_pool = Reference('resourcePool', 'RSPOOL')
+    role = Reference('role', 'ROLE')
+    schedule = Reference('schedule', 'SCHED')
+    source_task = Reference('sourceTask', 'TASK')
+    sponsor = Reference('sponsor', 'USER')
+    submitted_by = Reference('submittedBy', 'USER')
+    team = Reference('team', 'TEAMOB')
+    team_assignment = Reference('teamAssignment', 'ASSGN')
+    template = Reference('template', 'TMPL')
+    template_task = Reference('templateTask', 'TTSK')
+    work_item = Reference('workItem', 'WRKITM')
 
 
 class ApprovalPath(Object):
@@ -277,6 +323,8 @@ class ApprovalPath(Object):
     should_create_issue = Field('shouldCreateIssue')
     target_status = Field('targetStatus')
     target_status_label = Field('targetStatusLabel')
+    approval_process = Reference('approvalProcess', 'ARVPRC')
+    customer = Reference('customer', 'CUST')
 
 
 class ApprovalProcess(Object):
@@ -296,6 +344,9 @@ class ApprovalProcess(Object):
     name = Field('name')
     security_root_id = Field('securityRootID')
     security_root_obj_code = Field('securityRootObjCode')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
 
 
 class ApprovalStep(Object):
@@ -306,6 +357,8 @@ class ApprovalStep(Object):
     customer_id = Field('customerID')
     name = Field('name')
     sequence_number = Field('sequenceNumber')
+    approval_path = Reference('approvalPath', 'ARVPTH')
+    customer = Reference('customer', 'CUST')
 
 
 class ApproverStatus(Object):
@@ -324,6 +377,15 @@ class ApproverStatus(Object):
     step_approver_id = Field('stepApproverID')
     task_id = Field('taskID')
     wildcard_user_id = Field('wildcardUserID')
+    approval_step = Reference('approvalStep', 'ARVSTP')
+    approved_by = Reference('approvedBy', 'USER')
+    customer = Reference('customer', 'CUST')
+    op_task = Reference('opTask', 'OPTASK')
+    overridden_user = Reference('overriddenUser', 'USER')
+    project = Reference('project', 'PROJ')
+    step_approver = Reference('stepApprover', 'SPAPVR')
+    task = Reference('task', 'TASK')
+    wildcard_user = Reference('wildcardUser', 'USER')
 
 
 class Assignment(Object):
@@ -348,6 +410,15 @@ class Assignment(Object):
     work = Field('work')
     work_required = Field('workRequired')
     work_unit = Field('workUnit')
+    assigned_by = Reference('assignedBy', 'USER')
+    assigned_to = Reference('assignedTo', 'USER')
+    customer = Reference('customer', 'CUST')
+    op_task = Reference('opTask', 'OPTASK')
+    project = Reference('project', 'PROJ')
+    role = Reference('role', 'ROLE')
+    task = Reference('task', 'TASK')
+    team = Reference('team', 'TEAMOB')
+    work_item = Reference('workItem', 'WRKITM')
 
 
 class Avatar(Object):
@@ -376,6 +447,8 @@ class BackgroundJob(Object):
     handler_class_name = Field('handlerClassName')
     start_date = Field('startDate')
     status = Field('status')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
 
 
 class Baseline(Object):
@@ -409,6 +482,8 @@ class Baseline(Object):
     projected_start_date = Field('projectedStartDate')
     spi = Field('spi')
     work_required = Field('workRequired')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
 
 
 class BaselineTask(Object):
@@ -441,6 +516,9 @@ class BaselineTask(Object):
     spi = Field('spi')
     task_id = Field('taskID')
     work_required = Field('workRequired')
+    baseline = Reference('baseline', 'BLIN')
+    customer = Reference('customer', 'CUST')
+    task = Reference('task', 'TASK')
 
 
 class BillingRecord(Object):
@@ -457,6 +535,8 @@ class BillingRecord(Object):
     po_number = Field('poNumber')
     project_id = Field('projectID')
     status = Field('status')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
 
 
 class Category(Object):
@@ -472,6 +552,10 @@ class Category(Object):
     last_update_date = Field('lastUpdateDate')
     last_updated_by_id = Field('lastUpdatedByID')
     name = Field('name')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    group = Reference('group', 'GROUP')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
 
 
 class CategoryParameter(Object):
@@ -487,6 +571,11 @@ class CategoryParameter(Object):
     row_shared = Field('rowShared')
     security_level = Field('securityLevel')
     view_security_level = Field('viewSecurityLevel')
+    category = Reference('category', 'CTGY')
+    category_parameter_expression = Reference('categoryParameterExpression', 'CTGPEX')
+    customer = Reference('customer', 'CUST')
+    parameter = Reference('parameter', 'PARAM')
+    parameter_group = Reference('parameterGroup', 'PGRP')
 
 
 class CategoryParameterExpression(Object):
@@ -495,6 +584,8 @@ class CategoryParameterExpression(Object):
     custom_expression = Field('customExpression')
     customer_id = Field('customerID')
     has_finance_fields = Field('hasFinanceFields')
+    category_parameter = Reference('categoryParameter', 'CTGYPA')
+    customer = Reference('customer', 'CUST')
 
 
 class Company(Object):
@@ -509,6 +600,10 @@ class Company(Object):
     last_update_date = Field('lastUpdateDate')
     last_updated_by_id = Field('lastUpdatedByID')
     name = Field('name')
+    category = Reference('category', 'CTGY')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
 
 
 class CustomEnum(Object):
@@ -525,6 +620,7 @@ class CustomEnum(Object):
     value = Field('value')
     value_as_int = Field('valueAsInt')
     value_as_string = Field('valueAsString')
+    customer = Reference('customer', 'CUST')
 
 
 class Customer(Object):
@@ -668,6 +764,23 @@ class Document(Object):
     top_doc_obj_code = Field('topDocObjCode')
     top_obj_id = Field('topObjID')
     user_id = Field('userID')
+    category = Reference('category', 'CTGY')
+    checked_out_by = Reference('checkedOutBy', 'USER')
+    current_version = Reference('currentVersion', 'DOCV')
+    customer = Reference('customer', 'CUST')
+    iteration = Reference('iteration', 'ITRN')
+    last_note = Reference('lastNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    op_task = Reference('opTask', 'OPTASK')
+    owner = Reference('owner', 'USER')
+    portfolio = Reference('portfolio', 'PORT')
+    program = Reference('program', 'PRGM')
+    project = Reference('project', 'PROJ')
+    release_version = Reference('releaseVersion', 'DOCV')
+    task = Reference('task', 'TASK')
+    template = Reference('template', 'TMPL')
+    template_task = Reference('templateTask', 'TTSK')
+    user = Reference('user', 'USER')
 
 
 class DocumentApproval(Object):
@@ -682,6 +795,11 @@ class DocumentApproval(Object):
     request_date = Field('requestDate')
     requestor_id = Field('requestorID')
     status = Field('status')
+    approver = Reference('approver', 'USER')
+    customer = Reference('customer', 'CUST')
+    document = Reference('document', 'DOCU')
+    note = Reference('note', 'NOTE')
+    requestor = Reference('requestor', 'USER')
 
 
 class DocumentFolder(Object):
@@ -703,6 +821,18 @@ class DocumentFolder(Object):
     template_id = Field('templateID')
     template_task_id = Field('templateTaskID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    issue = Reference('issue', 'OPTASK')
+    iteration = Reference('iteration', 'ITRN')
+    parent = Reference('parent', 'DOCFDR')
+    portfolio = Reference('portfolio', 'PORT')
+    program = Reference('program', 'PRGM')
+    project = Reference('project', 'PROJ')
+    task = Reference('task', 'TASK')
+    template = Reference('template', 'TMPL')
+    template_task = Reference('templateTask', 'TTSK')
+    user = Reference('user', 'USER')
 
 
 class DocumentVersion(Object):
@@ -728,6 +858,9 @@ class DocumentVersion(Object):
     proof_id = Field('proofID')
     proof_status = Field('proofStatus')
     version = Field('version')
+    customer = Reference('customer', 'CUST')
+    document = Reference('document', 'DOCU')
+    entered_by = Reference('enteredBy', 'USER')
 
 
 class ExchangeRate(Object):
@@ -739,6 +872,9 @@ class ExchangeRate(Object):
     project_id = Field('projectID')
     rate = Field('rate')
     template_id = Field('templateID')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
+    template = Reference('template', 'TMPL')
 
 
 class Expense(Object):
@@ -779,6 +915,16 @@ class Expense(Object):
     top_obj_id = Field('topObjID')
     top_reference_obj_code = Field('topReferenceObjCode')
     top_reference_obj_id = Field('topReferenceObjID')
+    billing_record = Reference('billingRecord', 'BILL')
+    category = Reference('category', 'CTGY')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    expense_type = Reference('expenseType', 'EXPTYP')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    project = Reference('project', 'PROJ')
+    task = Reference('task', 'TASK')
+    template = Reference('template', 'TMPL')
+    template_task = Reference('templateTask', 'TTSK')
 
 
 class ExpenseType(Object):
@@ -797,6 +943,7 @@ class ExpenseType(Object):
     obj_obj_code = Field('objObjCode')
     rate = Field('rate')
     rate_unit = Field('rateUnit')
+    customer = Reference('customer', 'CUST')
 
 
 class Favorite(Object):
@@ -807,6 +954,8 @@ class Favorite(Object):
     obj_id = Field('objID')
     obj_obj_code = Field('objObjCode')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    user = Reference('user', 'USER')
 
 
 class FinancialData(Object):
@@ -837,6 +986,8 @@ class FinancialData(Object):
     variance_labor_cost = Field('varianceLaborCost')
     variance_labor_cost_hours = Field('varianceLaborCostHours')
     variance_labor_revenue = Field('varianceLaborRevenue')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
 
 
 class Group(Object):
@@ -848,6 +999,8 @@ class Group(Object):
     entry_date = Field('entryDate')
     ext_ref_id = Field('extRefID')
     name = Field('name')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
 
 
 class Hour(Object):
@@ -880,6 +1033,18 @@ class Hour(Object):
     status = Field('status')
     task_id = Field('taskID')
     timesheet_id = Field('timesheetID')
+    approved_by = Reference('approvedBy', 'USER')
+    billing_record = Reference('billingRecord', 'BILL')
+    customer = Reference('customer', 'CUST')
+    hour_type = Reference('hourType', 'HOURT')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    op_task = Reference('opTask', 'OPTASK')
+    owner = Reference('owner', 'USER')
+    project = Reference('project', 'PROJ')
+    project_overhead = Reference('projectOverhead', 'PROJ')
+    role = Reference('role', 'ROLE')
+    task = Reference('task', 'TASK')
+    timesheet = Reference('timesheet', 'TSHET')
 
 
 class HourType(Object):
@@ -899,6 +1064,7 @@ class HourType(Object):
     obj_obj_code = Field('objObjCode')
     overhead_type = Field('overheadType')
     scope = Field('scope')
+    customer = Reference('customer', 'CUST')
 
 
 class Issue(Object):
@@ -985,6 +1151,30 @@ class Issue(Object):
     url = Field('url')
     work_required = Field('workRequired')
     work_required_expression = Field('workRequiredExpression')
+    approval_process = Reference('approvalProcess', 'ARVPRC')
+    assigned_to = Reference('assignedTo', 'USER')
+    category = Reference('category', 'CTGY')
+    current_approval_step = Reference('currentApprovalStep', 'ARVSTP')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_condition_note = Reference('lastConditionNote', 'NOTE')
+    last_note = Reference('lastNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    owner = Reference('owner', 'USER')
+    parent = Reference('parent', 'TASK')
+    primary_assignment = Reference('primaryAssignment', 'ASSGN')
+    project = Reference('project', 'PROJ')
+    queue_topic = Reference('queueTopic', 'QUET')
+    rejection_issue = Reference('rejectionIssue', 'OPTASK')
+    resolve_op_task = Reference('resolveOpTask', 'OPTASK')
+    resolve_project = Reference('resolveProject', 'PROJ')
+    resolve_task = Reference('resolveTask', 'TASK')
+    role = Reference('role', 'ROLE')
+    source_task = Reference('sourceTask', 'TASK')
+    submitted_by = Reference('submittedBy', 'USER')
+    team = Reference('team', 'TEAMOB')
+    team_assignment = Reference('teamAssignment', 'ASSGN')
+    work_item = Reference('workItem', 'WRKITM')
 
 
 class Iteration(Object):
@@ -1013,6 +1203,12 @@ class Iteration(Object):
     task_ids = Field('taskIDs')
     team_id = Field('teamID')
     total_estimate = Field('totalEstimate')
+    category = Reference('category', 'CTGY')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    owner = Reference('owner', 'USER')
+    team = Reference('team', 'TEAMOB')
 
 
 class JournalEntry(Object):
@@ -1060,6 +1256,22 @@ class JournalEntry(Object):
     top_obj_code = Field('topObjCode')
     top_obj_id = Field('topObjID')
     user_id = Field('userID')
+    assignment = Reference('assignment', 'ASSGN')
+    billing_record = Reference('billingRecord', 'BILL')
+    customer = Reference('customer', 'CUST')
+    document = Reference('document', 'DOCU')
+    document_approval = Reference('documentApproval', 'DOCAPL')
+    edited_by = Reference('editedBy', 'USER')
+    expense = Reference('expense', 'EXPNS')
+    hour = Reference('hour', 'HOUR')
+    op_task = Reference('opTask', 'OPTASK')
+    portfolio = Reference('portfolio', 'PORT')
+    program = Reference('program', 'PRGM')
+    project = Reference('project', 'PROJ')
+    task = Reference('task', 'TASK')
+    template = Reference('template', 'TMPL')
+    timesheet = Reference('timesheet', 'TSHET')
+    user = Reference('user', 'USER')
 
 
 class LayoutTemplate(Object):
@@ -1080,6 +1292,8 @@ class LayoutTemplate(Object):
     nav_items = Field('navItems')
     obj_id = Field('objID')
     obj_obj_code = Field('objObjCode')
+    customer = Reference('customer', 'CUST')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
 
 
 class MessageArg(Object):
@@ -1104,6 +1318,8 @@ class Milestone(Object):
     milestone_path_id = Field('milestonePathID')
     name = Field('name')
     sequence = Field('sequence')
+    customer = Reference('customer', 'CUST')
+    milestone_path = Reference('milestonePath', 'MPATH')
 
 
 class MilestonePath(Object):
@@ -1115,6 +1331,8 @@ class MilestonePath(Object):
     entry_date = Field('entryDate')
     ext_ref_id = Field('extRefID')
     name = Field('name')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
 
 
 class NonWorkDay(Object):
@@ -1127,6 +1345,9 @@ class NonWorkDay(Object):
     schedule_day = Field('scheduleDay')
     schedule_id = Field('scheduleID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    schedule = Reference('schedule', 'SCHED')
+    user = Reference('user', 'USER')
 
 
 class Note(Object):
@@ -1178,6 +1399,23 @@ class Note(Object):
     top_obj_id = Field('topObjID')
     top_reference_object_name = Field('topReferenceObjectName')
     user_id = Field('userID')
+    attach_document = Reference('attachDocument', 'DOCU')
+    attach_op_task = Reference('attachOpTask', 'OPTASK')
+    customer = Reference('customer', 'CUST')
+    document = Reference('document', 'DOCU')
+    iteration = Reference('iteration', 'ITRN')
+    op_task = Reference('opTask', 'OPTASK')
+    owner = Reference('owner', 'USER')
+    parent_journal_entry = Reference('parentJournalEntry', 'JRNLE')
+    parent_note = Reference('parentNote', 'NOTE')
+    portfolio = Reference('portfolio', 'PORT')
+    program = Reference('program', 'PRGM')
+    project = Reference('project', 'PROJ')
+    task = Reference('task', 'TASK')
+    template = Reference('template', 'TMPL')
+    template_task = Reference('templateTask', 'TTSK')
+    timesheet = Reference('timesheet', 'TSHET')
+    user = Reference('user', 'USER')
 
 
 class NoteTag(Object):
@@ -1192,6 +1430,10 @@ class NoteTag(Object):
     start_idx = Field('startIdx')
     team_id = Field('teamID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    note = Reference('note', 'NOTE')
+    team = Reference('team', 'TEAMOB')
+    user = Reference('user', 'USER')
 
 
 class Parameter(Object):
@@ -1208,6 +1450,8 @@ class Parameter(Object):
     last_update_date = Field('lastUpdateDate')
     last_updated_by_id = Field('lastUpdatedByID')
     name = Field('name')
+    customer = Reference('customer', 'CUST')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
 
 
 class ParameterGroup(Object):
@@ -1221,6 +1465,8 @@ class ParameterGroup(Object):
     last_update_date = Field('lastUpdateDate')
     last_updated_by_id = Field('lastUpdatedByID')
     name = Field('name')
+    customer = Reference('customer', 'CUST')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
 
 
 class ParameterOption(Object):
@@ -1234,6 +1480,8 @@ class ParameterOption(Object):
     label = Field('label')
     parameter_id = Field('parameterID')
     value = Field('value')
+    customer = Reference('customer', 'CUST')
+    parameter = Reference('parameter', 'PARAM')
 
 
 class Portfolio(Object):
@@ -1262,6 +1510,12 @@ class Portfolio(Object):
     on_time = Field('onTime')
     owner_id = Field('ownerID')
     roi = Field('roi')
+    alignment_score_card = Reference('alignmentScoreCard', 'SCORE')
+    category = Reference('category', 'CTGY')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    owner = Reference('owner', 'USER')
 
 
 class Predecessor(Object):
@@ -1275,6 +1529,9 @@ class Predecessor(Object):
     predecessor_id = Field('predecessorID')
     predecessor_type = Field('predecessorType')
     successor_id = Field('successorID')
+    customer = Reference('customer', 'CUST')
+    predecessor = Reference('predecessor', 'TASK')
+    successor = Reference('successor', 'TASK')
 
 
 class Program(Object):
@@ -1297,6 +1554,12 @@ class Program(Object):
     portfolio_id = Field('portfolioID')
     security_root_id = Field('securityRootID')
     security_root_obj_code = Field('securityRootObjCode')
+    category = Reference('category', 'CTGY')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    owner = Reference('owner', 'USER')
+    portfolio = Reference('portfolio', 'PORT')
 
 
 class Project(Object):
@@ -1452,6 +1715,33 @@ class Project(Object):
     version = Field('version')
     work_required = Field('workRequired')
     work_required_expression = Field('workRequiredExpression')
+    alignment_score_card = Reference('alignmentScoreCard', 'SCORE')
+    approval_process = Reference('approvalProcess', 'ARVPRC')
+    category = Reference('category', 'CTGY')
+    company = Reference('company', 'CMPY')
+    converted_op_task_originator = Reference('convertedOpTaskOriginator', 'USER')
+    current_approval_step = Reference('currentApprovalStep', 'ARVSTP')
+    customer = Reference('customer', 'CUST')
+    default_baseline = Reference('defaultBaseline', 'BLIN')
+    deliverable_score_card = Reference('deliverableScoreCard', 'SCORE')
+    entered_by = Reference('enteredBy', 'USER')
+    exchange_rate = Reference('exchangeRate', 'EXRATE')
+    group = Reference('group', 'GROUP')
+    last_condition_note = Reference('lastConditionNote', 'NOTE')
+    last_note = Reference('lastNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    milestone_path = Reference('milestonePath', 'MPATH')
+    owner = Reference('owner', 'USER')
+    portfolio = Reference('portfolio', 'PORT')
+    program = Reference('program', 'PRGM')
+    project = Reference('project', 'PROJ')
+    queue_def = Reference('queueDef', 'QUED')
+    rejection_issue = Reference('rejectionIssue', 'OPTASK')
+    resource_pool = Reference('resourcePool', 'RSPOOL')
+    schedule = Reference('schedule', 'SCHED')
+    sponsor = Reference('sponsor', 'USER')
+    submitted_by = Reference('submittedBy', 'USER')
+    template = Reference('template', 'TMPL')
 
 
 class ProjectUser(Object):
@@ -1459,6 +1749,9 @@ class ProjectUser(Object):
     customer_id = Field('customerID')
     project_id = Field('projectID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
+    user = Reference('user', 'USER')
 
 
 class ProjectUserRole(Object):
@@ -1467,6 +1760,10 @@ class ProjectUserRole(Object):
     project_id = Field('projectID')
     role_id = Field('roleID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
+    role = Reference('role', 'ROLE')
+    user = Reference('user', 'USER')
 
 
 class QueueDef(Object):
@@ -1492,6 +1789,12 @@ class QueueDef(Object):
     security_root_obj_code = Field('securityRootObjCode')
     template_id = Field('templateID')
     visible_op_task_fields = Field('visibleOpTaskFields')
+    customer = Reference('customer', 'CUST')
+    default_approval_process = Reference('defaultApprovalProcess', 'ARVPRC')
+    default_category = Reference('defaultCategory', 'CTGY')
+    default_route = Reference('defaultRoute', 'RRUL')
+    project = Reference('project', 'PROJ')
+    template = Reference('template', 'TMPL')
 
 
 class QueueTopic(Object):
@@ -1512,6 +1815,12 @@ class QueueTopic(Object):
     name = Field('name')
     parent_topic_id = Field('parentTopicID')
     queue_def_id = Field('queueDefID')
+    customer = Reference('customer', 'CUST')
+    default_approval_process = Reference('defaultApprovalProcess', 'ARVPRC')
+    default_category = Reference('defaultCategory', 'CTGY')
+    default_route = Reference('defaultRoute', 'RRUL')
+    parent_topic = Reference('parentTopic', 'QUET')
+    queue_def = Reference('queueDef', 'QUED')
 
 
 class Rate(Object):
@@ -1525,6 +1834,10 @@ class Rate(Object):
     role_id = Field('roleID')
     security_root_id = Field('securityRootID')
     security_root_obj_code = Field('securityRootObjCode')
+    company = Reference('company', 'CMPY')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
+    role = Reference('role', 'ROLE')
 
 
 class ReservedTime(Object):
@@ -1535,6 +1848,9 @@ class ReservedTime(Object):
     start_date = Field('startDate')
     task_id = Field('taskID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    task = Reference('task', 'TASK')
+    user = Reference('user', 'USER')
 
 
 class ResourceAllocation(Object):
@@ -1552,6 +1868,10 @@ class ResourceAllocation(Object):
     scheduled_hours = Field('scheduledHours')
     security_root_id = Field('securityRootID')
     security_root_obj_code = Field('securityRootObjCode')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
+    resource_pool = Reference('resourcePool', 'RSPOOL')
+    role = Reference('role', 'ROLE')
 
 
 class ResourcePool(Object):
@@ -1562,6 +1882,7 @@ class ResourcePool(Object):
     display_order = Field('displayOrder')
     ext_ref_id = Field('extRefID')
     name = Field('name')
+    customer = Reference('customer', 'CUST')
 
 
 class Risk(Object):
@@ -1581,6 +1902,10 @@ class Risk(Object):
     security_root_obj_code = Field('securityRootObjCode')
     status = Field('status')
     template_id = Field('templateID')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
+    risk_type = Reference('riskType', 'RSKTYP')
+    template = Reference('template', 'TMPL')
 
 
 class RiskType(Object):
@@ -1590,6 +1915,7 @@ class RiskType(Object):
     description = Field('description')
     ext_ref_id = Field('extRefID')
     name = Field('name')
+    customer = Reference('customer', 'CUST')
 
 
 class Role(Object):
@@ -1605,6 +1931,9 @@ class Role(Object):
     layout_template_id = Field('layoutTemplateID')
     max_users = Field('maxUsers')
     name = Field('name')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    layout_template = Reference('layoutTemplate', 'LYTMPL')
 
 
 class RoutingRule(Object):
@@ -1621,6 +1950,13 @@ class RoutingRule(Object):
     security_root_id = Field('securityRootID')
     security_root_obj_code = Field('securityRootObjCode')
     template_id = Field('templateID')
+    customer = Reference('customer', 'CUST')
+    default_assigned_to = Reference('defaultAssignedTo', 'USER')
+    default_project = Reference('defaultProject', 'PROJ')
+    default_role = Reference('defaultRole', 'ROLE')
+    default_team = Reference('defaultTeam', 'TEAMOB')
+    project = Reference('project', 'PROJ')
+    template = Reference('template', 'TMPL')
 
 
 class Schedule(Object):
@@ -1642,6 +1978,9 @@ class Schedule(Object):
     time_zone = Field('timeZone')
     tuesday = Field('tuesday')
     wednesday = Field('wednesday')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    group = Reference('group', 'GROUP')
 
 
 class ScoreCard(Object):
@@ -1662,6 +2001,11 @@ class ScoreCard(Object):
     security_root_id = Field('securityRootID')
     security_root_obj_code = Field('securityRootObjCode')
     template_id = Field('templateID')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    project = Reference('project', 'PROJ')
+    template = Reference('template', 'TMPL')
 
 
 class ScoreCardAnswer(Object):
@@ -1677,6 +2021,12 @@ class ScoreCardAnswer(Object):
     score_card_question_id = Field('scoreCardQuestionID')
     template_id = Field('templateID')
     type = Field('type')
+    customer = Reference('customer', 'CUST')
+    project = Reference('project', 'PROJ')
+    score_card = Reference('scoreCard', 'SCORE')
+    score_card_option = Reference('scoreCardOption', 'SCOPT')
+    score_card_question = Reference('scoreCardQuestion', 'SCOREQ')
+    template = Reference('template', 'TMPL')
 
 
 class ScoreCardOption(Object):
@@ -1689,6 +2039,8 @@ class ScoreCardOption(Object):
     label = Field('label')
     score_card_question_id = Field('scoreCardQuestionID')
     value = Field('value')
+    customer = Reference('customer', 'CUST')
+    score_card_question = Reference('scoreCardQuestion', 'SCOREQ')
 
 
 class ScoreCardQuestion(Object):
@@ -1701,6 +2053,8 @@ class ScoreCardQuestion(Object):
     name = Field('name')
     score_card_id = Field('scoreCardID')
     weight = Field('weight')
+    customer = Reference('customer', 'CUST')
+    score_card = Reference('scoreCard', 'SCORE')
 
 
 class StepApprover(Object):
@@ -1712,6 +2066,11 @@ class StepApprover(Object):
     team_id = Field('teamID')
     user_id = Field('userID')
     wild_card = Field('wildCard')
+    approval_step = Reference('approvalStep', 'ARVSTP')
+    customer = Reference('customer', 'CUST')
+    role = Reference('role', 'ROLE')
+    team = Reference('team', 'TEAMOB')
+    user = Reference('user', 'USER')
 
 
 class Task(Object):
@@ -1858,6 +2217,32 @@ class Task(Object):
     work_required = Field('workRequired')
     work_required_expression = Field('workRequiredExpression')
     work_unit = Field('workUnit')
+    approval_process = Reference('approvalProcess', 'ARVPRC')
+    assigned_to = Reference('assignedTo', 'USER')
+    billing_record = Reference('billingRecord', 'BILL')
+    category = Reference('category', 'CTGY')
+    converted_op_task_originator = Reference('convertedOpTaskOriginator', 'USER')
+    current_approval_step = Reference('currentApprovalStep', 'ARVSTP')
+    customer = Reference('customer', 'CUST')
+    default_baseline_task = Reference('defaultBaselineTask', 'BSTSK')
+    entered_by = Reference('enteredBy', 'USER')
+    group = Reference('group', 'GROUP')
+    iteration = Reference('iteration', 'ITRN')
+    last_condition_note = Reference('lastConditionNote', 'NOTE')
+    last_note = Reference('lastNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    milestone = Reference('milestone', 'MILE')
+    parent = Reference('parent', 'TASK')
+    primary_assignment = Reference('primaryAssignment', 'ASSGN')
+    project = Reference('project', 'PROJ')
+    rejection_issue = Reference('rejectionIssue', 'OPTASK')
+    reserved_time = Reference('reservedTime', 'RESVT')
+    role = Reference('role', 'ROLE')
+    submitted_by = Reference('submittedBy', 'USER')
+    team = Reference('team', 'TEAMOB')
+    team_assignment = Reference('teamAssignment', 'ASSGN')
+    template_task = Reference('templateTask', 'TTSK')
+    work_item = Reference('workItem', 'WRKITM')
 
 
 class Team(Object):
@@ -1880,6 +2265,11 @@ class Team(Object):
     requests_view_id = Field('requestsViewID')
     task_statuses = Field('taskStatuses')
     team_story_board_statuses = Field('teamStoryBoardStatuses')
+    customer = Reference('customer', 'CUST')
+    layout_template = Reference('layoutTemplate', 'LYTMPL')
+    my_work_view = Reference('myWorkView', 'UIVW')
+    owner = Reference('owner', 'USER')
+    requests_view = Reference('requestsView', 'UIVW')
 
 
 class TeamMember(Object):
@@ -1888,6 +2278,9 @@ class TeamMember(Object):
     has_assign_permissions = Field('hasAssignPermissions')
     team_id = Field('teamID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    team = Reference('team', 'TEAMOB')
+    user = Reference('user', 'USER')
 
 
 class Template(Object):
@@ -1936,6 +2329,16 @@ class Template(Object):
     summary_completion_type = Field('summaryCompletionType')
     version = Field('version')
     work_required = Field('workRequired')
+    approval_process = Reference('approvalProcess', 'ARVPRC')
+    category = Reference('category', 'CTGY')
+    customer = Reference('customer', 'CUST')
+    deliverable_score_card = Reference('deliverableScoreCard', 'SCORE')
+    entered_by = Reference('enteredBy', 'USER')
+    exchange_rate = Reference('exchangeRate', 'EXRATE')
+    last_note = Reference('lastNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    milestone_path = Reference('milestonePath', 'MPATH')
+    queue_def = Reference('queueDef', 'QUED')
 
 
 class TemplateAssignment(Object):
@@ -1955,6 +2358,12 @@ class TemplateAssignment(Object):
     template_task_id = Field('templateTaskID')
     work_required = Field('workRequired')
     work_unit = Field('workUnit')
+    assigned_to = Reference('assignedTo', 'USER')
+    customer = Reference('customer', 'CUST')
+    role = Reference('role', 'ROLE')
+    team = Reference('team', 'TEAMOB')
+    template = Reference('template', 'TMPL')
+    template_task = Reference('templateTask', 'TTSK')
 
 
 class TemplatePredecessor(Object):
@@ -1966,6 +2375,9 @@ class TemplatePredecessor(Object):
     predecessor_id = Field('predecessorID')
     predecessor_type = Field('predecessorType')
     successor_id = Field('successorID')
+    customer = Reference('customer', 'CUST')
+    predecessor = Reference('predecessor', 'TTSK')
+    successor = Reference('successor', 'TTSK')
 
 
 class TemplateTask(Object):
@@ -2034,6 +2446,19 @@ class TemplateTask(Object):
     work = Field('work')
     work_required = Field('workRequired')
     work_unit = Field('workUnit')
+    approval_process = Reference('approvalProcess', 'ARVPRC')
+    assigned_to = Reference('assignedTo', 'USER')
+    category = Reference('category', 'CTGY')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_note = Reference('lastNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    milestone = Reference('milestone', 'MILE')
+    parent = Reference('parent', 'TTSK')
+    role = Reference('role', 'ROLE')
+    team = Reference('team', 'TEAMOB')
+    team_assignment = Reference('teamAssignment', 'TASSGN')
+    template = Reference('template', 'TMPL')
 
 
 class TemplateUser(Object):
@@ -2042,6 +2467,9 @@ class TemplateUser(Object):
     template_id = Field('templateID')
     tmp_user_id = Field('tmpUserID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    template = Reference('template', 'TMPL')
+    user = Reference('user', 'USER')
 
 
 class TemplateUserRole(Object):
@@ -2050,6 +2478,10 @@ class TemplateUserRole(Object):
     role_id = Field('roleID')
     template_id = Field('templateID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    role = Reference('role', 'ROLE')
+    template = Reference('template', 'TMPL')
+    user = Reference('user', 'USER')
 
 
 class Timesheet(Object):
@@ -2074,6 +2506,11 @@ class Timesheet(Object):
     timesheet_profile_id = Field('timesheetProfileID')
     total_hours = Field('totalHours')
     user_id = Field('userID')
+    approver = Reference('approver', 'USER')
+    customer = Reference('customer', 'CUST')
+    last_note = Reference('lastNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    user = Reference('user', 'USER')
 
 
 class UIFilter(Object):
@@ -2102,6 +2539,9 @@ class UIFilter(Object):
     security_root_id = Field('securityRootID')
     security_root_obj_code = Field('securityRootObjCode')
     ui_obj_code = Field('uiObjCode')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
 
 
 class UIGroupBy(Object):
@@ -2128,6 +2568,9 @@ class UIGroupBy(Object):
     security_root_id = Field('securityRootID')
     security_root_obj_code = Field('securityRootObjCode')
     ui_obj_code = Field('uiObjCode')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
 
 
 class UIView(Object):
@@ -2158,6 +2601,9 @@ class UIView(Object):
     security_root_obj_code = Field('securityRootObjCode')
     ui_obj_code = Field('uiObjCode')
     uiview_type = Field('uiviewType')
+    customer = Reference('customer', 'CUST')
+    entered_by = Reference('enteredBy', 'USER')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
 
 
 class Update(Object):
@@ -2185,6 +2631,8 @@ class Update(Object):
     update_obj_code = Field('updateObjCode')
     update_obj_id = Field('updateObjID')
     update_type = Field('updateType')
+    update_journal_entry = Reference('updateJournalEntry', 'JRNLE')
+    update_note = Reference('updateNote', 'NOTE')
 
 
 class User(Object):
@@ -2268,6 +2716,24 @@ class User(Object):
     title = Field('title')
     username = Field('username')
     web_davprofile = Field('webDAVProfile')
+    category = Reference('category', 'CTGY')
+    company = Reference('company', 'CMPY')
+    customer = Reference('customer', 'CUST')
+    default_hour_type = Reference('defaultHourType', 'HOURT')
+    entered_by = Reference('enteredBy', 'USER')
+    high_priority_work_item = Reference('highPriorityWorkItem', 'WRKITM')
+    home_group = Reference('homeGroup', 'GROUP')
+    home_team = Reference('homeTeam', 'TEAMOB')
+    last_entered_note = Reference('lastEnteredNote', 'NOTE')
+    last_note = Reference('lastNote', 'NOTE')
+    last_status_note = Reference('lastStatusNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    latest_update_note = Reference('latestUpdateNote', 'NOTE')
+    layout_template = Reference('layoutTemplate', 'LYTMPL')
+    manager = Reference('manager', 'USER')
+    resource_pool = Reference('resourcePool', 'RSPOOL')
+    role = Reference('role', 'ROLE')
+    schedule = Reference('schedule', 'SCHED')
 
 
 class UserActivity(Object):
@@ -2279,6 +2745,8 @@ class UserActivity(Object):
     name = Field('name')
     user_id = Field('userID')
     value = Field('value')
+    customer = Reference('customer', 'CUST')
+    user = Reference('user', 'USER')
 
 
 class UserNote(Object):
@@ -2295,6 +2763,11 @@ class UserNote(Object):
     like_id = Field('likeID')
     note_id = Field('noteID')
     user_id = Field('userID')
+    customer = Reference('customer', 'CUST')
+    document_approval = Reference('documentApproval', 'DOCAPL')
+    journal_entry = Reference('journalEntry', 'JRNLE')
+    note = Reference('note', 'NOTE')
+    user = Reference('user', 'USER')
 
 
 class UserPrefValue(Object):
@@ -2303,6 +2776,8 @@ class UserPrefValue(Object):
     name = Field('name')
     user_id = Field('userID')
     value = Field('value')
+    customer = Reference('customer', 'CUST')
+    user = Reference('user', 'USER')
 
 
 class Work(Object):
@@ -2474,6 +2949,38 @@ class Work(Object):
     work_required = Field('workRequired')
     work_required_expression = Field('workRequiredExpression')
     work_unit = Field('workUnit')
+    approval_process = Reference('approvalProcess', 'ARVPRC')
+    assigned_to = Reference('assignedTo', 'USER')
+    billing_record = Reference('billingRecord', 'BILL')
+    category = Reference('category', 'CTGY')
+    converted_op_task_originator = Reference('convertedOpTaskOriginator', 'USER')
+    current_approval_step = Reference('currentApprovalStep', 'ARVSTP')
+    customer = Reference('customer', 'CUST')
+    default_baseline_task = Reference('defaultBaselineTask', 'BSTSK')
+    entered_by = Reference('enteredBy', 'USER')
+    group = Reference('group', 'GROUP')
+    iteration = Reference('iteration', 'ITRN')
+    last_condition_note = Reference('lastConditionNote', 'NOTE')
+    last_note = Reference('lastNote', 'NOTE')
+    last_updated_by = Reference('lastUpdatedBy', 'USER')
+    milestone = Reference('milestone', 'MILE')
+    owner = Reference('owner', 'USER')
+    parent = Reference('parent', 'TASK')
+    primary_assignment = Reference('primaryAssignment', 'ASSGN')
+    project = Reference('project', 'PROJ')
+    queue_topic = Reference('queueTopic', 'QUET')
+    rejection_issue = Reference('rejectionIssue', 'OPTASK')
+    reserved_time = Reference('reservedTime', 'RESVT')
+    resolve_op_task = Reference('resolveOpTask', 'OPTASK')
+    resolve_project = Reference('resolveProject', 'PROJ')
+    resolve_task = Reference('resolveTask', 'TASK')
+    role = Reference('role', 'ROLE')
+    source_task = Reference('sourceTask', 'TASK')
+    submitted_by = Reference('submittedBy', 'USER')
+    team = Reference('team', 'TEAMOB')
+    team_assignment = Reference('teamAssignment', 'ASSGN')
+    template_task = Reference('templateTask', 'TTSK')
+    work_item = Reference('workItem', 'WRKITM')
 
 
 class WorkItem(Object):
@@ -2498,3 +3005,9 @@ class WorkItem(Object):
     snooze_date = Field('snoozeDate')
     task_id = Field('taskID')
     user_id = Field('userID')
+    assignment = Reference('assignment', 'ASSGN')
+    customer = Reference('customer', 'CUST')
+    op_task = Reference('opTask', 'OPTASK')
+    project = Reference('project', 'PROJ')
+    task = Reference('task', 'TASK')
+    user = Reference('user', 'USER')
