@@ -69,14 +69,18 @@ class Object(object):
         return cls.registry[data['objCode']](session, **data)
 
     @classmethod
+    def convert_name(cls, field_name):
+        field = getattr(cls, field_name, None)
+        if field is None:
+            return field_name
+        else:
+            return field.workfront_name
+
+    @classmethod
     def field_spec(cls, *field_names):
         workfront_fields = []
         for field_name in field_names:
-            field = getattr(cls, field_name, None)
-            if field is None:
-                workfront_fields.append(field_name)
-            else:
-                workfront_fields.append(field.workfront_name)
+            workfront_fields.append(cls.convert_name(field_name))
         return ','.join(workfront_fields)
 
     def api_url(self):

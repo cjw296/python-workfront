@@ -104,10 +104,13 @@ class Session(object):
         return self.put('/user', params)['result']
 
     def search(self, object_type, fields=None, **parameters):
+        converted_params = {}
+        for name, value in parameters.items():
+            converted_params[object_type.convert_name(name)] = value
         if fields:
-            parameters['fields'] = object_type.field_spec(*fields)
+            converted_params['fields'] = object_type.field_spec(*fields)
         results = []
-        for result in self.get('/{}/search'.format(object_type.code), parameters):
+        for result in self.get('/{}/search'.format(object_type.code), converted_params):
             results.append(object_type(self, **result))
         return results
 
