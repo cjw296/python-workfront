@@ -53,6 +53,9 @@ class Object(object):
     def api_url(self):
         return '/{0}/{1}'.format(self.code, self.id)
 
+    def delete(self):
+        self.session.delete(self.api_url())
+
 
 class FieldNotLoaded(AttributeError):
     pass
