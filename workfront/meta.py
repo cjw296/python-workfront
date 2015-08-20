@@ -3,18 +3,42 @@ missing = object()
 class ObjectMeta(type):
 
     def __new__(meta, name, bases, __dict__):
-        field_names = __dict__['field_names'] = []
         if name != 'Object':
+            field_names = set()
             for key, obj in __dict__.items():
                 if isinstance(obj, Field):
-                    field_names.append(key)
+                    field_names.add(key)
 
         cls = super(ObjectMeta, meta).__new__(meta, name, bases, __dict__)
 
         if name != 'Object':
             cls.registry[cls.code] = cls
+            cls.field_names = getattr(cls, 'field_names', set()) | field_names
 
         return cls
+
+
+class ModificationTrackingDict(dict):
+
+    def __init__(self):
+        self.clean()
+
+    def clean(self, only=None):
+        if only:
+            for key in only:
+                self.dirty_keys.discard(key)
+        else:
+            self.dirty_keys = set()
+
+    def __setitem__(self, key, value):
+        super(ModificationTrackingDict, self).__setitem__(key, value)
+        self.dirty_keys.add(key)
+
+    def dirty(self):
+        data = {}
+        for key in self.dirty_keys:
+            data[key] = self[key]
+        return data
 
 
 class Object(object):
@@ -24,7 +48,13 @@ class Object(object):
 
     def __init__(self, session=None, **fields):
         self.session = session
-        self.fields = fields
+        self.fields = ModificationTrackingDict()
+        for name, value in fields.items():
+            if name in self.field_names:
+                setattr(self, name, value)
+            else:
+                self.fields[name] = value
+        self.fields.clean()
 
     def __repr__(self):
         return '<{0}: {1}>'.format(self.__class__.__name__,
@@ -49,13 +79,22 @@ class Object(object):
                 workfront_fields.append(field.workfront_name)
         return ','.join(workfront_fields)
 
+    def api_url(self):
+        return '/{0}/{1}'.format(self.code, self.id)
+
     def load(self, *field_names):
         fields = self.session.get(self.api_url(),
                                   dict(fields=self.field_spec(*field_names)))
         self.fields.update(fields)
+        self.fields.clean(fields)
 
-    def api_url(self):
-        return '/{0}/{1}'.format(self.code, self.id)
+    def save(self):
+        if self.id is None:
+            data = self.session.post('/'+self.code, self.fields)
+            self.fields.update(data)
+        else:
+            self.session.put(self.api_url(), self.fields.dirty())
+        self.fields.clean()
 
     def delete(self):
         self.session.delete(self.api_url())
@@ -78,11 +117,14 @@ class Field(object):
             raise FieldNotLoaded(self.workfront_name)
         return result
 
+    def __set__(self, instance, value):
+        instance.fields[self.workfront_name] = value
 
-class Reference(Field):
+
+class Reference(object):
 
     def __init__(self, workfront_name, code):
-        super(Reference, self).__init__(workfront_name)
+        self.workfront_name = workfront_name
         self.code = code
 
     def __get__(self, instance, owner):
