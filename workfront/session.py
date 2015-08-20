@@ -40,6 +40,9 @@ class Session(object):
     def request(self, method, path, params=None):
         if params is None:
             params = {}
+        for key, value in params.items():
+            if not isinstance(value, (basestring, int, float)):
+                params[key] = json.dumps(value)
         params['method'] = method
         if self.api_key:
             params['apiKey'] = self.api_key
