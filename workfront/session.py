@@ -14,11 +14,12 @@ logger = getLogger('workfront')
 
 class WorkfrontAPIError(Exception):
 
-    def __init__(self, data):
+    def __init__(self, data, code):
         self.data = data
+        self.code = code
 
     def __str__(self):
-        return repr(self.data)
+        return '{0}: {1!r}'.format(self.code, repr(self.data))
 
 
 def pretty_json(data):
@@ -58,14 +59,21 @@ class Session(object):
 
         try:
             response = urllib2.urlopen(url, urlencode(params), context=self.ssl_context)
+            code = response.code
         except urllib2.HTTPError as e:
             response = e
-        json_response = json.load(response)
+            code = e.code
+
+        text = response.read()
+        try:
+            json_response = json.loads(text)
+        except ValueError as e:
+            json_response = dict(error=dict(exception=str(e), response=text))
 
         logger.debug('returned: %s', pretty_json(json_response))
 
         if 'error' in json_response:
-            raise WorkfrontAPIError(json_response['error'])
+            raise WorkfrontAPIError(json_response['error'], code)
 
         return json_response['data']
 
