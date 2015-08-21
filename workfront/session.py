@@ -109,8 +109,26 @@ class Session(object):
             converted_params[object_type.convert_name(name)] = value
         if fields:
             converted_params['fields'] = object_type.field_spec(*fields)
-        results = []
-        for result in self.get('/{}/search'.format(object_type.code), converted_params):
-            results.append(object_type(self, **result))
-        return results
+        return [object_type(self, **result) for result in
+                self.get('/{}/search'.format(object_type.code), converted_params)]
+
+    def load(self, object_type, ids, fields=None):
+        if isinstance(ids, basestring):
+            return_multiple = False
+        else:
+            ids = ','.join(ids)
+            return_multiple = True
+        params = dict(id=ids)
+        if fields:
+            params['fields'] = object_type.field_spec(*fields)
+        result = self.get('/{}'.format(object_type.code), params)
+        if isinstance(result, dict):
+            result = object_type(self, **result)
+        else:
+            result = [object_type(self, **result) for result in result]
+        if return_multiple and not isinstance(result, list):
+            result = [result]
+        return result
+
+
 
