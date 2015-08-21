@@ -70,6 +70,8 @@ class Object(object):
 
     @classmethod
     def convert_name(cls, field_name):
+        if isinstance(field_name, Field):
+            return field_name.workfront_name
         field = getattr(cls, field_name, None)
         if field is None:
             return field_name
