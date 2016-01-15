@@ -53,3 +53,45 @@ class SessionTests(TestCase):
         )
         with ShouldRaise(WorkfrontAPIError('Unknown error, check log', 500)):
             session.get('/login')
+
+    def test_api_error(self):
+        session = Session('test')
+        self.server.add(
+            url='https://test.attask-ondemand.com/attask/api/unsupported/',
+            params='method=GET',
+            response='{"error":{'
+                     '"class":"java.lang.UnsupportedOperationException",'
+                     '"message":"you must specify an action"}}'
+        )
+        with ShouldRaise(WorkfrontAPIError(
+                {u'message': u'you must specify an action',
+                 u'class': u'java.lang.UnsupportedOperationException'},
+                200
+        )):
+            session.get('/')
+
+    def test_other_error(self):
+        session = Session('test')
+        self.server.add(
+            url='https://test.attask-ondemand.com/attask/api/unsupported/',
+            params='method=GET',
+            response=Exception('boom!')
+        )
+        with ShouldRaise(Exception('boom!')):
+            session.get('/')
+
+    def test_bad_json(self):
+        session = Session('test')
+        self.server.add(
+            url='https://test.attask-ondemand.com/attask/api/unsupported/',
+            params='method=GET',
+            response="{'oops': 'not json'}"
+        )
+        with ShouldRaise(WorkfrontAPIError(
+                {'exception': 'Expecting property name enclosed in double '
+                              'quotes: line 1 column 2 (char 1)',
+                 'response': u"{'oops': 'not json'}"},
+                200
+        )):
+            session.get('/')
+
