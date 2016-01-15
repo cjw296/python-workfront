@@ -33,3 +33,12 @@ class SessionTests(TestCase):
             response='{"data": "foo"}'
         )
         compare(session.get('/login'), expected='foo')
+
+    def test_different_url_template(self):
+        session = Session('test', url_template=SANDBOX_TEMPLATE)
+        self.server.add(
+            url='https://test.attasksandbox.com/attask/api/unsupported/login',
+            params='method=GET',
+            response='{"data": "foo"}'
+        )
+        compare(session.get('/login'), expected='foo')
