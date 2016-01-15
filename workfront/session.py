@@ -78,8 +78,9 @@ class Session(object):
 
         logger.debug('returned: %s', pretty_json(json_response))
 
-        if 'error' in json_response:
-            raise WorkfrontAPIError(json_response['error'], code)
+        if 'error' in json_response or code != 200:
+            error = json_response.get('error', 'Unknown error, check log')
+            raise WorkfrontAPIError(error, code)
 
         return json_response['data']
 

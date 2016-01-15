@@ -42,3 +42,14 @@ class SessionTests(TestCase):
             response='{"data": "foo"}'
         )
         compare(session.get('/login'), expected='foo')
+
+    def test_http_error(self):
+        # somewhat hypothetical, error is usually in the return json
+        session = Session('test')
+        self.server.add(
+            url='https://test.attask-ondemand.com/attask/api/unsupported/login',
+            params='method=GET',
+            response=MockHTTPError('{"data": "foo"}', 500),
+        )
+        with ShouldRaise(WorkfrontAPIError('Unknown error, check log', 500)):
+            session.get('/login')
