@@ -1,0 +1,30 @@
+language: python
+
+# for container-y googdness:
+sudo: false
+
+python:
+  - "3.5"
+  - "3.4"
+  - "2.7"
+
+# command to install dependencies
+install: "pip install -Ue .[test,build]"
+
+# command to run tests, e.g. python setup.py test
+script: nosetests --with-cov --cov=workfront
+
+after_success:
+  - coveralls
+
+deploy:
+  provider: pypi
+  user: chrisw
+  password:
+    secure: ?
+  on:
+    tags: true
+    repo: cjw296/python-workfront
+    python: "3.5"
+  skip_cleanup: true
+  distributions: "sdist bdist_wheel"
