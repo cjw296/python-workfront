@@ -21,7 +21,7 @@ deploy:
   provider: pypi
   user: chrisw
   password:
-    secure: ?
+    secure: x
   on:
     tags: true
     repo: cjw296/python-workfront
