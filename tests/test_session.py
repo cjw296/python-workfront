@@ -1,3 +1,4 @@
+import ssl
 from unittest import TestCase
 from urllib2 import HTTPError
 
@@ -94,4 +95,15 @@ class SessionTests(TestCase):
                 200
         )):
             session.get('/')
+
+    def test_insecure_context(self):
+        context = ssl._create_unverified_context()
+        session = Session('test', ssl_context=context)
+        self.server.add(
+            url='https://test.attask-ondemand.com/attask/api/unsupported/login',
+            params='method=GET',
+            response='{"data": "foo"}',
+            ssl_context=context
+        )
+        compare(session.get('/login'), expected='foo')
 
