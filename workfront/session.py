@@ -64,7 +64,11 @@ class Session(object):
         logger.info('url:%s params:%s', url, params)
 
         try:
-            response = urllib2.urlopen(url, urlencode(params), context=self.ssl_context)
+            response = urllib2.urlopen(
+                url,
+                urlencode(params),
+                context=self.ssl_context
+            )
             code = response.code
         except urllib2.HTTPError as e:
             response = e
