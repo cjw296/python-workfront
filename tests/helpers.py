@@ -21,6 +21,9 @@ class MockOpen(dict):
     added = 0
     calls = 0
 
+    def __init__(self, base_url):
+        self.base_url = base_url
+
     def decode(self, params):
         bits = []
         for key, value in parse_qs(params).items():
@@ -45,7 +48,10 @@ class MockOpen(dict):
         return MockResponse(response, code)
 
     def add(self, url, response, params='', code=200, ssl_context=None):
-        self[self.added, url, self.decode(params), ssl_context] = response, code
+        self[self.added,
+             self.base_url + url,
+             self.decode(params),
+             ssl_context] = response, code
         self.added += 1
 
     def assert_called(self, times):

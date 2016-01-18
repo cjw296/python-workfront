@@ -14,13 +14,15 @@ class SessionTests(TestCase):
     def setUp(self):
         r = Replacer()
         self.addCleanup(r.restore)
-        self.server = MockOpen()
+        self.server = MockOpen(
+            'https://test.attask-ondemand.com/attask/api/unsupported'
+        )
         r.replace('urllib2.urlopen', self.server)
 
     def test_basic_request(self):
         session = Session('test')
         self.server.add(
-            url='https://test.attask-ondemand.com/attask/api/unsupported/login',
+            url='/login',
             params='method=GET',
             response='{"data": "foo"}'
         )
@@ -28,6 +30,7 @@ class SessionTests(TestCase):
         self.server.assert_called(times=1)
 
     def test_different_protocol_and_version(self):
+        self.server.base_url = ''
         session = Session('test', protocol='http', api_version='v4.0')
         self.server.add(
             url='http://test.attask-ondemand.com/attask/api/v4.0/login',
@@ -38,6 +41,7 @@ class SessionTests(TestCase):
         self.server.assert_called(times=1)
 
     def test_different_url_template(self):
+        self.server.base_url = ''
         session = Session('test', url_template=SANDBOX_TEMPLATE)
         self.server.add(
             url='https://test.attasksandbox.com/attask/api/unsupported/login',
@@ -51,7 +55,7 @@ class SessionTests(TestCase):
         # somewhat hypothetical, error is usually in the return json
         session = Session('test')
         self.server.add(
-            url='https://test.attask-ondemand.com/attask/api/unsupported/login',
+            url='/login',
             params='method=GET',
             response=MockHTTPError('{"data": "foo"}', 500),
         )
@@ -62,7 +66,7 @@ class SessionTests(TestCase):
     def test_api_error(self):
         session = Session('test')
         self.server.add(
-            url='https://test.attask-ondemand.com/attask/api/unsupported/',
+            url='/',
             params='method=GET',
             response='{"error":{'
                      '"class":"java.lang.UnsupportedOperationException",'
@@ -79,7 +83,7 @@ class SessionTests(TestCase):
     def test_other_error(self):
         session = Session('test')
         self.server.add(
-            url='https://test.attask-ondemand.com/attask/api/unsupported/',
+            url='/',
             params='method=GET',
             response=Exception('boom!')
         )
@@ -90,7 +94,7 @@ class SessionTests(TestCase):
     def test_bad_json(self):
         session = Session('test')
         self.server.add(
-            url='https://test.attask-ondemand.com/attask/api/unsupported/',
+            url='/',
             params='method=GET',
             response="{'oops': 'not json'}"
         )
@@ -107,7 +111,7 @@ class SessionTests(TestCase):
         context = ssl._create_unverified_context()
         session = Session('test', ssl_context=context)
         self.server.add(
-            url='https://test.attask-ondemand.com/attask/api/unsupported/login',
+            url='/login',
             params='method=GET',
             response='{"data": "foo"}',
             ssl_context=context
@@ -118,7 +122,7 @@ class SessionTests(TestCase):
     def test_login(self):
         session = Session('test')
         self.server.add(
-            url='https://test.attask-ondemand.com/attask/api/unsupported/login',
+            url='/login',
             params='method=GET&username=u&password=p',
             response='{"data": {"sessionID": "x", "userID": "uid"}}'
         )
@@ -131,7 +135,7 @@ class SessionTests(TestCase):
     def test_logout(self):
         session = self.test_login()
         self.server.add(
-            url='https://test.attask-ondemand.com/attask/api/unsupported/logout',
+            url='/logout',
             params='method=GET&sessionID=x',
             response='{"data": null}'
         )
@@ -143,7 +147,7 @@ class SessionTests(TestCase):
     def test_request_with_session_id(self):
         session = self.test_login()
         self.server.add(
-            url='https://test.attask-ondemand.com/attask/api/unsupported/ISSUE',
+            url='/ISSUE',
             params='method=GET&sessionID=x',
             response='{"data": "foo"}'
         )
