@@ -115,3 +115,38 @@ class SessionTests(TestCase):
         compare(session.get('/login'), expected='foo')
         self.server.assert_called(times=1)
 
+    def test_login(self):
+        session = Session('test')
+        self.server.add(
+            url='https://test.attask-ondemand.com/attask/api/unsupported/login',
+            params='method=GET&username=u&password=p',
+            response='{"data": {"sessionID": "x", "userID": "uid"}}'
+        )
+        session.login('u', 'p')
+        compare(session.session_id, 'x')
+        compare(session.user_id, 'uid')
+        self.server.assert_called(times=1)
+        return session
+
+    def test_logout(self):
+        session = self.test_login()
+        self.server.add(
+            url='https://test.attask-ondemand.com/attask/api/unsupported/logout',
+            params='method=GET&sessionID=x',
+            response='{"data": null}'
+        )
+        session.logout()
+        compare(session.session_id, None)
+        compare(session.user_id, None)
+        self.server.assert_called(times=2)
+
+    def test_request_with_session_id(self):
+        session = self.test_login()
+        self.server.add(
+            url='https://test.attask-ondemand.com/attask/api/unsupported/ISSUE',
+            params='method=GET&sessionID=x',
+            response='{"data": "foo"}'
+        )
+        compare(session.get('/ISSUE'), 'foo')
+        self.server.assert_called(times=2)
+
