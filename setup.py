@@ -22,7 +22,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     extras_require=dict(
-        test=['nose', 'nose-cov', 'testfixtures'],
+        test=['nose', 'nose-cov', 'testfixtures', 'mock', 'coveralls'],
         build=['sphinx', 'pkginfo', 'setuptools-git']
     )
 )
