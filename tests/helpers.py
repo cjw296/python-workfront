@@ -1,5 +1,8 @@
 from io import StringIO
 from urllib2 import HTTPError
+from urlparse import parse_qs
+
+from testfixtures import compare
 
 
 class MockResponse(StringIO):
@@ -15,11 +18,35 @@ class MockHTTPError(HTTPError):
 
 class MockOpen(dict):
 
+    added = 0
+    calls = 0
+
+    def decode(self, params):
+        bits = []
+        for key, value in parse_qs(params).items():
+            if isinstance(value, list):
+                value = tuple(value)
+            bits.append((key, value))
+        return tuple(sorted(bits))
+
     def __call__(self, url, params, context):
-        response, code = self[url, params, context]
+        key = self.calls, url, self.decode(params), context
+        try:
+            response, code = self[key]
+        except KeyError:
+            parts = []
+            for expected in sorted(self.keys()):
+                parts.append(compare(expected, actual=key, raises=False))
+            raise AssertionError('\n'.join(parts))
+
+        self.calls += 1
         if isinstance(response, Exception):
             raise response
         return MockResponse(response, code)
 
     def add(self, url, response, params='', code=200, ssl_context=None):
-        self[url, params, ssl_context] = response, code
+        self[self.added, url, self.decode(params), ssl_context] = response, code
+        self.added += 1
+
+    def assert_called(self, times):
+        compare(self.added, expected=times)

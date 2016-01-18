@@ -25,6 +25,7 @@ class SessionTests(TestCase):
             response='{"data": "foo"}'
         )
         compare(session.get('/login'), expected='foo')
+        self.server.assert_called(times=1)
 
     def test_different_protocol_and_version(self):
         session = Session('test', protocol='http', api_version='v4.0')
@@ -34,6 +35,7 @@ class SessionTests(TestCase):
             response='{"data": "foo"}'
         )
         compare(session.get('/login'), expected='foo')
+        self.server.assert_called(times=1)
 
     def test_different_url_template(self):
         session = Session('test', url_template=SANDBOX_TEMPLATE)
@@ -43,6 +45,7 @@ class SessionTests(TestCase):
             response='{"data": "foo"}'
         )
         compare(session.get('/login'), expected='foo')
+        self.server.assert_called(times=1)
 
     def test_http_error(self):
         # somewhat hypothetical, error is usually in the return json
@@ -54,6 +57,7 @@ class SessionTests(TestCase):
         )
         with ShouldRaise(WorkfrontAPIError('Unknown error, check log', 500)):
             session.get('/login')
+        self.server.assert_called(times=1)
 
     def test_api_error(self):
         session = Session('test')
@@ -70,6 +74,7 @@ class SessionTests(TestCase):
                 200
         )):
             session.get('/')
+        self.server.assert_called(times=1)
 
     def test_other_error(self):
         session = Session('test')
@@ -80,6 +85,7 @@ class SessionTests(TestCase):
         )
         with ShouldRaise(Exception('boom!')):
             session.get('/')
+        self.server.assert_called(times=1)
 
     def test_bad_json(self):
         session = Session('test')
@@ -95,6 +101,7 @@ class SessionTests(TestCase):
                 200
         )):
             session.get('/')
+        self.server.assert_called(times=1)
 
     def test_insecure_context(self):
         context = ssl._create_unverified_context()
@@ -106,4 +113,5 @@ class SessionTests(TestCase):
             ssl_context=context
         )
         compare(session.get('/login'), expected='foo')
+        self.server.assert_called(times=1)
 
