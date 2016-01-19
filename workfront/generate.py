@@ -1,15 +1,16 @@
 """
-Usage: python -m workfront.generate --help
-"""
-from argparse import ArgumentParser
-import logging
-from os import path
-import ssl
-import re
+Foo bar
 
-from workfront import Session
+asda as da  asd a das ad
+"""
+
+import re
+from os import path
+
+from workfront.script import script_setup, parser_with_standard_args
 
 name_re = re.compile('([a-z]|^)([A-Z]+)')
+
 
 def name_subber(match):
     if match.group(1):
@@ -17,6 +18,7 @@ def name_subber(match):
     else:
         start = ''
     return start+match.group(2).lower()
+
 
 def dehump(name):
     "SomeThing -> some_thing"
@@ -29,14 +31,7 @@ def decorated_object_types(session):
         yield class_name, object_type
 
 
-def generate(protocol, domain, version, unsafe_certs, output_path):
-    if unsafe_certs:
-        ssl_context = ssl._create_unverified_context()
-    else:
-        ssl_context = None
-    session = Session(protocol=protocol, domain=domain, api_version=version,
-                      ssl_context=ssl_context)
-
+def generate(session, output_path):
     with open(output_path, 'w') as output:
 
         output.write(header.format(url=session.url))
@@ -77,18 +72,15 @@ def generate(protocol, domain, version, unsafe_certs, output_path):
                 ))
 
 
-def parse_args():
-    parser = ArgumentParser()
-    parser.add_argument('--domain', default='api-cl01')
-    parser.add_argument('--protocol', default='https')
-    parser.add_argument('--version', default='v4.0')
-
+def main():
+    parser = parser_with_standard_args('generate', __doc__)
     parser.add_argument('--output-path',
-                        default=path.join(path.split(__file__)[0], 'generated_objects.py'))
+                        default=path.join(path.split(__file__)[0],
+                                          'generated_objects.py'))
 
-    parser.add_argument('--unsafe-certs', action='store_true')
-    parser.add_argument('--log-level', default=logging.WARNING, type=int)
-    return parser.parse_args()
+    args, session = script_setup(parser)
+
+    generate(args.output_path)
 
 
 header = """\
@@ -124,7 +116,5 @@ class_name_override = dict(
 )
 
 
-if __name__=='__main__':
-    args = parse_args()
-    logging.basicConfig(level=args.log_level)
-    generate(args.protocol, args.domain, args.version, args.unsafe_certs, args.output_path)
+if __name__ == '__main__':  # pragma: no cover
+    main()
