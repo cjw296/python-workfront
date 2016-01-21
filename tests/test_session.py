@@ -154,3 +154,23 @@ class SessionTests(TestCase):
         compare(session.get('/ISSUE'), 'foo')
         self.server.assert_called(times=2)
 
+    def test_get_api_key(self):
+        session = Session('test')
+        self.server.add(
+            url='/user',
+            params='method=PUT&action=getApiKey&username=u&password=p',
+            response='{"data": {"result": "xyz"}}'
+        )
+        compare(session.get_api_key('u', 'p'), 'xyz')
+        self.server.assert_called(times=1)
+
+    def test_request_with_api_key(self):
+        session = Session('test', api_key='xyz')
+        self.server.add(
+            url='/ISSUE',
+            params='method=GET&apiKey=xyz',
+            response='{"data": "foo"}'
+        )
+        compare(session.get('/ISSUE'), 'foo')
+        self.server.assert_called(times=1)
+
