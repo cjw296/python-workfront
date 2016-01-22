@@ -224,3 +224,47 @@ class SessionTests(TestCase):
                 'GET',
                 'https://bad.example.com/attask/api/unsupported/some/url'
             )
+
+    def test_get(self):
+        session = self.test_login()
+        self.server.add(
+            url='/ISSUE',
+            params='sessionID=x&method=GET',
+            response='{"data": "foo"}'
+        )
+        actual = session.get('/ISSUE')
+        compare(actual, expected='foo')
+        self.server.assert_called(times=2)
+
+    def test_post(self):
+        session = self.test_login()
+        self.server.add(
+            url='/ISSUE',
+            params='sessionID=x&method=POST',
+            response='{"data": "foo"}'
+        )
+        actual = session.post('/ISSUE')
+        compare(actual, expected='foo')
+        self.server.assert_called(times=2)
+
+    def test_put(self):
+        session = Session('test', api_key='xyz')
+        self.server.add(
+            url='/ISSUE',
+            params='method=PUT&apiKey=xyz',
+            response='{"data": "foo"}'
+        )
+        actual = session.put('/ISSUE')
+        compare(actual, expected='foo')
+        self.server.assert_called(times=1)
+
+    def test_delete(self):
+        session = Session('test', api_key='xyz')
+        self.server.add(
+            url='/ISSUE',
+            params='method=DELETE&apiKey=xyz',
+            response='{"data": "foo"}'
+        )
+        actual = session.delete('/ISSUE')
+        compare(actual, expected='foo')
+        self.server.assert_called(times=1)
