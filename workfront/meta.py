@@ -1,5 +1,25 @@
 missing = object()
 
+
+class APIVersion(object):
+
+    def __init__(self, version):
+        self.version = version
+        self.by_name = {}
+        self.by_code = {}
+
+    def register(self, type_):
+        self.by_name[type_.__name__] = type_
+        self.by_code[type_.code] = type_
+
+    def override(self, type_, replacement):
+        self.by_name[type_.__name__] = replacement
+        self.by_code[type_.code] = replacement
+
+    def from_data(self, session, data):
+        return self.by_code[data['objCode']](session, **data)
+
+
 class ObjectMeta(type):
 
     def __new__(meta, name, bases, __dict__):
