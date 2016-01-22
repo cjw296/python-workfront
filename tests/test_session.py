@@ -176,6 +176,24 @@ class SessionTests(TestCase):
             params='method=GET&apiKey=xyz',
             response='{"data": "foo"}'
         )
-        compare(session.get('/ISSUE'), 'foo')
+        actual = session.request('GET', '/ISSUE')
+        compare(actual, expected='foo')
         self.server.assert_called(times=1)
 
+    def test_request_with_params(self):
+        session = Session('test')
+        self.server.add(
+            url='/endpoint',
+            params='method=GET&str=svalue&unicode=uvalue&int=1&float=1.0&'
+                   'dict={"key": "value"}',
+            response='{"data": "foo"}'
+        )
+        actual = session.request('GET', '/endpoint', params={
+            'str': 'svalue',
+            'unicode': u'uvalue',
+            'int': 1,
+            'float': 1.0,
+            'dict': {'key': 'value'},
+        })
+        compare(actual, expected='foo')
+        self.server.assert_called(times=1)
