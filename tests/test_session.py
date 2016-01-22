@@ -80,6 +80,11 @@ class SessionTests(TestCase):
             session.get('/')
         self.server.assert_called(times=1)
 
+    def test_api_error_str_and_repr(self):
+        error = WorkfrontAPIError('data', 503)
+        compare(str(error), expected="503: 'data'")
+        compare(repr(error), expected="WorkfrontAPIError('data', 503)")
+
     def test_other_error(self):
         session = Session('test')
         self.server.add(

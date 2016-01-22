@@ -19,7 +19,12 @@ class WorkfrontAPIError(Exception):
         self.code = code
 
     def __str__(self):
-        return '{0}: {1!r}'.format(self.code, repr(self.data))
+        return '{0}: {1!r}'.format(self.code, self.data)
+
+    def __repr__(self):
+        return '{0}({1!r}, {2!r})'.format(
+            self.__class__.__name__, self.data, self.code
+        )
 
 
 def pretty_json(data):
