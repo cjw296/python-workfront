@@ -63,6 +63,8 @@ class Session(object):
 
         if path.startswith(self.url):
             url = path
+        elif '://' in path:
+            raise TypeError('url not for this session: ' + path)
         else:
             url = self.url + path
 

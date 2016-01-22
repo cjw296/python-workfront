@@ -197,3 +197,30 @@ class SessionTests(TestCase):
         })
         compare(actual, expected='foo')
         self.server.assert_called(times=1)
+
+    def test_request_absolute_url(self):
+
+        session = Session('test')
+        self.server.add(
+            url='/some/url',
+            params='method=GET',
+            response='{"data": "foo"}'
+        )
+        actual = session.request(
+            'GET',
+            'https://test.attask-ondemand.com/attask/api/unsupported/some/url'
+        )
+        compare(actual, expected='foo')
+        self.server.assert_called(times=1)
+
+    def test_request_with_dodgy_absolute_url(self):
+
+        session = Session('test')
+        with ShouldRaise(TypeError(
+            'url not for this session: '
+            'https://bad.example.com/attask/api/unsupported/some/url'
+        )):
+            session.request(
+                'GET',
+                'https://bad.example.com/attask/api/unsupported/some/url'
+            )
