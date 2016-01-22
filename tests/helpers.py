@@ -36,7 +36,7 @@ class MockOpen(dict):
         key = self.calls, url, self.decode(params), context
         try:
             response, code = self[key]
-        except KeyError:
+        except KeyError:  # pragma: no cover
             parts = []
             for expected in sorted(self.keys()):
                 parts.append(compare(expected, actual=key, raises=False))
