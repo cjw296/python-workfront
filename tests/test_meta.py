@@ -3,6 +3,7 @@ from unittest import TestCase
 from testfixtures import compare, ShouldRaise
 
 from tests.test_session import MockOpenHelper
+from workfront import Session
 from workfront.meta import APIVersion, Object, Field, FieldNotLoaded
 
 
@@ -58,10 +59,15 @@ class TestAPIVersion(TestCase):
 
 class TestBaseObject(MockOpenHelper, TestCase):
 
-    def test_field_names(self):
+    def make_test_object(self):
         class TestObject(Object):
+            code='TEST'
             field_one = Field('fieldOne')
             field_two = Field('fieldTwo')
+        return TestObject
+
+    def test_field_names(self):
+        TestObject = self.make_test_object()
         compare(TestObject.field_names, expected={'field_one', 'field_two'})
 
     def test_field_names_of_subclass(self):
@@ -164,4 +170,78 @@ class TestBaseObject(MockOpenHelper, TestCase):
             code = 'FOO'
         with ShouldRaise(ValueError('TestObject has no ID')):
             TestObject().api_url()
+
+    def test_load(self):
+        TestObject = self.make_test_object()
+
+        obj = TestObject(Session('test'), ID='x')
+        obj.field_one = 1
+        obj.field_two = 2
+
+        compare(obj.fields.dirty(), {'fieldOne': 1, 'fieldTwo': 2})
+
+        self.server.add(
+            url='/TEST/x',
+            params='fields=fieldOne&method=GET',
+            response='{"data":{"fieldOne": 3}}')
+
+        obj.load('field_one')
+
+        compare(obj.field_one, expected=3)
+        compare(obj.fields.dirty(), {'fieldTwo': 2})
+
+    def test_save_create(self):
+        TestObject = self.make_test_object()
+        obj = TestObject(Session('test'),
+                         field_one = 1,
+                         field_two = 2)
+
+        self.server.add(
+            url='/TEST',
+            params='method=POST&fieldOne=1&fieldTwo=2',
+            response='{"data":{"ID": "y"}}')
+
+        obj.save()
+
+        compare(obj.id, 'y')
+        compare(obj.fields.dirty(), {})
+
+    def test_save_update(self):
+        # some dirty, some not, check clean results
+        TestObject = self.make_test_object()
+        obj = TestObject(Session('test'), ID='x')
+        obj.field_one = 1
+
+        self.server.add(
+            url='/TEST/x',
+            params='method=PUT&fieldOne=1',
+            response='{"data": null}')
+
+        obj.save()
+
+        compare(obj.id, 'x')
+        compare(obj.fields.dirty(), {})
+
+    def test_save_no_dirty(self):
+        TestObject = self.make_test_object()
+        obj = TestObject(Session('test'), ID='x')
+
+        # no post!
+        obj.save()
+
+        compare(obj.id, 'x')
+        compare(obj.fields.dirty(), {})
+
+    def test_delete(self):
+        TestObject = self.make_test_object()
+        obj = TestObject(Session('test'), ID='x')
+
+        self.server.add(
+            url='/TEST/x',
+            params='method=DELETE',
+            response='{"data": null}')
+
+        obj.delete()
+
+        self.server.assert_called(times=1)
 

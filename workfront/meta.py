@@ -158,7 +158,9 @@ class Object(object):
             data = self.session.post('/'+self.code, self.fields)
             self.fields.update(data)
         else:
-            self.session.put(self.api_url(), self.fields.dirty())
+            dirty = self.fields.dirty()
+            if dirty:
+                self.session.put(self.api_url(), dirty)
         self.fields.clean()
 
     def delete(self):
