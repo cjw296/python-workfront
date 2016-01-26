@@ -1,6 +1,5 @@
 import ssl
 from unittest import TestCase
-from urllib2 import HTTPError
 
 from testfixtures import Replacer, compare, ShouldRaise
 
@@ -9,7 +8,7 @@ from workfront import Session
 from workfront.session import SANDBOX_TEMPLATE, WorkfrontAPIError
 
 
-class SessionTests(TestCase):
+class MockOpenHelper(object):
 
     def setUp(self):
         r = Replacer()
@@ -18,6 +17,9 @@ class SessionTests(TestCase):
             'https://test.attask-ondemand.com/attask/api/unsupported'
         )
         r.replace('urllib2.urlopen', self.server)
+
+
+class SessionTests(MockOpenHelper, TestCase):
 
     def test_basic_request(self):
         session = Session('test')
