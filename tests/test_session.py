@@ -10,13 +10,13 @@ from workfront.session import SANDBOX_TEMPLATE, WorkfrontAPIError
 
 class MockOpenHelper(object):
 
+    base = 'https://test.attask-ondemand.com/attask/api/unsupported'
+
     def setUp(self):
-        r = Replacer()
-        self.addCleanup(r.restore)
-        self.server = MockOpen(
-            'https://test.attask-ondemand.com/attask/api/unsupported'
-        )
-        r.replace('urllib2.urlopen', self.server)
+        self.replace = Replacer()
+        self.addCleanup(self.replace.restore)
+        self.server = MockOpen(self.base)
+        self.replace('urllib2.urlopen', self.server)
 
 
 class SessionTests(MockOpenHelper, TestCase):
