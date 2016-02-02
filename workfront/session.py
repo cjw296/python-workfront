@@ -1,9 +1,8 @@
-from logging import getLogger
-from urllib import urlencode
-
 import json
 import urllib2
-
+from logging import getLogger
+from urllib import urlencode
+from warnings import warn
 
 GET = 'GET'
 POST = 'POST'
@@ -40,6 +39,12 @@ class Session(object):
     session_id = None
     user_id = None
 
+    version_registry = {}
+
+    @classmethod
+    def register(cls, api_version):
+        cls.version_registry[api_version.version] = api_version
+
     def __init__(self, domain, api_key=None,
                  ssl_context=None, protocol='https',
                  api_version='unsupported', url_template=ONDEMAND_TEMPLATE):
@@ -48,6 +53,11 @@ class Session(object):
         )
         self.api_key = api_key
         self.ssl_context = ssl_context
+        self.api = self.version_registry.get(api_version)
+        if self.api is None:
+            warn('No APIVersion for {}, only basic requests possible'.format(
+                api_version
+            ))
 
     def request(self, method, path, params=None):
         if params is None:
@@ -149,4 +159,9 @@ class Session(object):
         return result
 
 
+# wire in api versions
+from .versions.unsupported import api
+Session.register(api)
+from .versions.v40 import api
+Session.register(api)
 

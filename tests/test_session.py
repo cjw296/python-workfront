@@ -1,7 +1,7 @@
 import ssl
 from unittest import TestCase
 
-from testfixtures import Replacer, compare, ShouldRaise
+from testfixtures import Replacer, compare, ShouldRaise, ShouldWarn
 
 from tests.helpers import MockOpen, MockHTTPError
 from workfront import Session
@@ -270,3 +270,10 @@ class SessionTests(MockOpenHelper, TestCase):
         actual = session.delete('/ISSUE')
         compare(actual, expected='foo')
         self.server.assert_called(times=1)
+
+    def test_warn_on_unknown_api(self):
+        with ShouldWarn(UserWarning(
+            'No APIVersion for silly, only basic requests possible'
+        )):
+            Session('test', api_version='silly')
+
