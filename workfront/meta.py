@@ -51,13 +51,19 @@ class LoadingAttribute(object):
             return self
         if self.workfront_name not in instance.fields:
             instance.load(self.workfront_name)
-        return self.process(instance, instance.fields[self.workfront_name])
+        session = instance.session
+        api = session.api
+        return self.process(session, api, instance.fields[self.workfront_name])
+
+    def __set__(self, instance, value):
+        raise AttributeError(self.__class__.__name__ + ' cannot be set')
 
 
 class Reference(LoadingAttribute):
 
-    def process(self, instance, data):
-        return Object.from_data(instance.session, data)
+    @staticmethod
+    def process(session, api, data):
+        return api.from_data(session, data)
 
 
 class Collection(LoadingAttribute):

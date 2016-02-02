@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from testfixtures import compare, ShouldRaise
+from testfixtures import compare, ShouldRaise, Comparison as C
 
 from tests.test_session import MockOpenHelper
 from workfront import Session
-from workfront.meta import APIVersion, Object, Field, FieldNotLoaded
+from workfront.meta import APIVersion, Object, Field, FieldNotLoaded, Reference
 
 
 class TestAPIVersion(TestCase):
@@ -245,3 +245,68 @@ class TestBaseObject(MockOpenHelper, TestCase):
 
         self.server.assert_called(times=1)
 
+
+class LoadingAttributeTests(MockOpenHelper, TestCase):
+
+    base = 'https://test.attask-ondemand.com/attask/api/test'
+
+    def setUp(self):
+        super(LoadingAttributeTests, self).setUp()
+        self.replace('workfront.session.Session.version_registry', {})
+        test_api = APIVersion('test')
+        class TestObject(Object):
+            code='TEST'
+            field_one = Field('fieldOne')
+            field_two = Field('fieldTwo')
+        test_api.register(TestObject)
+        Session.register(test_api)
+        self.session = Session('test', api_version='test')
+
+    def test_reference(self):
+        class AnotherObject(Object):
+            code='OTHER'
+            ref_field = Reference('refField')
+
+        obj = AnotherObject(self.session,
+                            refField=dict(objCode='TEST', fieldOne='foo'))
+
+        ref_obj = obj.ref_field
+        compare(ref_obj.field_one, expected='foo')
+        with ShouldRaise(FieldNotLoaded('fieldTwo')):
+            ref_obj.field_two
+
+    def test_reference_not_loaded(self):
+        class AnotherObject(Object):
+            code='OTHER'
+            ref_field = Reference('refField')
+
+        obj = AnotherObject(self.session, ID='xxx')
+
+        self.server.add(
+            url='/OTHER/xxx',
+            params='method=GET&fields=refField',
+            response='{"data": {"refField": '
+                     '{"objCode": "TEST", "ID": "yyy", '
+                     '"fieldOne":1, "fieldTwo":2}}}'
+        )
+
+        ref_obj = obj.ref_field
+        compare(ref_obj.id, expected='yyy')
+        compare(ref_obj.field_one, expected=1)
+        compare(ref_obj.field_two, expected=2)
+
+    def test_reference_from_class(self):
+        class AnotherObject(Object):
+            ref_field = Reference('refField')
+
+        compare(AnotherObject.ref_field,
+                expected=C(Reference, workfront_name='refField'))
+
+    def test_reference_modify(self):
+        class AnotherObject(Object):
+            ref_field = Reference('refField')
+
+        obj = AnotherObject()
+
+        with ShouldRaise(AttributeError('Reference cannot be set')):
+            obj.ref_field = 'foo'
