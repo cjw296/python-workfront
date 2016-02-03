@@ -137,8 +137,10 @@ class Session(object):
             converted_params[object_type.convert_name(name)] = value
         if fields:
             converted_params['fields'] = object_type.field_spec(*fields)
-        return [object_type(self, **result) for result in
-                self.get('/{}/search'.format(object_type.code), converted_params)]
+        return [
+            object_type(self, **result) for result in
+            self.get('/{}/search'.format(object_type.code), converted_params)
+        ]
 
     def load(self, object_type, ids, fields=None):
         if isinstance(ids, basestring):

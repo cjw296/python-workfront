@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from testfixtures import compare, ShouldRaise, ShouldWarn
 
-from tests.helpers import MockHTTPError, MockOpenHelper
+from tests.helpers import MockHTTPError, MockOpenHelper, TestObjectHelper
 from workfront import Session
 from workfront.session import SANDBOX_TEMPLATE, WorkfrontAPIError
 
@@ -266,3 +266,47 @@ class SessionTests(MockOpenHelper, TestCase):
         )):
             Session('test', api_version='silly')
 
+
+class SessionWithObjectTests(TestObjectHelper, TestCase):
+
+    def test_basic_search(self):
+        self.server.add(
+            url='/TEST/search',
+            params='method=GET',
+            response='{"data": [{"ID": "yyy"}]}'
+        )
+
+        results = self.session.search(self.TestObject)
+        compare(len(results), expected=1)
+        obj = results[0]
+        self.assertTrue(isinstance(obj, self.TestObject))
+        compare(obj.id, 'yyy')
+
+    def test_search_with_filters(self):
+        self.server.add(
+            url='/TEST/search',
+            params='method=GET&fieldOne=foo:*',
+            response='{"data": [{"ID": "yyy"}]}'
+        )
+
+        results = self.session.search(self.TestObject, field_one='foo:*')
+        compare(len(results), expected=1)
+        obj = results[0]
+        self.assertTrue(isinstance(obj, self.TestObject))
+        compare(obj.id, 'yyy')
+
+    def test_extra_fields(self):
+        self.server.add(
+            url='/TEST/search',
+            params='method=GET&fields=fieldOne,fieldTwo',
+            response='{"data": [{"ID": "yyy", "fieldOne": 1, "fieldTwo": 2}]}'
+        )
+
+        results = self.session.search(self.TestObject,
+                                      fields=('fieldOne', 'fieldTwo'))
+        compare(len(results), expected=1)
+        obj = results[0]
+        self.assertTrue(isinstance(obj, self.TestObject))
+        compare(obj.id, 'yyy')
+        compare(obj.field_one, 1)
+        compare(obj.field_two, 2)
