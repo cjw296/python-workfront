@@ -245,6 +245,14 @@ class TestBaseObject(MockOpenHelper, TestCase):
 
         self.server.assert_called(times=1)
 
+    def test_bad_field(self):
+        TestObject = self.make_test_object()
+        obj = TestObject()
+        with ShouldRaise(AttributeError(
+            "'TestObject' object has no attribute 'bad_field'"
+        )):
+            obj.bad_field = 'foo'
+
 
 class LoadingAttributeTests(MockOpenHelper, TestCase):
 

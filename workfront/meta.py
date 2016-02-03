@@ -103,6 +103,7 @@ class ObjectMeta(type):
         for key, obj in __dict__.items():
             if isinstance(obj, Field):
                 field_names.add(key)
+        __dict__['__slots__'] = ('session', 'fields')
         cls = super(ObjectMeta, meta).__new__(meta, name, bases, __dict__)
         cls.field_names = getattr(cls, 'field_names', set()) | field_names
         return cls
