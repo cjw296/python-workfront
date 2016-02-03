@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from testfixtures import compare, ShouldRaise, Comparison as C
 
-from tests.test_session import MockOpenHelper
+from tests.helpers import MockOpenHelper, TestObjectHelper
 from workfront import Session
 from workfront.meta import (
     APIVersion, Object, Field, FieldNotLoaded, Reference, Collection
@@ -256,21 +256,7 @@ class TestBaseObject(MockOpenHelper, TestCase):
             obj.bad_field = 'foo'
 
 
-class LoadingAttributeTests(MockOpenHelper, TestCase):
-
-    base = 'https://test.attask-ondemand.com/attask/api/test'
-
-    def setUp(self):
-        super(LoadingAttributeTests, self).setUp()
-        self.replace('workfront.session.Session.version_registry', {})
-        test_api = APIVersion('test')
-        class TestObject(Object):
-            code='TEST'
-            field_one = Field('fieldOne')
-            field_two = Field('fieldTwo')
-        test_api.register(TestObject)
-        Session.register(test_api)
-        self.session = Session('test', api_version='test')
+class LoadingAttributeTests(TestObjectHelper, TestCase):
 
     def test_reference(self):
         class AnotherObject(Object):

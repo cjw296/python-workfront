@@ -2,7 +2,10 @@ from io import StringIO
 from urllib2 import HTTPError
 from urlparse import parse_qs
 
-from testfixtures import compare
+from testfixtures import compare, Replacer
+
+from workfront import Session
+from workfront.meta import APIVersion, Object, Field
 
 
 class MockResponse(StringIO):
@@ -56,3 +59,32 @@ class MockOpen(dict):
 
     def assert_called(self, times):
         compare(self.added, expected=times)
+
+
+class MockOpenHelper(object):
+
+    base = 'https://test.attask-ondemand.com/attask/api/unsupported'
+
+    def setUp(self):
+        self.replace = Replacer()
+        self.addCleanup(self.replace.restore)
+        self.server = MockOpen(self.base)
+        self.replace('urllib2.urlopen', self.server)
+
+
+class TestObjectHelper(MockOpenHelper):
+
+    base = 'https://test.attask-ondemand.com/attask/api/test'
+
+    def setUp(self):
+        super(TestObjectHelper, self).setUp()
+        self.replace('workfront.session.Session.version_registry', {})
+        test_api = APIVersion('test')
+        class TestObject(Object):
+            code='TEST'
+            field_one = Field('fieldOne')
+            field_two = Field('fieldTwo')
+        test_api.register(TestObject)
+        Session.register(test_api)
+        self.TestObject = TestObject
+        self.session = Session('test', api_version='test')

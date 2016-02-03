@@ -1,22 +1,11 @@
 import ssl
 from unittest import TestCase
 
-from testfixtures import Replacer, compare, ShouldRaise, ShouldWarn
+from testfixtures import compare, ShouldRaise, ShouldWarn
 
-from tests.helpers import MockOpen, MockHTTPError
+from tests.helpers import MockHTTPError, MockOpenHelper
 from workfront import Session
 from workfront.session import SANDBOX_TEMPLATE, WorkfrontAPIError
-
-
-class MockOpenHelper(object):
-
-    base = 'https://test.attask-ondemand.com/attask/api/unsupported'
-
-    def setUp(self):
-        self.replace = Replacer()
-        self.addCleanup(self.replace.restore)
-        self.server = MockOpen(self.base)
-        self.replace('urllib2.urlopen', self.server)
 
 
 class SessionTests(MockOpenHelper, TestCase):
