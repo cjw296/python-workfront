@@ -68,9 +68,10 @@ class Reference(LoadingAttribute):
 
 class Collection(LoadingAttribute):
 
-    def process(self, instance, data):
-        return [Object.from_data(instance.session, object_data)
-                for object_data in data]
+    @staticmethod
+    def process(session, api, data):
+        return tuple(api.from_data(session, object_data)
+                     for object_data in data)
 
 
 class ModificationTrackingDict(dict):

@@ -4,7 +4,9 @@ from testfixtures import compare, ShouldRaise, Comparison as C
 
 from tests.test_session import MockOpenHelper
 from workfront import Session
-from workfront.meta import APIVersion, Object, Field, FieldNotLoaded, Reference
+from workfront.meta import (
+    APIVersion, Object, Field, FieldNotLoaded, Reference, Collection
+)
 
 
 class TestAPIVersion(TestCase):
@@ -318,3 +320,84 @@ class LoadingAttributeTests(MockOpenHelper, TestCase):
 
         with ShouldRaise(AttributeError('Reference cannot be set')):
             obj.ref_field = 'foo'
+
+    def test_collection(self):
+        class AnotherObject(Object):
+            col_field = Collection('colField')
+
+        obj = AnotherObject(self.session,
+                            colField=[dict(objCode='TEST', fieldOne='foo')])
+
+        ref_objs = obj.col_field
+        compare(len(ref_objs), expected=1)
+        ref_obj = ref_objs[0]
+        compare(ref_obj.field_one, expected='foo')
+        with ShouldRaise(FieldNotLoaded('fieldTwo')):
+            ref_obj.field_two
+
+    def test_collection_not_loaded(self):
+        class AnotherObject(Object):
+            code='OTHER'
+            col_field = Collection('colField')
+
+        obj = AnotherObject(self.session, ID='xxx')
+
+        self.server.add(
+            url='/OTHER/xxx',
+            params='method=GET&fields=colField',
+            response='{"data": {"colField": ['
+                     '{"objCode": "TEST", "ID": "yyy", '
+                     '"fieldOne":1, "fieldTwo":2}]}}'
+        )
+
+        ref_objs = obj.col_field
+        compare(len(ref_objs), expected=1)
+        ref_obj = ref_objs[0]
+        compare(ref_obj.field_one, expected=1)
+        compare(ref_obj.field_two, expected=2)
+
+    def test_collection_from_class(self):
+        class AnotherObject(Object):
+            col_field = Collection('colField')
+
+        compare(AnotherObject.col_field,
+                expected=C(Collection, workfront_name='colField'))
+
+    def test_empty_collection(self):
+        class AnotherObject(Object):
+            code='OTHER'
+            col_field = Collection('colField')
+
+        obj = AnotherObject(self.session, ID='xxx')
+
+        self.server.add(
+            url='/OTHER/xxx',
+            params='method=GET&fields=colField',
+            response='{"data": {"colField": []}}'
+        )
+
+        compare(obj.col_field, expected=(), strict=True)
+
+    def test_modify_collection(self):
+        class AnotherObject(Object):
+            col_field = Collection('colField')
+
+        obj = AnotherObject(self.session, colField=[dict(objCode='TEST')])
+        ref_objs = obj.col_field
+
+        new_obj = AnotherObject(ID='bad')
+
+        with ShouldRaise(TypeError):
+            ref_objs[0] = new_obj
+
+        with ShouldRaise(AttributeError):
+            ref_objs.append
+
+    def test_set_collection(self):
+        class AnotherObject(Object):
+            col_field = Collection('colField')
+
+        obj = AnotherObject()
+
+        with ShouldRaise(AttributeError('Collection cannot be set')):
+            obj.col_field = ('foo', 'bar')
