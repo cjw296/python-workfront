@@ -51,8 +51,10 @@ class MockOpen(dict):
         return MockResponse(response, code)
 
     def add(self, url, response, params='', code=200, ssl_context=None):
+        if not url.startswith('http'):
+            url = self.base_url + url
         self[self.added,
-             self.base_url + url,
+             url,
              self.decode(params),
              ssl_context] = response, code
         self.added += 1
