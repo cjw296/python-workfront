@@ -5,11 +5,17 @@ asda as da  asd a das ad
 """
 
 import re
-from os import path
+from os import mkdir, path
 
 from workfront.script import script_setup, parser_with_standard_args
 
 name_re = re.compile('([a-z]|^)([A-Z]+)')
+TARGET_ROOT = path.join(path.split(__file__)[0], 'versions')
+
+INIT_TEMPLATE = """\
+from .generated import api
+"""
+
 
 
 def name_subber(match):
@@ -23,6 +29,17 @@ def name_subber(match):
 def dehump(name):
     "SomeThing -> some_thing"
     return name_re.sub(name_subber, name).lower()
+
+
+def prepare_target(session):
+    target = path.join(TARGET_ROOT, session.api.version)
+    if not path.exists(target):
+        mkdir(target)
+    init = path.join(target, '__init__.py')
+    if not path.exists(init):
+        with open(init, 'w') as output:
+            output.write(INIT_TEMPLATE)
+    return path.join(target, 'generated.py')
 
 
 def decorated_object_types(session):
