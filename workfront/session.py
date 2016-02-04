@@ -142,13 +142,13 @@ class Session(object):
             self.get('/{}/search'.format(object_type.code), converted_params)
         ]
 
-    def load(self, object_type, ids, fields=None):
-        if isinstance(ids, basestring):
+    def load(self, object_type, id_or_ids, fields=None):
+        if isinstance(id_or_ids, basestring):
             return_multiple = False
         else:
-            ids = ','.join(ids)
+            id_or_ids = ','.join(id_or_ids)
             return_multiple = True
-        params = dict(id=ids)
+        params = dict(id=id_or_ids)
         if fields:
             params['fields'] = object_type.field_spec(*fields)
         result = self.get('/{}'.format(object_type.code), params)

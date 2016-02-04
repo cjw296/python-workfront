@@ -5,6 +5,7 @@ from testfixtures import compare, ShouldRaise, ShouldWarn
 
 from tests.helpers import MockHTTPError, MockOpenHelper, TestObjectHelper
 from workfront import Session
+from workfront.meta import FieldNotLoaded
 from workfront.session import SANDBOX_TEMPLATE, WorkfrontAPIError
 
 
@@ -308,5 +309,52 @@ class SessionWithObjectTests(TestObjectHelper, TestCase):
         obj = results[0]
         self.assertTrue(isinstance(obj, self.TestObject))
         compare(obj.id, 'yyy')
+        compare(obj.field_one, 1)
+        compare(obj.field_two, 2)
+
+    def test_load_single(self):
+        self.server.add(
+            url='/TEST',
+            params='method=GET&id=xx',
+            response='{"data": {"ID": "yyy", "fieldOne": 1}}'
+        )
+        obj = self.session.load(self.TestObject, 'xx')
+        self.assertTrue(isinstance(obj, self.TestObject))
+        compare(obj.id, 'yyy')
+        compare(obj.field_one, 1)
+        with ShouldRaise(FieldNotLoaded('fieldTwo')):
+            obj.field_two
+
+    def test_load_multiple(self):
+        self.server.add(
+            url='/TEST',
+            params='method=GET&id=xx,yy',
+            response='{"data": [{"ID": "xx", "fieldOne": 1, "fieldTwo": 2}, '
+                     '{"ID": "yy", "fieldOne": 3, "fieldTwo": 4}]}'
+        )
+        results = self.session.load(self.TestObject, ['xx', 'yy'])
+        compare(len(results), expected=2)
+        obj = results[0]
+        self.assertTrue(isinstance(obj, self.TestObject))
+        compare(obj.id, 'xx')
+        compare(obj.field_one, 1)
+        compare(obj.field_two, 2)
+        obj = results[1]
+        self.assertTrue(isinstance(obj, self.TestObject))
+        compare(obj.id, 'yy')
+        compare(obj.field_one, 3)
+        compare(obj.field_two, 4)
+
+    def test_load_extra_fields(self):
+        self.server.add(
+            url='/TEST',
+            params='method=GET&id=xx&fields=fieldTwo',
+            response='{"data": {"ID": "xx", "fieldOne": 1, "fieldTwo": 2}}'
+        )
+        results = self.session.load(self.TestObject, ['xx'], fields=['field_two'])
+        compare(len(results), expected=1)
+        obj = results[0]
+        self.assertTrue(isinstance(obj, self.TestObject))
+        compare(obj.id, 'xx')
         compare(obj.field_one, 1)
         compare(obj.field_two, 2)
