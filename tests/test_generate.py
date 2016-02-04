@@ -1,9 +1,12 @@
+import json
 from unittest import TestCase
 
 from testfixtures import TempDirectory, Replacer, compare
 
+from tests.helpers import MockOpenHelper
 from workfront import Session
-from workfront.generate import prepare_target, INIT_TEMPLATE
+from workfront.generate import prepare_target, INIT_TEMPLATE, \
+    decorated_object_types
 
 
 class TestPrepareTarget(TestCase):
@@ -65,3 +68,75 @@ class TestPrepareTarget(TestCase):
 
         compare(self.dir.read('unsupported/__init__.py'), "xx")
         compare(self.dir.read('unsupported/generated.py'), "yy")
+
+
+class TestDecoratedObjectTypes(MockOpenHelper, TestCase):
+
+    def test_normal(self):
+        base_url = 'https://test.attask-ondemand.com/attask/api/v4.0'
+        session = Session('test', api_version='v4.0')
+        self.server.add(
+            url=base_url+'/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=dict(objects=dict(
+                SomeThing=dict(objCode='SMTHING', name='SomeThing')
+            ))))
+        )
+        expected = dict(
+            objCode='SMTHING',
+            name='SomeThing',
+            stuff='a value'
+        )
+        self.server.add(
+            url=base_url+'/smthing/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=expected))
+        )
+        compare(decorated_object_types(session),
+                expected=[('SomeThing', 'SMTHING', expected)])
+
+    def test_unsupported(self):
+        base_url = 'https://test.attask-ondemand.com/attask/api/unsupported'
+        session = Session('test')
+        self.server.add(
+            url=base_url+'/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=dict(objects=dict(
+                SomeThing=dict(objCode='SMTHING', name='SomeThing')
+            ))))
+        )
+        expected = dict(
+            objCode='SMTHING',
+            name='SomeThing',
+            stuff='a value'
+        )
+        self.server.add(
+            url=base_url+'/smthing/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=expected))
+        )
+        compare(decorated_object_types(session),
+                expected=[('SomeThing', 'SMTHING', expected)])
+
+    def test_name_override(self):
+        base_url = 'https://test.attask-ondemand.com/attask/api/unsupported'
+        session = Session('test')
+        self.server.add(
+            url=base_url+'/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=dict(objects=dict(
+                SomeThing=dict(objCode='OPTASK', name='SomeThing')
+            ))))
+        )
+        expected = dict(
+            objCode='SMTHING',
+            name='SomeThing',
+            stuff='a value'
+        )
+        self.server.add(
+            url=base_url+'/optask/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=expected))
+        )
+        compare(decorated_object_types(session),
+                expected=[('Issue', 'OPTASK', expected)])

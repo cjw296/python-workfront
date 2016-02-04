@@ -12,6 +12,12 @@ from workfront.script import script_setup, parser_with_standard_args
 name_re = re.compile('([a-z]|^)([A-Z]+)')
 TARGET_ROOT = path.join(path.split(__file__)[0], 'versions')
 
+
+CLASS_NAME_OVERRIDE = dict(
+    OPTASK='Issue'
+)
+
+
 INIT_TEMPLATE = """\
 from .generated import api
 """
@@ -44,8 +50,12 @@ def prepare_target(session):
 
 def decorated_object_types(session):
     for object_type in session.get('/metadata')['objects'].values():
-        class_name = class_name_override.get(object_type['objCode'], object_type['name'])
-        yield class_name, object_type
+        code =  object_type['objCode']
+        # this works around the broken urls Workfront serve for the
+        # 'unsupported' api:
+        detail = session.get('/'+code.lower()+'/metadata')
+        class_name = CLASS_NAME_OVERRIDE.get(code, detail['name'])
+        yield class_name, code, detail
 
 
 def generate(session, output_path):
