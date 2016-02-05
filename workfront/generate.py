@@ -5,23 +5,46 @@ asda as da  asd a das ad
 """
 
 import re
+from logging import getLogger
 from os import mkdir, path
 
 from workfront.script import script_setup, parser_with_standard_args
 
-name_re = re.compile('([a-z]|^)([A-Z]+)')
-TARGET_ROOT = path.join(path.split(__file__)[0], 'versions')
+logger = getLogger(__name__)
 
+TARGET_ROOT = path.join(path.split(__file__)[0], 'versions')
 
 CLASS_NAME_OVERRIDE = dict(
     OPTASK='Issue'
 )
 
-
 INIT_TEMPLATE = """\
 from .generated import api
 """
 
+HEADER = """\
+# generated from {url}/metadata
+from .meta import APIVersion, Object, Field, Reference, Collection
+
+api = APIVersion('{version}')
+"""
+
+CLASS_HEADER_TEMPLATE = """
+
+class {class_name}(Object):
+    code = '{obj_code}'
+"""
+
+CLASS_MEMBER_TEMPLATE = """\
+    {python_name} = Field('{workfront_name}')
+"""
+
+CLASS_FOOTER_TEMPLATE = """
+
+api.register({class_name})
+"""
+
+NAME_RE = re.compile('([a-z]|^)([A-Z]+)')
 
 
 def name_subber(match):
@@ -33,8 +56,8 @@ def name_subber(match):
 
 
 def dehump(name):
-    "SomeThing -> some_thing"
-    return name_re.sub(name_subber, name).lower()
+    """SomeThing -> some_thing"""
+    return NAME_RE.sub(name_subber, name).lower()
 
 
 def prepare_target(session):
@@ -58,45 +81,57 @@ def decorated_object_types(session):
         yield class_name, code, detail
 
 
+class ClassWriter(object):
+
+    def __init__(self, class_name, code, output):
+        self.class_name = class_name
+        self.code = code
+        self.output = output
+        self.members = {}
+
+    def write_header(self):
+        self.output.write(CLASS_HEADER_TEMPLATE.format(
+            class_name=self.class_name,
+            obj_code=self.code
+        ))
+
+    def write_members(self, type_, members):
+        for workfront_name in sorted(members):
+            python_name = dehump(workfront_name)
+            if python_name in self.members:
+                logger.error(
+                    'duplicate member name: '
+                    '{!r}, first from {!r}, current from {!r}'.format(
+                        python_name, self.members[python_name], workfront_name
+                    ))
+            self.members[python_name] = workfront_name
+            self.output.write(CLASS_MEMBER_TEMPLATE.format(
+                type=type_,
+                python_name=python_name,
+                workfront_name=workfront_name
+            ))
+
+    def write_footer(self):
+        self.output.write(CLASS_FOOTER_TEMPLATE.format(
+            class_name=self.class_name,
+        ))
+
+
 def generate(session, output_path):
     with open(output_path, 'w') as output:
 
-        output.write(header.format(url=session.url))
+        output.write(HEADER.format(url=session.url,
+                                   version=session.api.version))
 
-        for class_name, object_type in sorted(decorated_object_types(session)):
+        for class_name, code, details in sorted(decorated_object_types(session)):
 
-            output.write(class_template.format(
-                class_name=class_name,
-                obj_code=object_type['objCode']
-            ))
-
-            type_detail = session.get(object_type['url'])
-
-            for workfront_name in sorted(type_detail['fields']):
-
-                if workfront_name == 'ID':
-                    continue
-
-                output.write(field_template.format(
-                    python_name=dehump(workfront_name),
-                    workfront_name=workfront_name
-                ))
-
-            for workfront_name, reference_type in sorted(
-                    type_detail['references'].items()
-            ):
-                output.write(reference_template.format(
-                    python_name=dehump(workfront_name),
-                    workfront_name=workfront_name,
-                ))
-
-            for workfront_name, reference_type in sorted(
-                    type_detail['collections'].items()
-            ):
-                output.write(collection_template.format(
-                    python_name=dehump(workfront_name),
-                    workfront_name=workfront_name,
-                ))
+            writer = ClassWriter(class_name, code, output)
+            writer.write_header()
+            writer.write_members('Field',
+                                 (name for name in details['fields']
+                                  if name != 'ID'))
+            writer.write_members('Reference', details['references'])
+            writer.write_members('Collection', details['collections'])
 
 
 def main():
@@ -107,40 +142,7 @@ def main():
 
     args, session = script_setup(parser)
 
-    generate(args.output_path)
-
-
-header = """\
-# generated from {url}/metadata
-from .meta import Object, Field, Reference, Collection
-"""
-
-
-class_template = """
-
-class {class_name}(Object):
-    code = "{obj_code}"
-"""
-
-
-field_template = """\
-    {python_name} = Field('{workfront_name}')
-"""
-
-
-reference_template = """\
-    {python_name} = Reference('{workfront_name}')
-"""
-
-
-collection_template = """\
-    {python_name} = Collection('{workfront_name}')
-"""
-
-
-class_name_override = dict(
-    OPTASK='Issue'
-)
+    generate(session, args.output_path)
 
 
 if __name__ == '__main__':  # pragma: no cover

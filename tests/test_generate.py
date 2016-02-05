@@ -1,12 +1,15 @@
 import json
+from textwrap import dedent
 from unittest import TestCase
 
-from testfixtures import TempDirectory, Replacer, compare
+from testfixtures import TempDirectory, Replacer, compare, LogCapture
 
 from tests.helpers import MockOpenHelper
 from workfront import Session
-from workfront.generate import prepare_target, INIT_TEMPLATE, \
-    decorated_object_types
+from workfront.generate import (
+    prepare_target, INIT_TEMPLATE, decorated_object_types, ClassWriter
+)
+from workfront.six import StringIO
 
 
 class TestPrepareTarget(TestCase):
@@ -140,3 +143,56 @@ class TestDecoratedObjectTypes(MockOpenHelper, TestCase):
         )
         compare(decorated_object_types(session),
                 expected=[('Issue', 'OPTASK', expected)])
+
+
+class TestClassWriter(TestCase):
+
+    def setUp(self):
+        self.output = StringIO()
+        self.writer = ClassWriter('FooBar', 'FOOB', self.output)
+        self.log = LogCapture()
+        self.addCleanup(self.log.uninstall)
+
+    def check_output(self, expected):
+        compare(expected=dedent(expected), actual=self.output.getvalue())
+
+    def test_write_header(self):
+        self.writer.write_header()
+        self.check_output("""
+
+        class FooBar(Object):
+            code = 'FOOB'
+        """)
+
+    def test_write_members(self):
+        self.output.write('class TestClass(Object):\n')
+        self.writer.write_members('Field', ['fooBar', 'BazBob'])
+        self.check_output("""\
+        class TestClass(Object):
+            baz_bob = Field('BazBob')
+            foo_bar = Field('fooBar')
+        """)
+
+    def test_write_duplicate_members(self):
+        self.output.write('class TestClass(Object):\n')
+        self.writer.write_members('Field', ['fooBar', 'FooBAR'])
+        self.check_output("""\
+        class TestClass(Object):
+            foo_bar = Field('FooBAR')
+            foo_bar = Field('fooBar')
+        """)
+        self.log.check(
+            ('workfront.generate', 'ERROR',
+             "duplicate member name: "
+             "'foo_bar', first from 'FooBAR', current from 'fooBar'")
+        )
+
+    def test_write_footer(self):
+        self.output.write('class FooBar(Object):\n    foo = "bar"')
+        self.writer.write_footer()
+        self.check_output("""\
+        class FooBar(Object):
+            foo = "bar"
+
+        api.register(FooBar)
+        """)
