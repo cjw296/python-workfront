@@ -1,7 +1,7 @@
 import ssl
 from unittest import TestCase
 
-from testfixtures import compare, ShouldRaise, ShouldWarn
+from testfixtures import compare, ShouldRaise, ShouldWarn, LogCapture
 
 from tests.helpers import MockHTTPError, MockOpenHelper, TestObjectHelper
 from workfront import Session
@@ -10,6 +10,11 @@ from workfront.session import SANDBOX_TEMPLATE, WorkfrontAPIError
 
 
 class SessionTests(MockOpenHelper, TestCase):
+
+    def setUp(self):
+        super(SessionTests, self).setUp()
+        self.log = LogCapture()
+        self.addCleanup(self.log.uninstall)
 
     def test_basic_request(self):
         session = Session('test')
@@ -20,6 +25,14 @@ class SessionTests(MockOpenHelper, TestCase):
         )
         compare(session.get('/login'), expected='foo')
         self.server.assert_called(times=1)
+        self.log.check(
+            ('workfront', 'INFO',
+             "url: https://test.attask-ondemand.com/attask/api/unsupported"
+             "/login "
+             "params: {'method': 'GET'}"),
+            ('workfront', 'DEBUG',
+             'returned: {\n    "data": "foo"\n}')
+        )
 
     def test_different_protocol_and_version(self):
         self.server.base_url = ''

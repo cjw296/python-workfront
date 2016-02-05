@@ -78,7 +78,7 @@ class Session(object):
         else:
             url = self.url + path
 
-        logger.info('url:%s params:%s', url, params)
+        logger.info('url: %s params: %s', url, params)
 
         try:
             response = urllib2.urlopen(
