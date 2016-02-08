@@ -61,7 +61,7 @@ def dehump(name):
 
 
 def prepare_target(session):
-    target = path.join(TARGET_ROOT, session.api.version)
+    target = path.join(TARGET_ROOT, session.api.version.replace('.', ''))
     if not path.exists(target):
         mkdir(target)
     init = path.join(target, '__init__.py')

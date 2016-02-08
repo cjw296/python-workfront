@@ -77,6 +77,18 @@ class TestPrepareTarget(TestCase):
         compare(self.dir.read('unsupported/__init__.py'), "xx")
         compare(self.dir.read('unsupported/generated.py'), "yy")
 
+    def test_dots_in_version(self):
+        path = prepare_target(Session('test', api_version='v4.0'))
+
+        compare(path, expected=self.dir.getpath('v40/generated.py'))
+        self.dir.compare([
+            'v40/',
+            'v40/__init__.py',
+        ])
+
+        compare(self.dir.read('v40/__init__.py'), INIT_TEMPLATE)
+
+
 
 class TestDecoratedObjectTypes(MockOpenHelper, TestCase):
 
