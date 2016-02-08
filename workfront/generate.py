@@ -36,7 +36,7 @@ class {class_name}(Object):
 """
 
 CLASS_MEMBER_TEMPLATE = """\
-    {python_name} = Field('{workfront_name}')
+    {python_name} = {type}('{workfront_name}')
 """
 
 CLASS_FOOTER_TEMPLATE = """
@@ -136,13 +136,9 @@ def generate(session, output_path):
 
 def main():
     parser = parser_with_standard_args('generate', __doc__)
-    parser.add_argument('--output-path',
-                        default=path.join(path.split(__file__)[0],
-                                          'generated_objects.py'))
-
     args, session = script_setup(parser)
-
-    generate(session, args.output_path)
+    path = prepare_target(session)
+    generate(session, path)
 
 
 if __name__ == '__main__':  # pragma: no cover

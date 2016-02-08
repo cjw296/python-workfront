@@ -2,13 +2,18 @@ import json
 from textwrap import dedent
 from unittest import TestCase
 
-from testfixtures import TempDirectory, Replacer, compare, LogCapture
+from mock import Mock
+from testfixtures import (
+    TempDirectory, Replacer, compare, LogCapture, OutputCapture
+)
 
 from tests.helpers import MockOpenHelper
 from workfront import Session
 from workfront.generate import (
-    prepare_target, INIT_TEMPLATE, decorated_object_types, ClassWriter
+    prepare_target, INIT_TEMPLATE, decorated_object_types, ClassWriter,
+    main
 )
+
 from workfront.six import StringIO
 
 
@@ -196,3 +201,85 @@ class TestClassWriter(TestCase):
 
         api.register(FooBar)
         """)
+
+
+class FunctionalTest(MockOpenHelper, TestCase):
+
+    base = 'https://api-cl01.attask-ondemand.com/attask/api/unsupported'
+
+    def setUp(self):
+        super(FunctionalTest, self).setUp()
+        self.log = LogCapture()
+        self.addCleanup(self.log.uninstall)
+        self.dir = TempDirectory()
+        self.addCleanup(self.dir.cleanup)
+        self.replace('logging.basicConfig', Mock())
+        self.replace('workfront.generate.TARGET_ROOT', self.dir.path)
+
+    def test_functional(self):
+        self.replace('sys.argv', ['x'])
+
+        self.server.add(
+            url='/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=dict(objects=dict(
+                SomeThing=dict(objCode='BAR', name='SomeThing'),
+                OtherThing=dict(objCode='FOO', name='OtherThing'),
+            ))))
+        )
+
+        self.server.add(
+            url='/foo/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=dict(
+                objCode='FOO',
+                name='OtherThing',
+                fields={"ID": {}, "anotherField": {}},
+                references={},
+                collections={},
+            )))
+        )
+
+        self.server.add(
+            url='/bar/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=dict(
+                objCode='BAR',
+                name='SomeThing',
+                fields={"ID": {}, "theField": {}},
+                references={"accessRules": {}},
+                collections={"assignedTo": {}},
+            )))
+        )
+
+        with OutputCapture() as output:
+            output.disable()
+            main()
+
+        output.compare("")
+
+        self.dir.compare([
+            'unsupported/',
+            'unsupported/__init__.py',
+            'unsupported/generated.py',
+        ])
+
+        compare(self.dir.read('unsupported/__init__.py'), INIT_TEMPLATE)
+        compare(self.dir.read('unsupported/generated.py'), """\
+# generated from https://api-cl01.attask-ondemand.com/attask/api/unsupported/metadata
+from .meta import APIVersion, Object, Field, Reference, Collection
+
+api = APIVersion('unsupported')
+
+
+class OtherThing(Object):
+    code = 'FOO'
+    another_field = Field('anotherField')
+
+
+class SomeThing(Object):
+    code = 'BAR'
+    the_field = Field('theField')
+    access_rules = Reference('accessRules')
+    assigned_to = Collection('assignedTo')
+""")
