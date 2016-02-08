@@ -291,7 +291,7 @@ class FunctionalTest(MockOpenHelper, TestCase):
         compare(self.dir.read('unsupported/__init__.py'), INIT_TEMPLATE)
         compare(self.dir.read('unsupported/generated.py'), """\
 # generated from https://api-cl01.attask-ondemand.com/attask/api/unsupported/metadata
-from .meta import APIVersion, Object, Field, Reference, Collection
+from ...meta import APIVersion, Object, Field, Reference, Collection
 
 api = APIVersion('unsupported')
 

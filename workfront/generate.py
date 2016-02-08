@@ -24,7 +24,7 @@ from .generated import api
 
 HEADER = """\
 # generated from {url}/metadata
-from .meta import APIVersion, Object, Field, Reference, Collection
+from ...meta import APIVersion, Object, Field, Reference, Collection
 
 api = APIVersion('{version}')
 """
