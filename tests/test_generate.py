@@ -188,9 +188,21 @@ class TestClassWriter(TestCase):
         """)
         self.log.check(
             ('workfront.generate', 'ERROR',
-             "duplicate member name: "
+             "FooBar has duplicate member name: "
              "'foo_bar', first from 'FooBAR', current from 'fooBar'")
         )
+
+    def test_member_name_override(self):
+        self.output.write('class Approval(Object):\n')
+        writer = ClassWriter('Approval', 'TEST', self.output)
+        writer.write_members('Field', ['URL', 'url'])
+        self.check_output("""\
+        class Approval(Object):
+            url = Field('URL')
+            url_ = Field('url')
+        """)
+        # no error log:
+        self.log.check()
 
     def test_write_footer(self):
         self.output.write('class FooBar(Object):\n    foo = "bar"')

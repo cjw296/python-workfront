@@ -83,6 +83,11 @@ def decorated_object_types(session):
 
 class ClassWriter(object):
 
+    name_overrides = {
+        ('Approval', 'url'): 'url_',
+        ('Work', 'url'): 'url_',
+    }
+
     def __init__(self, class_name, code, output):
         self.class_name = class_name
         self.code = code
@@ -97,11 +102,15 @@ class ClassWriter(object):
 
     def write_members(self, type_, members):
         for workfront_name in sorted(members):
-            python_name = dehump(workfront_name)
+            python_name = self.name_overrides.get(
+                (self.class_name, workfront_name),
+                dehump(workfront_name)
+            )
             if python_name in self.members:
                 logger.error(
-                    'duplicate member name: '
+                    '{} has duplicate member name: '
                     '{!r}, first from {!r}, current from {!r}'.format(
+                        self.class_name,
                         python_name, self.members[python_name], workfront_name
                     ))
             self.members[python_name] = workfront_name
