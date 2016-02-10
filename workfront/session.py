@@ -60,16 +60,17 @@ class Session(object):
             ))
 
     def request(self, method, path, params=None):
-        if params is None:
-            params = {}
-        for key, value in params.items():
+        url_params = {}
+        if params is not None:
+           url_params.update(params)
+        for key, value in url_params.items():
             if not isinstance(value, (basestring, int, float)):
-                params[key] = json.dumps(value)
-        params['method'] = method
+                url_params[key] = json.dumps(value)
+        url_params['method'] = method
         if self.api_key:
-            params['apiKey'] = self.api_key
+            url_params['apiKey'] = self.api_key
         elif self.session_id:
-            params['sessionID'] = self.session_id
+            url_params['sessionID'] = self.session_id
 
         if path.startswith(self.url):
             url = path
@@ -78,12 +79,12 @@ class Session(object):
         else:
             url = self.url + path
 
-        logger.info('url: %s params: %s', url, params)
+        logger.info('url: %s params: %s', url, url_params)
 
         try:
             response = urllib2.urlopen(
                 url,
-                urlencode(params),
+                urlencode(url_params),
                 context=self.ssl_context
             )
             code = response.code
