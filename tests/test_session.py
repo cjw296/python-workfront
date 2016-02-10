@@ -290,10 +290,10 @@ class SessionWithObjectTests(TestObjectHelper, TestCase):
             response='{"data": [{"ID": "yyy"}]}'
         )
 
-        results = self.session.search(self.TestObject)
+        results = self.session.search(self.api.TestObject)
         compare(len(results), expected=1)
         obj = results[0]
-        self.assertTrue(isinstance(obj, self.TestObject))
+        self.assertTrue(isinstance(obj, self.api.TestObject))
         compare(obj.id, 'yyy')
 
     def test_search_with_filters(self):
@@ -303,10 +303,10 @@ class SessionWithObjectTests(TestObjectHelper, TestCase):
             response='{"data": [{"ID": "yyy"}]}'
         )
 
-        results = self.session.search(self.TestObject, field_one='foo:*')
+        results = self.session.search(self.api.TestObject, field_one='foo:*')
         compare(len(results), expected=1)
         obj = results[0]
-        self.assertTrue(isinstance(obj, self.TestObject))
+        self.assertTrue(isinstance(obj, self.api.TestObject))
         compare(obj.id, 'yyy')
 
     def test_extra_fields(self):
@@ -316,11 +316,11 @@ class SessionWithObjectTests(TestObjectHelper, TestCase):
             response='{"data": [{"ID": "yyy", "fieldOne": 1, "fieldTwo": 2}]}'
         )
 
-        results = self.session.search(self.TestObject,
+        results = self.session.search(self.api.TestObject,
                                       fields=('fieldOne', 'fieldTwo'))
         compare(len(results), expected=1)
         obj = results[0]
-        self.assertTrue(isinstance(obj, self.TestObject))
+        self.assertTrue(isinstance(obj, self.api.TestObject))
         compare(obj.id, 'yyy')
         compare(obj.field_one, 1)
         compare(obj.field_two, 2)
@@ -331,8 +331,8 @@ class SessionWithObjectTests(TestObjectHelper, TestCase):
             params='method=GET&id=xx',
             response='{"data": {"ID": "yyy", "fieldOne": 1}}'
         )
-        obj = self.session.load(self.TestObject, 'xx')
-        self.assertTrue(isinstance(obj, self.TestObject))
+        obj = self.session.load(self.api.TestObject, 'xx')
+        self.assertTrue(isinstance(obj, self.api.TestObject))
         compare(obj.id, 'yyy')
         compare(obj.field_one, 1)
         with ShouldRaise(FieldNotLoaded('fieldTwo')):
@@ -345,15 +345,15 @@ class SessionWithObjectTests(TestObjectHelper, TestCase):
             response='{"data": [{"ID": "xx", "fieldOne": 1, "fieldTwo": 2}, '
                      '{"ID": "yy", "fieldOne": 3, "fieldTwo": 4}]}'
         )
-        results = self.session.load(self.TestObject, ['xx', 'yy'])
+        results = self.session.load(self.api.TestObject, ['xx', 'yy'])
         compare(len(results), expected=2)
         obj = results[0]
-        self.assertTrue(isinstance(obj, self.TestObject))
+        self.assertTrue(isinstance(obj, self.api.TestObject))
         compare(obj.id, 'xx')
         compare(obj.field_one, 1)
         compare(obj.field_two, 2)
         obj = results[1]
-        self.assertTrue(isinstance(obj, self.TestObject))
+        self.assertTrue(isinstance(obj, self.api.TestObject))
         compare(obj.id, 'yy')
         compare(obj.field_one, 3)
         compare(obj.field_two, 4)
@@ -364,10 +364,10 @@ class SessionWithObjectTests(TestObjectHelper, TestCase):
             params='method=GET&id=xx&fields=fieldTwo',
             response='{"data": {"ID": "xx", "fieldOne": 1, "fieldTwo": 2}}'
         )
-        results = self.session.load(self.TestObject, ['xx'], fields=['field_two'])
+        results = self.session.load(self.api.TestObject, ['xx'], fields=['field_two'])
         compare(len(results), expected=1)
         obj = results[0]
-        self.assertTrue(isinstance(obj, self.TestObject))
+        self.assertTrue(isinstance(obj, self.api.TestObject))
         compare(obj.id, 'xx')
         compare(obj.field_one, 1)
         compare(obj.field_two, 2)

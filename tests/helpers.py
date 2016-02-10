@@ -91,5 +91,5 @@ class TestObjectHelper(MockOpenHelper):
             field_two = Field('fieldTwo')
         test_api.register(TestObject)
         Session.register(test_api)
-        self.TestObject = TestObject
         self.session = Session('test', api_version='test')
+        self.api = self.session.api

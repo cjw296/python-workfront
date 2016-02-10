@@ -37,7 +37,7 @@ class TestAPIVersion(TestCase):
 
         api.register(TestObject)
 
-        result = api.by_name['TestObject']
+        result = api.TestObject
 
         compare(result, expected=TestObject)
 
@@ -52,7 +52,7 @@ class TestAPIVersion(TestCase):
             something = 'foo'
         api.override(TestObject, TestObject_)
 
-        result = api.by_name['TestObject']
+        result = api.TestObject
         compare(result, expected=TestObject_)
         result = api.from_data(None, dict(objCode='TEST'))
         self.assertTrue(isinstance(result, TestObject_))
