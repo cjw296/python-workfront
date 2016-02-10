@@ -4,8 +4,8 @@ language: python
 sudo: false
 
 python:
-  - "3.5"
-  - "3.4"
+#  - "3.5"
+#  - "3.4"
   - "2.7"
 
 # command to install dependencies
@@ -25,6 +25,6 @@ deploy:
   on:
     tags: true
     repo: cjw296/python-workfront
-    python: "3.5"
+    python: "2.7"
   skip_cleanup: true
   distributions: "sdist bdist_wheel"
