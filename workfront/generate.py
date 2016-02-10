@@ -39,7 +39,7 @@ CLASS_MEMBER_TEMPLATE = """\
     {python_name} = {type}('{workfront_name}')
 """
 
-CLASS_FOOTER_TEMPLATE = """
+CLASS_FOOTER_TEMPLATE = """\
 
 api.register({class_name})
 """
@@ -141,6 +141,7 @@ def generate(session, output_path):
                                   if name != 'ID'))
             writer.write_members('Reference', details['references'])
             writer.write_members('Collection', details['collections'])
+            writer.write_footer()
 
 
 def main():

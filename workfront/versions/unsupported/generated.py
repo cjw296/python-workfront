@@ -33,6 +33,8 @@ class AccessLevel(Object):
     access_rule_preferences = Collection('accessRulePreferences')
     access_scope_actions = Collection('accessScopeActions')
 
+api.register(AccessLevel)
+
 
 class AccessLevelPermissions(Object):
     code = 'ALVPER'
@@ -45,6 +47,8 @@ class AccessLevelPermissions(Object):
     secondary_actions = Field('secondaryActions')
     access_level = Reference('accessLevel')
     customer = Reference('customer')
+
+api.register(AccessLevelPermissions)
 
 
 class AccessRequest(Object):
@@ -68,6 +72,8 @@ class AccessRequest(Object):
     requestor = Reference('requestor')
     awaiting_approvals = Collection('awaitingApprovals')
 
+api.register(AccessRequest)
+
 
 class AccessRule(Object):
     code = 'ACSRUL'
@@ -83,6 +89,8 @@ class AccessRule(Object):
     security_obj_code = Field('securityObjCode')
     security_obj_id = Field('securityObjID')
     customer = Reference('customer')
+
+api.register(AccessRule)
 
 
 class AccessRulePreference(Object):
@@ -101,6 +109,8 @@ class AccessRulePreference(Object):
     customer = Reference('customer')
     template = Reference('template')
     user = Reference('user')
+
+api.register(AccessRulePreference)
 
 
 class AccessScope(Object):
@@ -124,6 +134,8 @@ class AccessScope(Object):
     app_global = Reference('appGlobal')
     customer = Reference('customer')
 
+api.register(AccessScope)
+
 
 class AccessScopeAction(Object):
     code = 'ASCPAT'
@@ -135,6 +147,8 @@ class AccessScopeAction(Object):
     access_level = Reference('accessLevel')
     access_scope = Reference('accessScope')
     customer = Reference('customer')
+
+api.register(AccessScopeAction)
 
 
 class AccessToken(Object):
@@ -159,6 +173,8 @@ class AccessToken(Object):
     entered_by = Reference('enteredBy')
     user = Reference('user')
 
+api.register(AccessToken)
+
 
 class AccountRep(Object):
     code = 'ACNTRP'
@@ -176,6 +192,8 @@ class AccountRep(Object):
     username = Field('username')
     reseller = Reference('reseller')
 
+api.register(AccountRep)
+
 
 class Acknowledgement(Object):
     code = 'ACK'
@@ -188,6 +206,8 @@ class Acknowledgement(Object):
     customer = Reference('customer')
     owner = Reference('owner')
     target = Reference('target')
+
+api.register(Acknowledgement)
 
 
 class Announcement(Object):
@@ -213,6 +233,8 @@ class Announcement(Object):
     announcement_recipients = Collection('announcementRecipients')
     attachments = Collection('attachments')
 
+api.register(Announcement)
+
 
 class AnnouncementAttachment(Object):
     code = 'ANMATT'
@@ -222,6 +244,8 @@ class AnnouncementAttachment(Object):
     format_doc_size = Field('formatDocSize')
     name = Field('name')
     announcement = Reference('announcement')
+
+api.register(AnnouncementAttachment)
 
 
 class AnnouncementOptOut(Object):
@@ -236,6 +260,8 @@ class AnnouncementOptOut(Object):
     user_last_name = Field('userLastName')
     customer = Reference('customer')
     user = Reference('user')
+
+api.register(AnnouncementOptOut)
 
 
 class AnnouncementRecipient(Object):
@@ -257,12 +283,16 @@ class AnnouncementRecipient(Object):
     team = Reference('team')
     user = Reference('user')
 
+api.register(AnnouncementRecipient)
+
 
 class AppBuild(Object):
     code = 'APPBLD'
     build_id = Field('buildID')
     build_number = Field('buildNumber')
     entry_date = Field('entryDate')
+
+api.register(AppBuild)
 
 
 class AppEvent(Object):
@@ -282,6 +312,8 @@ class AppEvent(Object):
     app_global = Reference('appGlobal')
     customer = Reference('customer')
 
+api.register(AppEvent)
+
 
 class AppGlobal(Object):
     code = 'APGLOB'
@@ -300,6 +332,8 @@ class AppGlobal(Object):
     ui_group_bys = Collection('uiGroupBys')
     ui_views = Collection('uiViews')
 
+api.register(AppGlobal)
+
 
 class AppInfo(Object):
     code = 'APPINF'
@@ -309,6 +343,8 @@ class AppInfo(Object):
     last_update = Field('lastUpdate')
     upgrade_build = Field('upgradeBuild')
     upgrade_step = Field('upgradeStep')
+
+api.register(AppInfo)
 
 
 class Approval(Object):
@@ -567,7 +603,7 @@ class Approval(Object):
     total_task_count = Field('totalTaskCount')
     tracking_mode = Field('trackingMode')
     update_type = Field('updateType')
-    url = Field('url')
+    url_ = Field('url')
     version = Field('version')
     wbs = Field('wbs')
     work = Field('work')
@@ -662,6 +698,8 @@ class Approval(Object):
     tasks = Collection('tasks')
     updates = Collection('updates')
 
+api.register(Approval)
+
 
 class ApprovalPath(Object):
     code = 'ARVPTH'
@@ -677,6 +715,8 @@ class ApprovalPath(Object):
     approval_process = Reference('approvalProcess')
     customer = Reference('customer')
     approval_steps = Collection('approvalSteps')
+
+api.register(ApprovalPath)
 
 
 class ApprovalProcess(Object):
@@ -700,6 +740,8 @@ class ApprovalProcess(Object):
     entered_by = Reference('enteredBy')
     last_updated_by = Reference('lastUpdatedBy')
     approval_paths = Collection('approvalPaths')
+
+api.register(ApprovalProcess)
 
 
 class ApprovalProcessAttachable(Object):
@@ -725,6 +767,8 @@ class ApprovalProcessAttachable(Object):
     object_categories = Collection('objectCategories')
     parameter_values = Collection('parameterValues')
 
+api.register(ApprovalProcessAttachable)
+
 
 class ApprovalStep(Object):
     code = 'ARVSTP'
@@ -736,6 +780,8 @@ class ApprovalStep(Object):
     approval_path = Reference('approvalPath')
     customer = Reference('customer')
     step_approvers = Collection('stepApprovers')
+
+api.register(ApprovalStep)
 
 
 class ApproverStatus(Object):
@@ -764,6 +810,8 @@ class ApproverStatus(Object):
     step_approver = Reference('stepApprover')
     task = Reference('task')
     wildcard_user = Reference('wildcardUser')
+
+api.register(ApproverStatus)
 
 
 class Assignment(Object):
@@ -804,6 +852,8 @@ class Assignment(Object):
     team = Reference('team')
     work_item = Reference('workItem')
 
+api.register(Assignment)
+
 
 class AuditLoginAsSession(Object):
     code = 'AUDS'
@@ -823,10 +873,14 @@ class AuditLoginAsSession(Object):
     journal_entries = Collection('journalEntries')
     notes = Collection('notes')
 
+api.register(AuditLoginAsSession)
+
 
 class Authentication(Object):
     code = 'AUTH'
     obj_code = Field('objCode')
+
+api.register(Authentication)
 
 
 class Avatar(Object):
@@ -838,6 +892,8 @@ class Avatar(Object):
     avatar_x = Field('avatarX')
     avatar_y = Field('avatarY')
     handle = Field('handle')
+
+api.register(Avatar)
 
 
 class AwaitingApproval(Object):
@@ -868,6 +924,8 @@ class AwaitingApproval(Object):
     timesheet = Reference('timesheet')
     user = Reference('user')
 
+api.register(AwaitingApproval)
+
 
 class BackgroundJob(Object):
     code = 'BKGJOB'
@@ -889,6 +947,8 @@ class BackgroundJob(Object):
     status = Field('status')
     customer = Reference('customer')
     entered_by = Reference('enteredBy')
+
+api.register(BackgroundJob)
 
 
 class Baseline(Object):
@@ -925,6 +985,8 @@ class Baseline(Object):
     project = Reference('project')
     baseline_tasks = Collection('baselineTasks')
 
+api.register(Baseline)
+
 
 class BaselineTask(Object):
     code = 'BSTSK'
@@ -959,6 +1021,8 @@ class BaselineTask(Object):
     customer = Reference('customer')
     task = Reference('task')
 
+api.register(BaselineTask)
+
 
 class BillingRecord(Object):
     code = 'BILL'
@@ -980,6 +1044,8 @@ class BillingRecord(Object):
     expenses = Collection('expenses')
     hours = Collection('hours')
 
+api.register(BillingRecord)
+
 
 class Branding(Object):
     code = 'BRND'
@@ -987,6 +1053,8 @@ class Branding(Object):
     details = Field('details')
     last_update_date = Field('lastUpdateDate')
     customer = Reference('customer')
+
+api.register(Branding)
 
 
 class BurndownEvent(Object):
@@ -1004,6 +1072,8 @@ class BurndownEvent(Object):
     is_complete = Field('isComplete')
     customer = Reference('customer')
 
+api.register(BurndownEvent)
+
 
 class CalendarEvent(Object):
     code = 'CALEVT'
@@ -1020,6 +1090,8 @@ class CalendarEvent(Object):
     calendar_section = Reference('calendarSection')
     customer = Reference('customer')
     entered_by = Reference('enteredBy')
+
+api.register(CalendarEvent)
 
 
 class CalendarFeedEntry(Object):
@@ -1049,6 +1121,8 @@ class CalendarFeedEntry(Object):
     project = Reference('project')
     task = Reference('task')
 
+api.register(CalendarFeedEntry)
+
 
 class CalendarInfo(Object):
     code = 'CALEND'
@@ -1069,6 +1143,8 @@ class CalendarInfo(Object):
     calendar_sections = Collection('calendarSections')
     security_ancestors = Collection('securityAncestors')
 
+api.register(CalendarInfo)
+
 
 class CalendarPortalSection(Object):
     code = 'CALPTL'
@@ -1082,6 +1158,8 @@ class CalendarPortalSection(Object):
     calendar_info = Reference('calendarInfo')
     customer = Reference('customer')
     entered_by = Reference('enteredBy')
+
+api.register(CalendarPortalSection)
 
 
 class CalendarSection(Object):
@@ -1101,6 +1179,8 @@ class CalendarSection(Object):
     callable_expressions = Collection('callableExpressions')
     filters = Collection('filters')
 
+api.register(CalendarSection)
+
 
 class CallableExpression(Object):
     code = 'CALEXP'
@@ -1108,6 +1188,8 @@ class CallableExpression(Object):
     expression = Field('expression')
     ui_obj_code = Field('uiObjCode')
     customer = Reference('customer')
+
+api.register(CallableExpression)
 
 
 class Category(Object):
@@ -1133,6 +1215,8 @@ class Category(Object):
     category_parameters = Collection('categoryParameters')
     other_groups = Collection('otherGroups')
 
+api.register(Category)
+
 
 class CategoryAccessRule(Object):
     code = 'CATACR'
@@ -1142,6 +1226,8 @@ class CategoryAccessRule(Object):
     customer_id = Field('customerID')
     category = Reference('category')
     customer = Reference('customer')
+
+api.register(CategoryAccessRule)
 
 
 class CategoryCascadeRule(Object):
@@ -1160,6 +1246,8 @@ class CategoryCascadeRule(Object):
     otherwise_parameter = Reference('otherwiseParameter')
     category_cascade_rule_matches = Collection('categoryCascadeRuleMatches')
 
+api.register(CategoryCascadeRule)
+
 
 class CategoryCascadeRuleMatch(Object):
     code = 'CTCSRM'
@@ -1171,6 +1259,8 @@ class CategoryCascadeRuleMatch(Object):
     category_cascade_rule = Reference('categoryCascadeRule')
     customer = Reference('customer')
     parameter = Reference('parameter')
+
+api.register(CategoryCascadeRuleMatch)
 
 
 class CategoryParameter(Object):
@@ -1194,6 +1284,8 @@ class CategoryParameter(Object):
     parameter = Reference('parameter')
     parameter_group = Reference('parameterGroup')
 
+api.register(CategoryParameter)
+
 
 class CategoryParameterExpression(Object):
     code = 'CTGPEX'
@@ -1202,6 +1294,8 @@ class CategoryParameterExpression(Object):
     has_finance_fields = Field('hasFinanceFields')
     category_parameter = Reference('categoryParameter')
     customer = Reference('customer')
+
+api.register(CategoryParameterExpression)
 
 
 class Company(Object):
@@ -1225,11 +1319,15 @@ class Company(Object):
     parameter_values = Collection('parameterValues')
     rates = Collection('rates')
 
+api.register(Company)
+
 
 class ComponentKey(Object):
     code = 'CMPSRV'
     component_key = Field('componentKey')
     name = Field('name')
+
+api.register(ComponentKey)
 
 
 class CustomEnum(Object):
@@ -1248,6 +1346,8 @@ class CustomEnum(Object):
     customer = Reference('customer')
     custom_enum_orders = Collection('customEnumOrders')
 
+api.register(CustomEnum)
+
 
 class CustomEnumOrder(Object):
     code = 'CSTEMO'
@@ -1258,6 +1358,8 @@ class CustomEnumOrder(Object):
     sub_obj_code = Field('subObjCode')
     custom_enum = Reference('customEnum')
     customer = Reference('customer')
+
+api.register(CustomEnumOrder)
 
 
 class CustomMenu(Object):
@@ -1282,6 +1384,8 @@ class CustomMenu(Object):
     target_portal_tab = Reference('targetPortalTab')
     children_menus = Collection('childrenMenus')
 
+api.register(CustomMenu)
+
 
 class CustomMenuCustomMenu(Object):
     code = 'CMSCMS'
@@ -1293,6 +1397,8 @@ class CustomMenuCustomMenu(Object):
     customer = Reference('customer')
     parent = Reference('parent')
 
+api.register(CustomMenuCustomMenu)
+
 
 class CustomQuarter(Object):
     code = 'CSTQRT'
@@ -1301,6 +1407,8 @@ class CustomQuarter(Object):
     quarter_label = Field('quarterLabel')
     start_date = Field('startDate')
     customer = Reference('customer')
+
+api.register(CustomQuarter)
 
 
 class Customer(Object):
@@ -1464,6 +1572,8 @@ class Customer(Object):
     ui_group_bys = Collection('uiGroupBys')
     ui_views = Collection('uiViews')
 
+api.register(Customer)
+
 
 class CustomerFeedback(Object):
     code = 'CSFD'
@@ -1477,6 +1587,8 @@ class CustomerFeedback(Object):
     score = Field('score')
     user_guid = Field('userGUID')
 
+api.register(CustomerFeedback)
+
 
 class CustomerPref(Object):
     code = 'CSTPRF'
@@ -1485,6 +1597,8 @@ class CustomerPref(Object):
     pref_value = Field('prefValue')
     customer = Reference('customer')
 
+api.register(CustomerPref)
+
 
 class CustomerPreferences(Object):
     code = 'CUSTPR'
@@ -1492,6 +1606,8 @@ class CustomerPreferences(Object):
     obj_code = Field('objCode')
     possible_values = Field('possibleValues')
     value = Field('value')
+
+api.register(CustomerPreferences)
 
 
 class CustomerTimelineCalc(Object):
@@ -1502,12 +1618,16 @@ class CustomerTimelineCalc(Object):
     timeline_calculation_status = Field('timelineCalculationStatus')
     customer = Reference('customer')
 
+api.register(CustomerTimelineCalc)
+
 
 class CustsSections(Object):
     code = 'CSTSEC'
     customer_id = Field('customerID')
     section_id = Field('sectionID')
     customer = Reference('customer')
+
+api.register(CustsSections)
 
 
 class DocsFolders(Object):
@@ -1518,6 +1638,8 @@ class DocsFolders(Object):
     customer = Reference('customer')
     document = Reference('document')
     folder = Reference('folder')
+
+api.register(DocsFolders)
 
 
 class Document(Object):
@@ -1605,6 +1727,8 @@ class Document(Object):
     subscribers = Collection('subscribers')
     versions = Collection('versions')
 
+api.register(Document)
+
 
 class DocumentApproval(Object):
     code = 'DOCAPL'
@@ -1623,6 +1747,8 @@ class DocumentApproval(Object):
     document = Reference('document')
     note = Reference('note')
     requestor = Reference('requestor')
+
+api.register(DocumentApproval)
 
 
 class DocumentFolder(Object):
@@ -1662,6 +1788,8 @@ class DocumentFolder(Object):
     children = Collection('children')
     documents = Collection('documents')
 
+api.register(DocumentFolder)
+
 
 class DocumentProvider(Object):
     code = 'DOCPRO'
@@ -1677,6 +1805,8 @@ class DocumentProvider(Object):
     doc_provider_config = Reference('docProviderConfig')
     owner = Reference('owner')
 
+api.register(DocumentProvider)
+
 
 class DocumentProviderConfig(Object):
     code = 'DOCCFG'
@@ -1688,6 +1818,8 @@ class DocumentProviderConfig(Object):
     name = Field('name')
     customer = Reference('customer')
 
+api.register(DocumentProviderConfig)
+
 
 class DocumentProviderMetadata(Object):
     code = 'DOCMET'
@@ -1695,6 +1827,8 @@ class DocumentProviderMetadata(Object):
     external_integration_type = Field('externalIntegrationType')
     mapping = Field('mapping')
     customer = Reference('customer')
+
+api.register(DocumentProviderMetadata)
 
 
 class DocumentRequest(Object):
@@ -1737,6 +1871,8 @@ class DocumentRequest(Object):
     template_task = Reference('templateTask')
     user = Reference('user')
 
+api.register(DocumentRequest)
+
 
 class DocumentShare(Object):
     code = 'DOCSHR'
@@ -1765,6 +1901,8 @@ class DocumentShare(Object):
     team = Reference('team')
     user = Reference('user')
 
+api.register(DocumentShare)
+
 
 class DocumentTaskStatus(Object):
     code = 'DOCTSK'
@@ -1776,6 +1914,8 @@ class DocumentTaskStatus(Object):
     status_date = Field('statusDate')
     task_info = Field('taskInfo')
     user_id = Field('userID')
+
+api.register(DocumentTaskStatus)
 
 
 class DocumentVersion(Object):
@@ -1819,10 +1959,14 @@ class DocumentVersion(Object):
     document_provider = Reference('documentProvider')
     entered_by = Reference('enteredBy')
 
+api.register(DocumentVersion)
+
 
 class Email(Object):
     code = 'EMAILC'
     obj_code = Field('objCode')
+
+api.register(Email)
 
 
 class EmailTemplate(Object):
@@ -1834,6 +1978,8 @@ class EmailTemplate(Object):
     subject = Field('subject')
     template_obj_code = Field('templateObjCode')
     customer = Reference('customer')
+
+api.register(EmailTemplate)
 
 
 class Endorsement(Object):
@@ -1875,6 +2021,8 @@ class Endorsement(Object):
     replies = Collection('replies')
     shares = Collection('shares')
 
+api.register(Endorsement)
+
 
 class EndorsementShare(Object):
     code = 'ENDSHR'
@@ -1894,6 +2042,8 @@ class EndorsementShare(Object):
     last_updated_by = Reference('lastUpdatedBy')
     team = Reference('team')
     user = Reference('user')
+
+api.register(EndorsementShare)
 
 
 class EventHandler(Object):
@@ -1916,6 +2066,8 @@ class EventHandler(Object):
     customer = Reference('customer')
     app_events = Collection('appEvents')
 
+api.register(EventHandler)
+
 
 class EventSubscription(Object):
     code = 'EVTSUB'
@@ -1928,6 +2080,8 @@ class EventSubscription(Object):
     status = Field('status')
     customer = Reference('customer')
     entered_by = Reference('enteredBy')
+
+api.register(EventSubscription)
 
 
 class ExchangeRate(Object):
@@ -1944,6 +2098,8 @@ class ExchangeRate(Object):
     customer = Reference('customer')
     project = Reference('project')
     template = Reference('template')
+
+api.register(ExchangeRate)
 
 
 class Expense(Object):
@@ -1998,6 +2154,8 @@ class Expense(Object):
     object_categories = Collection('objectCategories')
     parameter_values = Collection('parameterValues')
 
+api.register(Expense)
+
 
 class ExpenseType(Object):
     code = 'EXPTYP'
@@ -2017,6 +2175,8 @@ class ExpenseType(Object):
     app_global = Reference('appGlobal')
     customer = Reference('customer')
 
+api.register(ExpenseType)
+
 
 class ExternalDocument(Object):
     code = 'EXTDOC'
@@ -2035,6 +2195,8 @@ class ExternalDocument(Object):
     read_only = Field('readOnly')
     size = Field('size')
     thumbnail_url = Field('thumbnailURL')
+
+api.register(ExternalDocument)
 
 
 class ExternalSection(Object):
@@ -2064,6 +2226,8 @@ class ExternalSection(Object):
     entered_by = Reference('enteredBy')
     view = Reference('view')
 
+api.register(ExternalSection)
+
 
 class Favorite(Object):
     code = 'FVRITE'
@@ -2075,6 +2239,8 @@ class Favorite(Object):
     customer = Reference('customer')
     user = Reference('user')
 
+api.register(Favorite)
+
 
 class Feature(Object):
     code = 'FEATR'
@@ -2084,6 +2250,8 @@ class Feature(Object):
     name = Field('name')
     old_jexl_expression = Field('oldJexlExpression')
     app_global = Reference('appGlobal')
+
+api.register(Feature)
 
 
 class FinancialData(Object):
@@ -2116,6 +2284,8 @@ class FinancialData(Object):
     customer = Reference('customer')
     project = Reference('project')
 
+api.register(FinancialData)
+
 
 class Group(Object):
     code = 'GROUP'
@@ -2132,6 +2302,8 @@ class Group(Object):
     parent = Reference('parent')
     children = Collection('children')
     user_groups = Collection('userGroups')
+
+api.register(Group)
 
 
 class Hour(Object):
@@ -2177,6 +2349,8 @@ class Hour(Object):
     task = Reference('task')
     timesheet = Reference('timesheet')
 
+api.register(Hour)
+
 
 class HourType(Object):
     code = 'HOURT'
@@ -2199,6 +2373,8 @@ class HourType(Object):
     timesheetprofiles = Collection('timesheetprofiles')
     users = Collection('users')
 
+api.register(HourType)
+
 
 class IPRange(Object):
     code = 'IPRAGE'
@@ -2206,6 +2382,8 @@ class IPRange(Object):
     end_range = Field('endRange')
     start_range = Field('startRange')
     customer = Reference('customer')
+
+api.register(IPRange)
 
 
 class ImportRow(Object):
@@ -2217,6 +2395,8 @@ class ImportRow(Object):
     customer = Reference('customer')
     import_template = Reference('importTemplate')
 
+api.register(ImportRow)
+
 
 class ImportTemplate(Object):
     code = 'ITMPL'
@@ -2227,6 +2407,8 @@ class ImportTemplate(Object):
     customer = Reference('customer')
     import_rows = Collection('importRows')
 
+api.register(ImportTemplate)
+
 
 class InstalledDDItem(Object):
     code = 'IDDI'
@@ -2234,6 +2416,8 @@ class InstalledDDItem(Object):
     customer_id = Field('customerID')
     name_key = Field('nameKey')
     customer = Reference('customer')
+
+api.register(InstalledDDItem)
 
 
 class Issue(Object):
@@ -2373,6 +2557,8 @@ class Issue(Object):
     security_ancestors = Collection('securityAncestors')
     updates = Collection('updates')
 
+api.register(Issue)
+
 
 class Iteration(Object):
     code = 'ITRN'
@@ -2411,6 +2597,8 @@ class Iteration(Object):
     documents = Collection('documents')
     object_categories = Collection('objectCategories')
     parameter_values = Collection('parameterValues')
+
+api.register(Iteration)
 
 
 class JournalEntry(Object):
@@ -2486,6 +2674,8 @@ class JournalEntry(Object):
     user = Reference('user')
     replies = Collection('replies')
 
+api.register(JournalEntry)
+
 
 class JournalField(Object):
     code = 'JRNLF'
@@ -2500,10 +2690,14 @@ class JournalField(Object):
     customer = Reference('customer')
     parameter = Reference('parameter')
 
+api.register(JournalField)
+
 
 class KickStart(Object):
     code = 'KSS'
     obj_code = Field('objCode')
+
+api.register(KickStart)
 
 
 class LayoutTemplate(Object):
@@ -2536,6 +2730,8 @@ class LayoutTemplate(Object):
     ui_group_bys = Collection('uiGroupBys')
     ui_views = Collection('uiViews')
 
+api.register(LayoutTemplate)
+
 
 class LayoutTemplateCard(Object):
     code = 'LTMPLC'
@@ -2552,6 +2748,8 @@ class LayoutTemplateCard(Object):
     customer = Reference('customer')
     layout_template = Reference('layoutTemplate')
 
+api.register(LayoutTemplateCard)
+
 
 class LayoutTemplateDatePreference(Object):
     code = 'LTMPDP'
@@ -2563,6 +2761,8 @@ class LayoutTemplateDatePreference(Object):
     customer = Reference('customer')
     layout_template = Reference('layoutTemplate')
 
+api.register(LayoutTemplateDatePreference)
+
 
 class LayoutTemplatePage(Object):
     code = 'LTMPLP'
@@ -2572,6 +2772,8 @@ class LayoutTemplatePage(Object):
     tabs = Field('tabs')
     customer = Reference('customer')
     layout_template = Reference('layoutTemplate')
+
+api.register(LayoutTemplatePage)
 
 
 class LicenseOrder(Object):
@@ -2592,6 +2794,8 @@ class LicenseOrder(Object):
     team_users = Field('teamUsers')
     customer = Reference('customer')
 
+api.register(LicenseOrder)
+
 
 class Like(Object):
     code = 'LIKE'
@@ -2606,6 +2810,8 @@ class Like(Object):
     entered_by = Reference('enteredBy')
     journal_entry = Reference('journalEntry')
     note = Reference('note')
+
+api.register(Like)
 
 
 class LinkedFolder(Object):
@@ -2623,6 +2829,8 @@ class LinkedFolder(Object):
     document_provider = Reference('documentProvider')
     folder = Reference('folder')
     linked_by = Reference('linkedBy')
+
+api.register(LinkedFolder)
 
 
 class MasterTask(Object):
@@ -2678,6 +2886,8 @@ class MasterTask(Object):
     object_categories = Collection('objectCategories')
     parameter_values = Collection('parameterValues')
 
+api.register(MasterTask)
+
 
 class MessageArg(Object):
     code = 'MSGARG'
@@ -2688,6 +2898,8 @@ class MessageArg(Object):
     objid = Field('objid')
     text = Field('text')
     type = Field('type')
+
+api.register(MessageArg)
 
 
 class MetaRecord(Object):
@@ -2713,6 +2925,8 @@ class MetaRecord(Object):
     review_actions = Field('reviewActions')
     team_actions = Field('teamActions')
 
+api.register(MetaRecord)
+
 
 class Milestone(Object):
     code = 'MILE'
@@ -2725,6 +2939,8 @@ class Milestone(Object):
     sequence = Field('sequence')
     customer = Reference('customer')
     milestone_path = Reference('milestonePath')
+
+api.register(Milestone)
 
 
 class MilestonePath(Object):
@@ -2740,6 +2956,8 @@ class MilestonePath(Object):
     groups = Collection('groups')
     milestones = Collection('milestones')
 
+api.register(MilestonePath)
+
 
 class MobileDevice(Object):
     code = 'MOBILDVC'
@@ -2747,6 +2965,8 @@ class MobileDevice(Object):
     device_type = Field('deviceType')
     endpoint = Field('endpoint')
     user = Reference('user')
+
+api.register(MobileDevice)
 
 
 class NonWorkDay(Object):
@@ -2761,6 +2981,8 @@ class NonWorkDay(Object):
     customer = Reference('customer')
     schedule = Reference('schedule')
     user = Reference('user')
+
+api.register(NonWorkDay)
 
 
 class Note(Object):
@@ -2840,6 +3062,8 @@ class Note(Object):
     replies = Collection('replies')
     tags = Collection('tags')
 
+api.register(Note)
+
 
 class NoteTag(Object):
     code = 'NTAG'
@@ -2856,6 +3080,8 @@ class NoteTag(Object):
     note = Reference('note')
     team = Reference('team')
     user = Reference('user')
+
+api.register(NoteTag)
 
 
 class NotificationRecord(Object):
@@ -2887,6 +3113,8 @@ class NotificationRecord(Object):
     timesheet = Reference('timesheet')
     timesheet_profile = Reference('timesheetProfile')
 
+api.register(NotificationRecord)
+
 
 class ObjectCategory(Object):
     code = 'OBJCAT'
@@ -2897,6 +3125,8 @@ class ObjectCategory(Object):
     obj_obj_code = Field('objObjCode')
     category = Reference('category')
     customer = Reference('customer')
+
+api.register(ObjectCategory)
 
 
 class Parameter(Object):
@@ -2916,6 +3146,8 @@ class Parameter(Object):
     last_updated_by = Reference('lastUpdatedBy')
     parameter_options = Collection('parameterOptions')
 
+api.register(Parameter)
+
 
 class ParameterGroup(Object):
     code = 'PGRP'
@@ -2930,6 +3162,8 @@ class ParameterGroup(Object):
     customer = Reference('customer')
     last_updated_by = Reference('lastUpdatedBy')
 
+api.register(ParameterGroup)
+
 
 class ParameterOption(Object):
     code = 'POPT'
@@ -2943,6 +3177,8 @@ class ParameterOption(Object):
     value = Field('value')
     customer = Reference('customer')
     parameter = Reference('parameter')
+
+api.register(ParameterOption)
 
 
 class ParameterValue(Object):
@@ -2984,6 +3220,8 @@ class ParameterValue(Object):
     template_task = Reference('templateTask')
     user = Reference('user')
 
+api.register(ParameterValue)
+
 
 class PopAccount(Object):
     code = 'POPA'
@@ -2999,6 +3237,8 @@ class PopAccount(Object):
     project_id = Field('projectID')
     customer = Reference('customer')
     project = Reference('project')
+
+api.register(PopAccount)
 
 
 class PortalProfile(Object):
@@ -3021,6 +3261,8 @@ class PortalProfile(Object):
     ui_filters = Collection('uiFilters')
     ui_group_bys = Collection('uiGroupBys')
     ui_views = Collection('uiViews')
+
+api.register(PortalProfile)
 
 
 class PortalSection(Object):
@@ -3103,6 +3345,8 @@ class PortalSection(Object):
     scheduled_reports = Collection('scheduledReports')
     security_ancestors = Collection('securityAncestors')
 
+api.register(PortalSection)
+
 
 class PortalTab(Object):
     code = 'PTLTAB'
@@ -3130,6 +3374,8 @@ class PortalTab(Object):
     linked_users = Collection('linkedUsers')
     portal_tab_sections = Collection('portalTabSections')
 
+api.register(PortalTab)
+
 
 class PortalTabSection(Object):
     code = 'PRTBSC'
@@ -3147,6 +3393,8 @@ class PortalTabSection(Object):
     external_section = Reference('externalSection')
     internal_section = Reference('internalSection')
     portal_tab = Reference('portalTab')
+
+api.register(PortalTabSection)
 
 
 class Portfolio(Object):
@@ -3190,6 +3438,8 @@ class Portfolio(Object):
     programs = Collection('programs')
     projects = Collection('projects')
 
+api.register(Portfolio)
+
 
 class Predecessor(Object):
     code = 'PRED'
@@ -3205,6 +3455,8 @@ class Predecessor(Object):
     predecessor = Reference('predecessor')
     successor = Reference('successor')
 
+api.register(Predecessor)
+
 
 class Preference(Object):
     code = 'PROSET'
@@ -3213,6 +3465,8 @@ class Preference(Object):
     value = Field('value')
     app_global = Reference('appGlobal')
     customer = Reference('customer')
+
+api.register(Preference)
 
 
 class Program(Object):
@@ -3249,6 +3503,8 @@ class Program(Object):
     parameter_values = Collection('parameterValues')
     projects = Collection('projects')
     security_ancestors = Collection('securityAncestors')
+
+api.register(Program)
 
 
 class Project(Object):
@@ -3481,6 +3737,8 @@ class Project(Object):
     tasks = Collection('tasks')
     updates = Collection('updates')
 
+api.register(Project)
+
 
 class ProjectUser(Object):
     code = 'PRTU'
@@ -3490,6 +3748,8 @@ class ProjectUser(Object):
     customer = Reference('customer')
     project = Reference('project')
     user = Reference('user')
+
+api.register(ProjectUser)
 
 
 class ProjectUserRole(Object):
@@ -3502,6 +3762,8 @@ class ProjectUserRole(Object):
     project = Reference('project')
     role = Reference('role')
     user = Reference('user')
+
+api.register(ProjectUserRole)
 
 
 class QueueDef(Object):
@@ -3539,6 +3801,8 @@ class QueueDef(Object):
     object_categories = Collection('objectCategories')
     queue_topics = Collection('queueTopics')
 
+api.register(QueueDef)
+
 
 class QueueTopic(Object):
     code = 'QUET'
@@ -3569,6 +3833,8 @@ class QueueTopic(Object):
     queue_def = Reference('queueDef')
     object_categories = Collection('objectCategories')
 
+api.register(QueueTopic)
+
 
 class QueueTopicGroup(Object):
     code = 'QUETGP'
@@ -3584,6 +3850,8 @@ class QueueTopicGroup(Object):
     queue_def = Reference('queueDef')
     queue_topic_groups = Collection('queueTopicGroups')
     queue_topics = Collection('queueTopics')
+
+api.register(QueueTopicGroup)
 
 
 class Rate(Object):
@@ -3604,6 +3872,8 @@ class Rate(Object):
     role = Reference('role')
     template = Reference('template')
 
+api.register(Rate)
+
 
 class Recent(Object):
     code = 'RECENT'
@@ -3616,6 +3886,8 @@ class Recent(Object):
     customer = Reference('customer')
     user = Reference('user')
 
+api.register(Recent)
+
 
 class RecentMenuItem(Object):
     code = 'RECENTMENUITEM'
@@ -3625,6 +3897,8 @@ class RecentMenuItem(Object):
     obj_id = Field('objID')
     obj_obj_code = Field('objObjCode')
     recent_item_string = Field('recentItemString')
+
+api.register(RecentMenuItem)
 
 
 class RecentUpdate(Object):
@@ -3656,6 +3930,8 @@ class RecentUpdate(Object):
     user_id = Field('userID')
     customer = Reference('customer')
 
+api.register(RecentUpdate)
+
 
 class RecurrenceRule(Object):
     code = 'RECR'
@@ -3678,12 +3954,16 @@ class RecurrenceRule(Object):
     task = Reference('task')
     template_task = Reference('templateTask')
 
+api.register(RecurrenceRule)
+
 
 class ReportFolder(Object):
     code = 'RPTFDR'
     customer_id = Field('customerID')
     name = Field('name')
     customer = Reference('customer')
+
+api.register(ReportFolder)
 
 
 class Reseller(Object):
@@ -3702,6 +3982,8 @@ class Reseller(Object):
     state = Field('state')
     account_reps = Collection('accountReps')
 
+api.register(Reseller)
+
 
 class ReservedTime(Object):
     code = 'RESVT'
@@ -3713,6 +3995,8 @@ class ReservedTime(Object):
     customer = Reference('customer')
     task = Reference('task')
     user = Reference('user')
+
+api.register(ReservedTime)
 
 
 class ResourceAllocation(Object):
@@ -3736,6 +4020,8 @@ class ResourceAllocation(Object):
     resource_pool = Reference('resourcePool')
     role = Reference('role')
 
+api.register(ResourceAllocation)
+
 
 class ResourcePool(Object):
     code = 'RSPOOL'
@@ -3748,6 +4034,8 @@ class ResourcePool(Object):
     resource_allocations = Collection('resourceAllocations')
     roles = Collection('roles')
     users = Collection('users')
+
+api.register(ResourcePool)
 
 
 class Risk(Object):
@@ -3772,6 +4060,8 @@ class Risk(Object):
     risk_type = Reference('riskType')
     template = Reference('template')
 
+api.register(Risk)
+
 
 class RiskType(Object):
     code = 'RSKTYP'
@@ -3780,6 +4070,8 @@ class RiskType(Object):
     ext_ref_id = Field('extRefID')
     name = Field('name')
     customer = Reference('customer')
+
+api.register(RiskType)
 
 
 class Role(Object):
@@ -3798,6 +4090,8 @@ class Role(Object):
     customer = Reference('customer')
     entered_by = Reference('enteredBy')
     layout_template = Reference('layoutTemplate')
+
+api.register(Role)
 
 
 class RoutingRule(Object):
@@ -3822,6 +4116,8 @@ class RoutingRule(Object):
     project = Reference('project')
     template = Reference('template')
 
+api.register(RoutingRule)
+
 
 class S3Migration(Object):
     code = 'S3MT'
@@ -3829,6 +4125,8 @@ class S3Migration(Object):
     migration_date = Field('migrationDate')
     status = Field('status')
     customer = Reference('customer')
+
+api.register(S3Migration)
 
 
 class SSOMapping(Object):
@@ -3843,6 +4141,8 @@ class SSOMapping(Object):
     customer = Reference('customer')
     mapping_rules = Collection('mappingRules')
 
+api.register(SSOMapping)
+
 
 class SSOMappingRule(Object):
     code = 'SSOMR'
@@ -3852,6 +4152,8 @@ class SSOMappingRule(Object):
     remote_attribute = Field('remoteAttribute')
     sso_mapping_id = Field('ssoMappingID')
     customer = Reference('customer')
+
+api.register(SSOMappingRule)
 
 
 class SSOOption(Object):
@@ -3878,12 +4180,16 @@ class SSOOption(Object):
     customer = Reference('customer')
     sso_mappings = Collection('ssoMappings')
 
+api.register(SSOOption)
+
 
 class SSOUsername(Object):
     code = 'SSOUSR'
     customer_id = Field('customerID')
     name = Field('name')
     user_id = Field('userID')
+
+api.register(SSOUsername)
 
 
 class SandboxMigration(Object):
@@ -3901,6 +4207,8 @@ class SandboxMigration(Object):
     user_id = Field('userID')
     customer = Reference('customer')
     user = Reference('user')
+
+api.register(SandboxMigration)
 
 
 class Schedule(Object):
@@ -3926,6 +4234,8 @@ class Schedule(Object):
     group = Reference('group')
     non_work_days = Collection('nonWorkDays')
     other_groups = Collection('otherGroups')
+
+api.register(Schedule)
 
 
 class ScheduledReport(Object):
@@ -3963,6 +4273,8 @@ class ScheduledReport(Object):
     teams = Collection('teams')
     users = Collection('users')
 
+api.register(ScheduledReport)
+
 
 class ScoreCard(Object):
     code = 'SCORE'
@@ -3989,6 +4301,8 @@ class ScoreCard(Object):
     template = Reference('template')
     score_card_questions = Collection('scoreCardQuestions')
 
+api.register(ScoreCard)
+
 
 class ScoreCardAnswer(Object):
     code = 'SCANS'
@@ -4009,6 +4323,8 @@ class ScoreCardAnswer(Object):
     score_card_question = Reference('scoreCardQuestion')
     template = Reference('template')
 
+api.register(ScoreCardAnswer)
+
 
 class ScoreCardOption(Object):
     code = 'SCOPT'
@@ -4021,6 +4337,8 @@ class ScoreCardOption(Object):
     value = Field('value')
     customer = Reference('customer')
     score_card_question = Reference('scoreCardQuestion')
+
+api.register(ScoreCardOption)
 
 
 class ScoreCardQuestion(Object):
@@ -4036,6 +4354,8 @@ class ScoreCardQuestion(Object):
     score_card = Reference('scoreCard')
     score_card_options = Collection('scoreCardOptions')
 
+api.register(ScoreCardQuestion)
+
 
 class SearchEvent(Object):
     code = 'SRCEVT'
@@ -4044,6 +4364,8 @@ class SearchEvent(Object):
     event_obj_code = Field('eventObjCode')
     event_type = Field('eventType')
     obj_ids = Field('objIDs')
+
+api.register(SearchEvent)
 
 
 class SecurityAncestor(Object):
@@ -4055,6 +4377,8 @@ class SecurityAncestor(Object):
     ref_obj_id = Field('refObjID')
     customer = Reference('customer')
 
+api.register(SecurityAncestor)
+
 
 class Sequence(Object):
     code = 'SEQ'
@@ -4062,6 +4386,8 @@ class Sequence(Object):
     seq_name = Field('seqName')
     seq_value = Field('seqValue')
     customer = Reference('customer')
+
+api.register(Sequence)
 
 
 class SharingSettings(Object):
@@ -4084,6 +4410,8 @@ class SharingSettings(Object):
     project = Reference('project')
     template = Reference('template')
 
+api.register(SharingSettings)
+
 
 class StepApprover(Object):
     code = 'SPAPVR'
@@ -4098,6 +4426,8 @@ class StepApprover(Object):
     role = Reference('role')
     team = Reference('team')
     user = Reference('user')
+
+api.register(StepApprover)
 
 
 class Task(Object):
@@ -4305,6 +4635,8 @@ class Task(Object):
     successors = Collection('successors')
     updates = Collection('updates')
 
+api.register(Task)
+
 
 class Team(Object):
     code = 'TEAMOB'
@@ -4340,6 +4672,8 @@ class Team(Object):
     updates = Collection('updates')
     users = Collection('users')
 
+api.register(Team)
+
 
 class TeamMember(Object):
     code = 'TEAMMB'
@@ -4352,6 +4686,8 @@ class TeamMember(Object):
     team = Reference('team')
     user = Reference('user')
 
+api.register(TeamMember)
+
 
 class TeamMemberRole(Object):
     code = 'TEAMMR'
@@ -4363,6 +4699,8 @@ class TeamMemberRole(Object):
     role = Reference('role')
     team = Reference('team')
     user = Reference('user')
+
+api.register(TeamMemberRole)
 
 
 class Template(Object):
@@ -4470,6 +4808,8 @@ class Template(Object):
     template_users = Collection('templateUsers')
     updates = Collection('updates')
 
+api.register(Template)
+
 
 class TemplateAssignment(Object):
     code = 'TASSGN'
@@ -4497,6 +4837,8 @@ class TemplateAssignment(Object):
     template = Reference('template')
     template_task = Reference('templateTask')
 
+api.register(TemplateAssignment)
+
 
 class TemplatePredecessor(Object):
     code = 'TPRED'
@@ -4510,6 +4852,8 @@ class TemplatePredecessor(Object):
     customer = Reference('customer')
     predecessor = Reference('predecessor')
     successor = Reference('successor')
+
+api.register(TemplatePredecessor)
 
 
 class TemplateTask(Object):
@@ -4611,6 +4955,8 @@ class TemplateTask(Object):
     predecessors = Collection('predecessors')
     successors = Collection('successors')
 
+api.register(TemplateTask)
+
 
 class TemplateUser(Object):
     code = 'TMTU'
@@ -4621,6 +4967,8 @@ class TemplateUser(Object):
     customer = Reference('customer')
     template = Reference('template')
     user = Reference('user')
+
+api.register(TemplateUser)
 
 
 class TemplateUserRole(Object):
@@ -4633,6 +4981,8 @@ class TemplateUserRole(Object):
     role = Reference('role')
     template = Reference('template')
     user = Reference('user')
+
+api.register(TemplateUserRole)
 
 
 class TimedNotification(Object):
@@ -4650,6 +5000,8 @@ class TimedNotification(Object):
     timing = Field('timing')
     customer = Reference('customer')
     email_template = Reference('emailTemplate')
+
+api.register(TimedNotification)
 
 
 class Timesheet(Object):
@@ -4686,6 +5038,8 @@ class Timesheet(Object):
     hours = Collection('hours')
     notification_records = Collection('notificationRecords')
 
+api.register(Timesheet)
+
 
 class TimesheetProfile(Object):
     code = 'TSPRO'
@@ -4710,6 +5064,8 @@ class TimesheetProfile(Object):
     hour_types = Collection('hourTypes')
     notification_records = Collection('notificationRecords')
 
+api.register(TimesheetProfile)
+
 
 class TimesheetTemplate(Object):
     code = 'TSHTMP'
@@ -4727,6 +5083,8 @@ class TimesheetTemplate(Object):
     project = Reference('project')
     task = Reference('task')
     user = Reference('user')
+
+api.register(TimesheetTemplate)
 
 
 class UIFilter(Object):
@@ -4766,6 +5124,8 @@ class UIFilter(Object):
     linked_users = Collection('linkedUsers')
     users = Collection('users')
 
+api.register(UIFilter)
+
 
 class UIGroupBy(Object):
     code = 'UIGB'
@@ -4800,6 +5160,8 @@ class UIGroupBy(Object):
     linked_roles = Collection('linkedRoles')
     linked_teams = Collection('linkedTeams')
     linked_users = Collection('linkedUsers')
+
+api.register(UIGroupBy)
 
 
 class UIView(Object):
@@ -4840,6 +5202,8 @@ class UIView(Object):
     linked_teams = Collection('linkedTeams')
     linked_users = Collection('linkedUsers')
 
+api.register(UIView)
+
 
 class Update(Object):
     code = 'UPDATE'
@@ -4875,6 +5239,8 @@ class Update(Object):
     nested_updates = Collection('nestedUpdates')
     replies = Collection('replies')
     sub_message_args = Collection('subMessageArgs')
+
+api.register(Update)
 
 
 class User(Object):
@@ -5010,6 +5376,8 @@ class User(Object):
     watch_list = Collection('watchList')
     work_items = Collection('workItems')
 
+api.register(User)
+
 
 class UserActivity(Object):
     code = 'USERAC'
@@ -5021,6 +5389,8 @@ class UserActivity(Object):
     value = Field('value')
     customer = Reference('customer')
     user = Reference('user')
+
+api.register(UserActivity)
 
 
 class UserAvailability(Object):
@@ -5039,6 +5409,8 @@ class UserAvailability(Object):
     customer = Reference('customer')
     user = Reference('user')
 
+api.register(UserAvailability)
+
 
 class UserDelegation(Object):
     code = 'USRDEL'
@@ -5051,6 +5423,8 @@ class UserDelegation(Object):
     from_user = Reference('fromUser')
     to_user = Reference('toUser')
 
+api.register(UserDelegation)
+
 
 class UserGroups(Object):
     code = 'USRGPS'
@@ -5061,6 +5435,8 @@ class UserGroups(Object):
     customer = Reference('customer')
     group = Reference('group')
     user = Reference('user')
+
+api.register(UserGroups)
 
 
 class UserNote(Object):
@@ -5096,6 +5472,8 @@ class UserNote(Object):
     note = Reference('note')
     user = Reference('user')
 
+api.register(UserNote)
+
 
 class UserObjectPref(Object):
     code = 'USOP'
@@ -5109,6 +5487,8 @@ class UserObjectPref(Object):
     customer = Reference('customer')
     user = Reference('user')
 
+api.register(UserObjectPref)
+
 
 class UserPrefValue(Object):
     code = 'USERPF'
@@ -5118,6 +5498,8 @@ class UserPrefValue(Object):
     value = Field('value')
     customer = Reference('customer')
     user = Reference('user')
+
+api.register(UserPrefValue)
 
 
 class UserResource(Object):
@@ -5151,12 +5533,16 @@ class UserResource(Object):
     user_primary_role = Reference('userPrimaryRole')
     assignments = Collection('assignments')
 
+api.register(UserResource)
+
 
 class UsersSections(Object):
     code = 'USRSEC'
     customer_id = Field('customerID')
     section_id = Field('sectionID')
     user_id = Field('userID')
+
+api.register(UsersSections)
 
 
 class WatchListEntry(Object):
@@ -5174,6 +5560,8 @@ class WatchListEntry(Object):
     task = Reference('task')
     user = Reference('user')
 
+api.register(WatchListEntry)
+
 
 class WhatsNew(Object):
     code = 'WTSN'
@@ -5185,6 +5573,8 @@ class WhatsNew(Object):
     start_date = Field('startDate')
     title = Field('title')
     whats_new_types = Field('whatsNewTypes')
+
+api.register(WhatsNew)
 
 
 class Work(Object):
@@ -5361,7 +5751,7 @@ class Work(Object):
     team_id = Field('teamID')
     template_task_id = Field('templateTaskID')
     tracking_mode = Field('trackingMode')
-    url = Field('url')
+    url_ = Field('url')
     version = Field('version')
     wbs = Field('wbs')
     work = Field('work')
@@ -5426,6 +5816,8 @@ class Work(Object):
     successors = Collection('successors')
     updates = Collection('updates')
 
+api.register(Work)
+
 
 class WorkItem(Object):
     code = 'WRKITM'
@@ -5455,3 +5847,5 @@ class WorkItem(Object):
     project = Reference('project')
     task = Reference('task')
     user = Reference('user')
+
+api.register(WorkItem)

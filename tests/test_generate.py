@@ -217,7 +217,7 @@ class TestClassWriter(TestCase):
         self.log.check()
 
     def test_write_footer(self):
-        self.output.write('class FooBar(Object):\n    foo = "bar"')
+        self.output.write('class FooBar(Object):\n    foo = "bar"\n')
         self.writer.write_footer()
         self.check_output("""\
         class FooBar(Object):
@@ -289,7 +289,7 @@ class FunctionalTest(MockOpenHelper, TestCase):
         ])
 
         compare(self.dir.read('unsupported/__init__.py'), INIT_TEMPLATE)
-        compare(self.dir.read('unsupported/generated.py'), """\
+        compare(self.dir.read('unsupported/generated.py'), expected="""\
 # generated from https://api-cl01.attask-ondemand.com/attask/api/unsupported/metadata
 from ...meta import APIVersion, Object, Field, Reference, Collection
 
@@ -300,10 +300,14 @@ class OtherThing(Object):
     code = 'FOO'
     another_field = Field('anotherField')
 
+api.register(OtherThing)
+
 
 class SomeThing(Object):
     code = 'BAR'
     the_field = Field('theField')
     access_rules = Reference('accessRules')
     assigned_to = Collection('assignedTo')
+
+api.register(SomeThing)
 """)
