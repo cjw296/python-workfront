@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='workfront',
-    version='0.0.dev0',
+    version='0.3.0',
     author='Chris Withers',
     author_email='chris@withers.org',
     license='MIT',
