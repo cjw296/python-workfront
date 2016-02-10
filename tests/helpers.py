@@ -43,7 +43,10 @@ class MockOpen(dict):
             parts = []
             for expected in sorted(self.keys()):
                 parts.append(compare(expected, actual=key, raises=False))
-            raise AssertionError('\n'.join(parts))
+            if parts:
+                raise AssertionError('\n'.join(parts))
+            else:
+                raise KeyError(key)
 
         self.calls += 1
         if isinstance(response, Exception):
