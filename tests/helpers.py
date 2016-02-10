@@ -31,7 +31,12 @@ class MockOpen(dict):
         bits = []
         for key, value in parse_qs(params).items():
             if isinstance(value, list):
-                value = tuple(value)
+                if len(value) == 1:
+                    value = value[0]
+                else:
+                    value = tuple(value)
+            if isinstance(value, string_types) and value[0]=='{':
+                value = json.dumps(json.loads(value), sort_keys=True)
             bits.append((key, value))
         return tuple(sorted(bits))
 

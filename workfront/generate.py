@@ -72,7 +72,9 @@ def prepare_target(session):
 
 
 def decorated_object_types(session):
-    for object_type in session.get('/metadata')['objects'].values():
+    for name, object_type in sorted(
+        session.get('/metadata')['objects'].items()
+    ):
         code =  object_type['objCode']
         # this works around the broken urls Workfront serve for the
         # 'unsupported' api:
