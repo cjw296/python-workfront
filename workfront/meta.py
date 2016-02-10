@@ -125,8 +125,11 @@ class Object(object):
         self.fields.clean()
 
     def __repr__(self):
-        return '<{0}: {1}>'.format(self.__class__.__name__,
-                                   self.fields)
+        return '<{0}: {1}>'.format(
+            self.__class__.__name__,
+            ', '.join('{}={!r}'.format(f, v)
+                      for (f, v) in sorted(self.fields.items()))
+        )
 
     @property
     def id(self):

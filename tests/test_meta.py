@@ -112,8 +112,7 @@ class TestBaseObject(MockOpenHelper, TestCase):
         obj = self.test_instantiate()
         compare(
             repr(obj),
-            expected="<TestObject: "
-                     "{'fieldOne': 'foo', 'fieldTwo': 'bar', 'ID': 'x'}>"
+            expected="<TestObject: ID='x', fieldOne='foo', fieldTwo='bar'>"
         )
 
     def test_set_field(self):
