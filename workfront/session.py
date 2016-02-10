@@ -1,7 +1,9 @@
 import json
-import urllib2
+from workfront.six import string_types
+from workfront.six.moves import urllib
+from workfront.six.moves.urllib.error import HTTPError
+from workfront.six.moves.urllib.parse import urlencode
 from logging import getLogger
-from urllib import urlencode
 from warnings import warn
 
 GET = 'GET'
@@ -64,7 +66,7 @@ class Session(object):
         if params is not None:
            url_params.update(params)
         for key, value in url_params.items():
-            if not isinstance(value, (basestring, int, float)):
+            if not isinstance(value, (string_types, int, float)):
                 url_params[key] = json.dumps(value)
         url_params['method'] = method
         if self.api_key:
@@ -82,13 +84,13 @@ class Session(object):
         logger.info('url: %s params: %s', url, url_params)
 
         try:
-            response = urllib2.urlopen(
+            response = urllib.urlopen(
                 url,
                 urlencode(url_params),
                 context=self.ssl_context
             )
             code = response.code
-        except urllib2.HTTPError as e:
+        except HTTPError as e:
             response = e
             code = e.code
 
@@ -144,7 +146,7 @@ class Session(object):
         ]
 
     def load(self, object_type, id_or_ids, fields=None):
-        if isinstance(id_or_ids, basestring):
+        if isinstance(id_or_ids, string_types):
             return_multiple = False
         else:
             id_or_ids = ','.join(id_or_ids)

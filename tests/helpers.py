@@ -1,6 +1,8 @@
+import json
 from io import StringIO
-from urllib2 import HTTPError
-from urlparse import parse_qs
+from workfront.six import text_type, string_types
+from workfront.six.moves.urllib.error import HTTPError
+from workfront.six.moves.urllib.parse import parse_qs
 
 from testfixtures import compare, Replacer
 
@@ -10,13 +12,13 @@ from workfront.meta import APIVersion, Object, Field
 
 class MockResponse(StringIO):
     def __init__(self, content, code):
-        super(MockResponse, self).__init__(unicode(content))
+        super(MockResponse, self).__init__(text_type(content))
         self.code = code
 
 
 class MockHTTPError(HTTPError):
     def __init__(self, content, code):
-        self.read = StringIO(unicode(content)).read
+        self.read = StringIO(text_type(content)).read
         self.code = code
 
 class MockOpen(dict):
@@ -79,7 +81,8 @@ class MockOpenHelper(object):
         self.replace = Replacer()
         self.addCleanup(self.replace.restore)
         self.server = MockOpen(self.base)
-        self.replace('urllib2.urlopen', self.server)
+        self.replace('workfront.six.moves.urllib.urlopen',
+                     self.server, strict=False)
 
 
 class TestObjectHelper(MockOpenHelper):

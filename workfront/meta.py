@@ -1,3 +1,5 @@
+from workfront.six import with_metaclass
+
 missing = object()
 
 
@@ -109,9 +111,8 @@ class ObjectMeta(type):
         return cls
 
 
-class Object(object):
+class Object(with_metaclass(ObjectMeta, object)):
 
-    __metaclass__ = ObjectMeta
     registry = {}
 
     def __init__(self, session=None, **fields):

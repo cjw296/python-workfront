@@ -51,7 +51,7 @@ class TestPrepareTarget(TestCase):
         compare(self.dir.read('unsupported/__init__.py'), INIT_TEMPLATE)
 
     def test_dir_and_init(self):
-        self.dir.write('unsupported/__init__.py', 'xx')
+        self.dir.write('unsupported/__init__.py', b'xx')
         path = prepare_target(self.session)
 
         compare(path, expected=self.dir.getpath('unsupported/generated.py'))
@@ -60,11 +60,11 @@ class TestPrepareTarget(TestCase):
             'unsupported/__init__.py',
         ])
 
-        compare(self.dir.read('unsupported/__init__.py'), "xx")
+        compare(self.dir.read('unsupported/__init__.py'), b"xx")
 
     def test_everything(self):
-        self.dir.write('unsupported/__init__.py', 'xx')
-        self.dir.write('unsupported/generated.py', 'yy')
+        self.dir.write('unsupported/__init__.py', b'xx')
+        self.dir.write('unsupported/generated.py', b'yy')
         path = prepare_target(self.session)
 
         compare(path, expected=self.dir.getpath('unsupported/generated.py'))
@@ -74,8 +74,8 @@ class TestPrepareTarget(TestCase):
             'unsupported/generated.py',
         ])
 
-        compare(self.dir.read('unsupported/__init__.py'), "xx")
-        compare(self.dir.read('unsupported/generated.py'), "yy")
+        compare(self.dir.read('unsupported/__init__.py'), b"xx")
+        compare(self.dir.read('unsupported/generated.py'), b"yy")
 
     def test_dots_in_version(self):
         path = prepare_target(Session('test', api_version='v4.0'))
@@ -289,7 +289,7 @@ class FunctionalTest(MockOpenHelper, TestCase):
         ])
 
         compare(self.dir.read('unsupported/__init__.py'), INIT_TEMPLATE)
-        compare(self.dir.read('unsupported/generated.py'), expected="""\
+        compare(self.dir.read('unsupported/generated.py'), expected=b"""\
 # generated from https://api-cl01.attask-ondemand.com/attask/api/unsupported/metadata
 from ...meta import APIVersion, Object, Field, Reference, Collection
 

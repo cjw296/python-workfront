@@ -18,7 +18,7 @@ CLASS_NAME_OVERRIDE = dict(
     OPTASK='Issue'
 )
 
-INIT_TEMPLATE = """\
+INIT_TEMPLATE = b"""\
 from .generated import api
 """
 
@@ -66,7 +66,7 @@ def prepare_target(session):
         mkdir(target)
     init = path.join(target, '__init__.py')
     if not path.exists(init):
-        with open(init, 'w') as output:
+        with open(init, 'wb') as output:
             output.write(INIT_TEMPLATE)
     return path.join(target, 'generated.py')
 
