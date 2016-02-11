@@ -7,8 +7,8 @@ setup(
     author_email='chris@withers.org',
     license='MIT',
     description="Python library for accessing the Workfront REST api",
-    long_description="Python library for accessing the Workfront REST api",
-    url='http://workfront.readthedocs.org',
+    long_description=open('docs/description.rst').read(),
+    url='http://python-workfront.readthedocs.org',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

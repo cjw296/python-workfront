@@ -1,2 +1,5 @@
 /.coverage
 *.egg-info
+/docs/_build
+desc.html
+readme.html
