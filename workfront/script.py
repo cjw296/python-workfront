@@ -55,7 +55,7 @@ def script_setup(parser):
     logging.basicConfig(level=args.log_level)
 
     if args.unsafe_certs:
-        ssl_context = ssl._create_unverified_context()
+        ssl_context = ssl._create_stdlib_context()
     else:
         ssl_context = None
 

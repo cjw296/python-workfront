@@ -118,7 +118,7 @@ class SessionTests(MockOpenHelper, TestCase):
         self.server.assert_called(times=1)
 
     def test_insecure_context(self):
-        context = ssl._create_unverified_context()
+        context = ssl._create_stdlib_context()
         session = Session('test', ssl_context=context)
         self.server.add(
             url='/login',
