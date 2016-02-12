@@ -1,4 +1,6 @@
 import ssl
+from workfront.six.moves.BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from threading import Thread
 from unittest import TestCase
 
 from testfixtures import compare, ShouldRaise, ShouldWarn, LogCapture
@@ -371,3 +373,42 @@ class SessionWithObjectTests(TestObjectHelper, TestCase):
         compare(obj.id, 'xx')
         compare(obj.field_one, 1)
         compare(obj.field_two, 2)
+
+
+class Handler(BaseHTTPRequestHandler):
+
+    def do_POST(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b'{"data": "foo"}')
+
+    def log_request(self, _):
+        pass
+
+
+class TestServer(object):
+
+    def start(self):
+        server_address = ('', 8000)
+        self.server = HTTPServer(server_address, Handler)
+        self.thread = Thread(target=self.server.serve_forever, args=[0.01])
+        self.thread.setDaemon(True)
+        self.thread.start()
+
+    def stop(self):
+        self.server.shutdown()
+        self.thread.join()
+        self.server.server_close()
+
+
+class FunctionalTests(TestCase):
+
+    def setUp(self):
+        server = TestServer()
+        server.start()
+        self.addCleanup(server.stop)
+
+    def test_request(self):
+        session = Session('test', url_template='http://127.0.0.1:8000')
+        compare(session.request('GET', '/uri', {'foo': 'bar'}),
+                expected='foo')

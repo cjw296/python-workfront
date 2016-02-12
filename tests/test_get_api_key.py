@@ -24,8 +24,7 @@ class TestGetApiKey(TestCase):
         self.server = MockOpen(
             'https://api-cl01.attask-ondemand.com/attask/api/unsupported'
         )
-        r.replace('workfront.six.moves.urllib.urlopen',
-                  self.server, strict=False)
+        r.replace('workfront.six.moves.urllib.request.urlopen', self.server)
 
     def test_functional(self):
         self.server.add(

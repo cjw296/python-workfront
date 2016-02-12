@@ -21,6 +21,7 @@ class MockHTTPError(HTTPError):
         self.read = StringIO(text_type(content)).read
         self.code = code
 
+
 class MockOpen(dict):
 
     added = 0
@@ -30,6 +31,8 @@ class MockOpen(dict):
         self.base_url = base_url
 
     def decode(self, params):
+        if isinstance(params, bytes):
+            params = params.decode('utf-8')
         bits = []
         for key, value in parse_qs(params).items():
             if isinstance(value, list):
@@ -42,8 +45,10 @@ class MockOpen(dict):
             bits.append((key, value))
         return tuple(sorted(bits))
 
-    def __call__(self, url, params, context):
-        key = self.calls, url, self.decode(params), context
+    def __call__(self, request, context):
+        params = self.decode(request.data)
+        url = request.get_full_url()
+        key = self.calls, url, params, context
         try:
             response, code = self[key]
         except KeyError:  # pragma: no cover
@@ -81,8 +86,7 @@ class MockOpenHelper(object):
         self.replace = Replacer()
         self.addCleanup(self.replace.restore)
         self.server = MockOpen(self.base)
-        self.replace('workfront.six.moves.urllib.urlopen',
-                     self.server, strict=False)
+        self.replace('workfront.six.moves.urllib.request.urlopen', self.server)
 
 
 class TestObjectHelper(MockOpenHelper):

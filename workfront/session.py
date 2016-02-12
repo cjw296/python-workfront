@@ -1,6 +1,6 @@
 import json
 from workfront.six import string_types
-from workfront.six.moves import urllib
+from workfront.six.moves.urllib import request
 from workfront.six.moves.urllib.error import HTTPError
 from workfront.six.moves.urllib.parse import urlencode
 from logging import getLogger
@@ -34,6 +34,7 @@ def pretty_json(data):
 
 ONDEMAND_TEMPLATE = '{protocol}://{domain}.attask-ondemand.com/attask/api/{api_version}'
 SANDBOX_TEMPLATE = "{protocol}://{domain}.attasksandbox.com/attask/api/{api_version}"
+HEADERS = {"Content-Type":" application/x-www-form-urlencoded;charset=utf-8"}
 
 
 class Session(object):
@@ -84,9 +85,9 @@ class Session(object):
         logger.info('url: %s params: %s', url, url_params)
 
         try:
-            response = urllib.urlopen(
-                url,
-                urlencode(url_params),
+            body = urlencode(url_params).encode('utf-8')
+            response = request.urlopen(
+                request.Request(url, body, HEADERS),
                 context=self.ssl_context
             )
             code = response.code
@@ -95,6 +96,9 @@ class Session(object):
             code = e.code
 
         text = response.read()
+        if isinstance(text, bytes):
+            text = text.decode('utf-8')
+
         try:
             json_response = json.loads(text)
         except ValueError as e:

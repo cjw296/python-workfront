@@ -16,8 +16,7 @@ class TestV40Mixins(TestCase):
         self.server = MockOpen(
             'https://test.attask-ondemand.com/attask/api/'+self.api_version
         )
-        self.replace('workfront.six.moves.urllib.urlopen',
-                     self.server, strict=False)
+        self.replace('workfront.six.moves.urllib.request.urlopen', self.server)
         self.session = Session('test', api_version=self.api_version)
         self.api = self.session.api
 
