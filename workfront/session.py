@@ -1,10 +1,14 @@
 import json
+import sys
+
 from workfront.six import string_types
 from workfront.six.moves.urllib import request
 from workfront.six.moves.urllib.error import HTTPError
 from workfront.six.moves.urllib.parse import urlencode
 from logging import getLogger
 from warnings import warn
+
+PY34 = sys.version_info[0:2] == (3, 4)
 
 GET = 'GET'
 POST = 'POST'
@@ -86,9 +90,12 @@ class Session(object):
 
         try:
             body = urlencode(url_params).encode('utf-8')
+            kw = {}
+            if not PY34:
+                kw['context'] = context=self.ssl_context
             response = request.urlopen(
                 request.Request(url, body, HEADERS),
-                context=self.ssl_context
+                **kw
             )
             code = response.code
         except HTTPError as e:

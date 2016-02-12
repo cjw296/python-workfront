@@ -3,6 +3,7 @@ from io import StringIO
 from workfront.six import text_type, string_types
 from workfront.six.moves.urllib.error import HTTPError
 from workfront.six.moves.urllib.parse import parse_qs
+from workfront.session import  PY34
 
 from testfixtures import compare, Replacer
 
@@ -45,7 +46,7 @@ class MockOpen(dict):
             bits.append((key, value))
         return tuple(sorted(bits))
 
-    def __call__(self, request, context):
+    def __call__(self, request, context=None):
         params = self.decode(request.data)
         url = request.get_full_url()
         key = self.calls, url, params, context
@@ -66,6 +67,10 @@ class MockOpen(dict):
         return MockResponse(response, code)
 
     def add(self, url, response, params='', code=200, ssl_context=None):
+        # Python 3.4 doesn't support ssl contexts, so just ignore them:
+        if PY34:
+            ssl_context = None
+
         if not url.startswith('http'):
             url = self.base_url + url
         self[self.added,
