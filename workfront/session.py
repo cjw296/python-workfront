@@ -46,7 +46,7 @@ def pretty_json(data):
 #: The default URL template used when creating a :class:`~workfront.Session`.
 ONDEMAND_TEMPLATE = '{protocol}://{domain}.attask-ondemand.com/attask/api/{api_version}'
 #: An alternate URL template that can be used when creating a
-#: :class:`~workfront.Session` to the Workfront Sandbox .
+#: :class:`~workfront.Session` to the Workfront Sandbox.
 SANDBOX_TEMPLATE = "{protocol}://{domain}.attasksandbox.com/attask/api/{api_version}"
 HEADERS = {"Content-Type":" application/x-www-form-urlencoded;charset=utf-8"}
 
