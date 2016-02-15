@@ -4,6 +4,13 @@ from .generated_objects import *
 class Commentable(object):
 
     def add_comment(self, text):
+        """
+        Add a comment to the current object containing the supplied text.
+
+        The new :class:`Comment` instance is returned, it does not need to be
+        saved.
+        """
+
         comment = self.session.api.Note(
             self.session,
             note_text = text,
@@ -17,6 +24,12 @@ class Commentable(object):
 class NoteCommentable(object):
 
     def add_comment(self, text):
+        """
+        Add a comment to this comment.
+
+        The new :class:`Comment` instance is returned, it does not need to be
+        saved.
+        """
         comment = self.session.api.Note(
             self.session,
             note_text = text,
@@ -31,6 +44,11 @@ class NoteCommentable(object):
 class IssueMixin(Commentable):
 
     def convert_to_task(self):
+        """
+        Convert this issue to a task.
+        The newly converted task will be returned, it does not need to be
+        saved.
+        """
         data = self.session.put(
             self.api_url()+'/convertToTask',
             params=dict(
@@ -50,6 +68,9 @@ class UpdateMixin(object):
 
     @property
     def update_obj(self):
+        """
+        The object referenced by this update.
+        """
         return self.session.api.from_data(
             self.session, dict(
                 ID=self.update_obj_id,
