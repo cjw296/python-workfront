@@ -4,6 +4,21 @@ missing = object()
 
 
 class APIVersion(object):
+    """
+    Receptacle for classes for a specific API version. The classes
+    can be obtained from the :class:`APIVersion` instance by attribute, eg:
+
+    .. code-block:: python
+
+       session = Session(...)
+       api = session.api
+       issue = api.Issue(session, ...)
+
+    To find the name of a class your require, consult the :ref:`modindex`
+    or use the :ref:`search` in conjunction with the `API Explorer`__.
+
+    __ https://developers.workfront.com/api-docs/api-explorer/
+    """
 
     def __init__(self, version):
         self.version = version
@@ -22,11 +37,21 @@ class APIVersion(object):
 
 
 class FieldNotLoaded(Exception):
-    pass
+    """Exception raised when a field is accessed but has not been loaded."""
 
 
 class Field(object):
+    """
+    The descriptor used for mapping Workfront fields to attributes of an
+    :class:`Object`.
 
+    When a :class:`Field` is obtained from an :class:`Object`, it's value will
+    be returned, or a :class:`FieldNotLoaded` exception will be raised if it
+    has not yet been loaded.
+
+    When set, a :class:`Field` will store its value in the :class:`Object`, to
+    save values back to Workfront, use :meth:`Object.save`.
+    """
     def __init__(self, workfront_name):
         self.workfront_name = workfront_name
         self.__doc__ = ':class:`~workfront.meta.Field` for ``{}``'.format(
@@ -67,6 +92,19 @@ class LoadingAttribute(object):
 
 
 class Reference(LoadingAttribute):
+    """
+    The descriptor used for mapping Workfront references to attributes of an
+    :class:`Object`.
+
+    When a :class:`Reference` is obtained from an :class:`Object`, a referenced
+    object or ``None``, if there is no referenced object in this field, will be
+    returned. If the referenced object has not yet been loaded, it will be
+    loaded before being returned.
+
+    A :class:`Reference` cannot be set, you should instead set the matching
+    ``_id`` :class:`Field` to the :attr:`~Object.id` of the object you wish to
+    reference.
+    """
 
     @staticmethod
     def process(session, api, data):
@@ -74,6 +112,18 @@ class Reference(LoadingAttribute):
 
 
 class Collection(LoadingAttribute):
+    """
+    The descriptor used for mapping Workfront collections to attributes of an
+    :class:`Object`.
+
+    When a :class:`Collection` is obtained from an :class:`Object`, a
+    :class:`tuple` of objects, which may be empty, is returned.
+    If the collection has not yet been loaded, it will be
+    loaded before being returned.
+
+    A :class:`Collection` cannot be set or modified.
+    """
+
 
     @staticmethod
     def process(session, api, data):
@@ -136,6 +186,17 @@ class ObjectMeta(type):
 
 
 class Object(with_metaclass(ObjectMeta, object)):
+    """
+    The base class for objects reflected from the Workfront REST API.
+
+    Objects can be instantiated and then saved in order to create new objects,
+    or retrieved from Workfront using :meth:`workfront.Session.search`
+    or :meth:`workfront.Session.load`.
+
+    Wherever ``fields`` are mentioned, they may be specified as either
+    Workfront-style camel case names, or the Python-style attribute names they
+    are mapped to.
+    """
 
     registry = {}
 
@@ -158,6 +219,10 @@ class Object(with_metaclass(ObjectMeta, object)):
 
     @property
     def id(self):
+        """
+        The UUID of this object in Workfront.
+        It will be ``None`` if this object has not yet been saved to Workfront.
+        """
         return self.fields.get('ID')
 
     @classmethod
@@ -178,17 +243,37 @@ class Object(with_metaclass(ObjectMeta, object)):
         return ','.join(workfront_fields)
 
     def api_url(self):
+        """
+        The URI of this object in Workfront, suitable for passing to any of the
+        :class:`~workfront.Session` methods that generate requests.
+
+        This method cannot be used until the object has been saved to Workfront.
+        """
         if not self.id:
             raise ValueError('{0} has no ID'.format(self.__class__.__name__))
         return '/{0}/{1}'.format(self.code, self.id)
 
     def load(self, *field_names):
+        """
+        Load additional fields for this object from Workfront.
+
+        :param field_names: Either Workfront-style camel case names or the
+                            Python-style attribute names they
+                            are mapped to for the fields to be loaded.
+        """
         fields = self.session.get(self.api_url(),
                                   dict(fields=self.field_spec(*field_names)))
         self.fields.update(fields)
         self.fields.clean(fields)
 
     def save(self):
+        """
+        If this object has not yet been saved to Workfront, create it
+        using all the current fields that have been set.
+
+        In other cases, save only the fields that have changed on this object to
+        Workfront.
+        """
         if self.id is None:
             data = self.session.post('/'+self.code, self.fields)
             self.fields.update(data)
@@ -199,4 +284,5 @@ class Object(with_metaclass(ObjectMeta, object)):
         self.fields.clean()
 
     def delete(self):
+        """Delete this object from Workfront."""
         self.session.delete(self.api_url())
