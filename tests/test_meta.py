@@ -295,7 +295,9 @@ class LoadingAttributeTests(TestObjectHelper, TestCase):
             ref_field = Reference('refField')
 
         compare(AnotherObject.ref_field,
-                expected=C(Reference, workfront_name='refField'))
+                expected=C(Reference,
+                           workfront_name='refField',
+                           __doc__=C(str)))
 
     def test_reference_modify(self):
         class AnotherObject(Object):
@@ -346,7 +348,9 @@ class LoadingAttributeTests(TestObjectHelper, TestCase):
             col_field = Collection('colField')
 
         compare(AnotherObject.col_field,
-                expected=C(Collection, workfront_name='colField'))
+                expected=C(Collection,
+                           workfront_name='colField',
+                           __doc__=C(str)))
 
     def test_empty_collection(self):
         class AnotherObject(Object):
