@@ -29,6 +29,9 @@ class Field(object):
 
     def __init__(self, workfront_name):
         self.workfront_name = workfront_name
+        self.__doc__ = ':class:`~workfront.meta.Field` for ``{}``'.format(
+            self.workfront_name
+        )
 
     def __get__(self, instance, owner):
         if instance is None:
@@ -46,6 +49,9 @@ class LoadingAttribute(object):
 
     def __init__(self, workfront_name):
         self.workfront_name = workfront_name
+        self.__doc__ = ':class:`~workfront.meta.{}` for ``{}``'.format(
+            self.__class__.__name__, self.workfront_name
+        )
 
     def __get__(self, instance, owner):
         if instance is None:
@@ -101,11 +107,29 @@ class ModificationTrackingDict(dict):
 class ObjectMeta(type):
 
     def __new__(meta, name, bases, __dict__):
+
+        # record field names
         field_names = set()
         for key, obj in __dict__.items():
             if isinstance(obj, Field):
                 field_names.add(key)
+
+        # limit slots
         __dict__['__slots__'] = ('session', 'fields')
+
+        # sort out docstring
+        code = __dict__.get('code')
+        if code:
+            __dict__['__doc__'] = (
+                ':class:`~workfront.meta.Object` for ``{}``'.format(code))
+        elif '__doc__' not in __dict__:
+            for base in bases:
+                base_doc = getattr(base, '__doc__', None)
+                if base_doc:
+                    __dict__['__doc__'] = base_doc
+                    break
+
+        # make the class
         cls = super(ObjectMeta, meta).__new__(meta, name, bases, __dict__)
         cls.field_names = getattr(cls, 'field_names', set()) | field_names
         return cls

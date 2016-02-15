@@ -18,9 +18,17 @@ DELETE = 'DELETE'
 logger = getLogger('workfront')
 
 class WorkfrontAPIError(Exception):
+    """
+    An exception indicating that an error has been returned by Workfront,
+    either in the form of the ``error`` key being provided in the JSON
+    response, or a non-200 HTTP status code being sent.
+    """
 
     def __init__(self, data, code):
+        #: The ``error`` returned in the response from Workfront, decoded from
+        #: JSON if possible, a string otherwise.
         self.data = data
+        #: The HTTP response code returned by Workfront.
         self.code = code
 
     def __str__(self):
@@ -35,13 +43,35 @@ class WorkfrontAPIError(Exception):
 def pretty_json(data):
     return json.dumps(data, sort_keys=True, indent=4)
 
-
+#: The default URL template used when creating a :class:`~workfront.Session`.
 ONDEMAND_TEMPLATE = '{protocol}://{domain}.attask-ondemand.com/attask/api/{api_version}'
+#: An alternate URL template that can be used when creating a
+#: :class:`~workfront.Session` to the Workfront Sandbox .
 SANDBOX_TEMPLATE = "{protocol}://{domain}.attasksandbox.com/attask/api/{api_version}"
 HEADERS = {"Content-Type":" application/x-www-form-urlencoded;charset=utf-8"}
 
 
 class Session(object):
+    """
+    A session for communicating with the Workfront REST API.
+
+    :param domain: Your Workfront domain name.
+    :param api_key: An optional API key to pass with requests made using
+                    this session.
+    :param ssl_context: An optional :class:`~ssl.SSLContext` to use when
+                        communicating with Workfront via SSL.
+    :param protocol: The protocol to use, defaults to ``https``.
+    :param api_version: The version of the Workfront API to use, defaults to
+                        ``unsupported``, which is the newest available.
+    :param url_template: The template for Workfront URLs into which
+                         ``domain``, ``protocol``, and ``api_version`` will
+                         be interpolated.
+
+    .. warning::
+
+        ``ssl_context`` will result in exceptions being raised when used
+        under Python 3.4, support exists in Python 2.7 and Python 3.5 onwards.
+    """
 
     session_id = None
     user_id = None
@@ -60,6 +90,8 @@ class Session(object):
         )
         self.api_key = api_key
         self.ssl_context = ssl_context
+        #: The :class:`~workfront.meta.APIVersion` for the ``api_version``
+        #: specified.
         self.api = self.version_registry.get(api_version)
         if self.api is None:
             warn('No APIVersion for {}, only basic requests possible'.format(
@@ -67,6 +99,16 @@ class Session(object):
             ))
 
     def request(self, method, path, params=None):
+        """
+        The lowest level method for making a request to the Workfront REST API.
+        You should only need to use this if you need a ``method`` that isn't
+        supported below.
+
+        :param method: The HTTP method to use, eg: ``GET``, ``POST``, ``PUT``.
+        :param path: The path element of the URL for the request, eg: ``/user``.
+        :param params: A :class:`dict` of parameters to include in the request.
+        :return: The JSON-decoded `data` element of the response from Workfront.
+        """
         url_params = {}
         if params is not None:
            url_params.update(params)
@@ -120,32 +162,94 @@ class Session(object):
         return json_response['data']
 
     def get(self, path, params=None):
+        """
+        Perform a ``method=GET`` request to the Workfront REST API.
+
+        :param path: The path element of the URL for the request, eg: ``/user``.
+        :param params: A :class:`dict` of parameters to include in the request.
+        :return: The JSON-decoded `data` element of the response from Workfront.
+        """
         return self.request(GET, path, params)
 
     def post(self, path, params=None):
+        """
+        Perform a ``method=POST`` request to the Workfront REST API.
+
+        :param path: The path element of the URL for the request, eg: ``/user``.
+        :param params: A :class:`dict` of parameters to include in the request.
+        :return: The JSON-decoded `data` element of the response from Workfront.
+        """
         return self.request(POST, path, params)
 
     def put(self, path, params=None):
+        """
+        Perform a ``method=PUT`` request to the Workfront REST API.
+
+        :param path: The path element of the URL for the request, eg: ``/user``.
+        :param params: A :class:`dict` of parameters to include in the request.
+        :return: The JSON-decoded `data` element of the response from Workfront.
+        """
         return self.request(PUT, path, params)
 
     def delete(self, path, params=None):
+        """
+        Perform a ``method=DELETE`` request to the Workfront REST API.
+
+        :param path: The path element of the URL for the request, eg: ``/user``.
+        :param params: A :class:`dict` of parameters to include in the request.
+        :return: The JSON-decoded `data` element of the response from Workfront.
+        """
         return self.request(DELETE, path, params)
 
     def login(self, username, password):
+        """
+        Start an ID-based session using the supplied username and password.
+        The resulting ``sessionID`` will be passed for all subsequence requests
+        using this :class:`Session`.
+
+        The session user's UUID will be stored in :class:`Session.user_id`.
+        """
         data = self.get('/login', dict(username=username, password=password))
         self.session_id = data['sessionID']
         self.user_id = data['userID']
 
     def logout(self):
+        """
+        End the current ID-based session.
+        """
         self.get('/logout')
         del self.session_id
         del self.user_id
 
     def get_api_key(self, username, password):
+        """
+        Return the API key for the user with the username and password supplied.
+
+        .. warning::
+
+            If the :class:`Session` is created with an ``api_key``, then that
+            key may always be returned, no matter what username or password
+            are provided.
+        """
         params = dict(action='getApiKey', username=username, password=password)
         return self.put('/user', params)['result']
 
     def search(self, object_type, fields=None, **parameters):
+        """
+        Search for :class:`~workfront.meta.Object` instances of the specified
+        type.
+
+        :param object_type: The type of object to search for. Should be obtained
+                            from the :class:`workfront.Session.api`.
+        :param fields: Additional fields to :meth:`~workfront.meta.Object.load`
+                       on the returned objects.
+                       Nested Object field specifications are supported.
+        :param parameters: The search parameters. See the
+                           `Workfront documentation`__ for full details.
+        :return: A list of objects of the ``object_type`` specified.
+
+        __ https://developers.workfront.com/api-docs/#Search
+        """
         converted_params = {}
         for name, value in parameters.items():
             converted_params[object_type.convert_name(name)] = value
@@ -157,6 +261,22 @@ class Session(object):
         ]
 
     def load(self, object_type, id_or_ids, fields=None):
+        """
+        Load one or more :class:`~workfront.meta.Object` instances by their
+        UUID.
+        
+        :param object_type: The type of object to search for. Should be obtained
+                            from the :class:`workfront.Session.api`.
+        :param id_or_ids: A string, when a single object is to be loaded, or a
+                          sequence of strings when multiple objects are to be
+                          loaded.
+        :param fields: The fields to :meth:`~workfront.meta.Object.load`
+                       on each object returned. If not specified, the default
+                       fields for that object type will be loaded.
+        :return: If a single ``id`` is specified, the loaded object will be
+                 returned. If ``id_or_ids`` is a sequence, a list of objects
+                 will be returned.
+        """
         if isinstance(id_or_ids, string_types):
             return_multiple = False
         else:
