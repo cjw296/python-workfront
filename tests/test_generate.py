@@ -10,7 +10,7 @@ from testfixtures import (
 from tests.helpers import MockOpenHelper
 from workfront import Session
 from workfront.generate import (
-    prepare_target, INIT_TEMPLATE, decorated_object_types, ClassWriter,
+    prepare_target, decorated_object_types, ClassWriter,
     main
 )
 
@@ -30,63 +30,22 @@ class TestPrepareTarget(TestCase):
     def test_from_scratch(self):
         path = prepare_target(self.session)
 
-        compare(path, expected=self.dir.getpath('unsupported/generated.py'))
-        self.dir.compare([
-            'unsupported/',
-            'unsupported/__init__.py',
-        ])
-
-        compare(self.dir.read('unsupported/__init__.py'), INIT_TEMPLATE)
-
-    def test_just_dir(self):
-        self.dir.makedir('unsupported')
-        path = prepare_target(self.session)
-
-        compare(path, expected=self.dir.getpath('unsupported/generated.py'))
-        self.dir.compare([
-            'unsupported/',
-            'unsupported/__init__.py',
-        ])
-
-        compare(self.dir.read('unsupported/__init__.py'), INIT_TEMPLATE)
-
-    def test_dir_and_init(self):
-        self.dir.write('unsupported/__init__.py', b'xx')
-        path = prepare_target(self.session)
-
-        compare(path, expected=self.dir.getpath('unsupported/generated.py'))
-        self.dir.compare([
-            'unsupported/',
-            'unsupported/__init__.py',
-        ])
-
-        compare(self.dir.read('unsupported/__init__.py'), b"xx")
+        compare(path, expected=self.dir.getpath('unsupported.py'))
+        self.dir.compare(expected=[])
 
     def test_everything(self):
-        self.dir.write('unsupported/__init__.py', b'xx')
-        self.dir.write('unsupported/generated.py', b'yy')
+        self.dir.write('unsupported.py', b'yy')
         path = prepare_target(self.session)
 
-        compare(path, expected=self.dir.getpath('unsupported/generated.py'))
-        self.dir.compare([
-            'unsupported/',
-            'unsupported/__init__.py',
-            'unsupported/generated.py',
-        ])
-
-        compare(self.dir.read('unsupported/__init__.py'), b"xx")
-        compare(self.dir.read('unsupported/generated.py'), b"yy")
+        compare(path, expected=self.dir.getpath('unsupported.py'))
+        self.dir.compare(expected=['unsupported.py'])
+        compare(self.dir.read('unsupported.py'), b"yy")
 
     def test_dots_in_version(self):
         path = prepare_target(Session('test', api_version='v4.0'))
 
-        compare(path, expected=self.dir.getpath('v40/generated.py'))
-        self.dir.compare([
-            'v40/',
-            'v40/__init__.py',
-        ])
-
-        compare(self.dir.read('v40/__init__.py'), INIT_TEMPLATE)
+        compare(path, expected=self.dir.getpath('v40.py'))
+        self.dir.compare(expected=[])
 
 
 class TestDecoratedObjectTypes(MockOpenHelper, TestCase):
@@ -342,16 +301,11 @@ class FunctionalTest(MockOpenHelper, TestCase):
 
         output.compare("")
 
-        self.dir.compare([
-            'unsupported/',
-            'unsupported/__init__.py',
-            'unsupported/generated.py',
-        ])
+        self.dir.compare(expected=['unsupported.py'])
 
-        compare(self.dir.read('unsupported/__init__.py'), INIT_TEMPLATE)
-        compare(self.dir.read('unsupported/generated.py'), expected=b"""\
+        compare(self.dir.read('unsupported.py'), expected=b"""\
 # generated from https://api-cl01.attask-ondemand.com/attask/api/unsupported/metadata
-from ...meta import APIVersion, Object, Field, Reference, Collection
+from ..meta import APIVersion, Object, Field, Reference, Collection
 
 api = APIVersion('unsupported')
 

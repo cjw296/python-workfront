@@ -92,6 +92,7 @@ class Session(object):
         self.ssl_context = ssl_context
         #: The :class:`~workfront.meta.APIVersion` for the ``api_version``
         #: specified.
+        self.api_version = api_version
         self.api = self.version_registry.get(api_version)
         if self.api is None:
             warn('No APIVersion for {}, only basic requests possible'.format(

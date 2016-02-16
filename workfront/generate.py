@@ -23,13 +23,9 @@ CLASS_NAME_OVERRIDE = dict(
     OPTASK='Issue'
 )
 
-INIT_TEMPLATE = b"""\
-from .generated import api
-"""
-
 HEADER = """\
 # generated from {url}/metadata
-from ...meta import APIVersion, Object, Field, Reference, Collection
+from ..meta import APIVersion, Object, Field, Reference, Collection
 
 api = APIVersion('{version}')
 """
@@ -66,21 +62,15 @@ def dehump(name):
 
 
 def prepare_target(session):
-    target = path.join(TARGET_ROOT, session.api.version.replace('.', ''))
-    if not path.exists(target):
-        mkdir(target)
-    init = path.join(target, '__init__.py')
-    if not path.exists(init):
-        with open(init, 'wb') as output:
-            output.write(INIT_TEMPLATE)
-    return path.join(target, 'generated.py')
+    return path.join(TARGET_ROOT,
+                     session.api_version.replace('.', '')+'.py')
 
 
 def get_with_cache(session, cache, path):
     if cache:
         cache_path = os.path.join(
             cache,
-            session.api.version+path.replace('/', '_')+'.json'
+            session.api_version+path.replace('/', '_')+'.json'
         )
         if os.path.exists(cache_path):
             with open(cache_path) as source:
@@ -156,7 +146,7 @@ def generate(session, cache, output_path):
     with open(output_path, 'w') as output:
 
         output.write(HEADER.format(url=session.url,
-                                   version=session.api.version))
+                                   version=session.api_version))
 
         for class_name, code, details in sorted(
             decorated_object_types(session, cache)
