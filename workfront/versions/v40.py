@@ -1291,6 +1291,43 @@ class Issue(Object):
     resolvables = Collection('resolvables')
     updates = Collection('updates')
 
+    def add_comment(self, text):
+        """
+        Add a comment to the current object containing the supplied text.
+
+        The new :class:`Comment` instance is returned, it does not need to be
+        saved.
+        """
+
+        comment = self.session.api.Note(
+            self.session,
+            note_text = text,
+            note_obj_code = self.code,
+            obj_id = self.id
+        )
+        comment.save()
+        return comment
+
+    def convert_to_task(self):
+        """
+        Convert this issue to a task.
+        The newly converted task will be returned, it does not need to be
+        saved.
+        """
+        data = self.session.put(
+            self.api_url()+'/convertToTask',
+            params=dict(
+                updates=dict(
+                    options=['preserveIssue',
+                             'preservePrimaryContact',
+                             'preserveUpdates'],
+                    task=dict(name=self.name,
+                              description=self.description,
+                              enteredByID=self.entered_by_id,
+                              )
+            )))
+        return self.session.api.Task(self.session, ID=data['result'])
+
 api.register(Issue)
 
 
@@ -1551,6 +1588,23 @@ class Note(Object):
     user = Reference('user')
     replies = Collection('replies')
     tags = Collection('tags')
+
+    def add_comment(self, text):
+        """
+        Add a comment to this comment.
+
+        The new :class:`Comment` instance is returned, it does not need to be
+        saved.
+        """
+        comment = self.session.api.Note(
+            self.session,
+            note_text = text,
+            note_obj_code = self.note_obj_code,
+            obj_id = self.obj_id,
+            parent_note_id=self.id
+        )
+        comment.save()
+        return comment
 
 api.register(Note)
 
@@ -2466,6 +2520,23 @@ class Task(Object):
     successors = Collection('successors')
     updates = Collection('updates')
 
+    def add_comment(self, text):
+        """
+        Add a comment to the current object containing the supplied text.
+
+        The new :class:`Comment` instance is returned, it does not need to be
+        saved.
+        """
+
+        comment = self.session.api.Note(
+            self.session,
+            note_text = text,
+            note_obj_code = self.code,
+            obj_id = self.id
+        )
+        comment.save()
+        return comment
+
 api.register(Task)
 
 
@@ -2913,6 +2984,17 @@ class Update(Object):
     nested_updates = Collection('nestedUpdates')
     replies = Collection('replies')
     sub_message_args = Collection('subMessageArgs')
+
+    @property
+    def update_obj(self):
+        """
+        The object referenced by this update.
+        """
+        return self.session.api.from_data(
+            self.session, dict(
+                ID=self.update_obj_id,
+                objCode=self.update_obj_code
+            ))
 
 api.register(Update)
 
