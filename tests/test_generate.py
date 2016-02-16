@@ -89,8 +89,12 @@ class TestPrepareTarget(TestCase):
         compare(self.dir.read('v40/__init__.py'), INIT_TEMPLATE)
 
 
-
 class TestDecoratedObjectTypes(MockOpenHelper, TestCase):
+
+    def setUp(self):
+        super(TestDecoratedObjectTypes, self).setUp()
+        self.dir = TempDirectory()
+        self.addCleanup(self.dir.cleanup)
 
     def test_normal(self):
         base_url = 'https://test.attask-ondemand.com/attask/api/v4.0'
@@ -112,7 +116,63 @@ class TestDecoratedObjectTypes(MockOpenHelper, TestCase):
             params='method=GET',
             response=json.dumps(dict(data=expected))
         )
-        compare(decorated_object_types(session),
+        compare(decorated_object_types(session, None),
+                expected=[('SomeThing', 'SMTHING', expected)])
+
+    def test_cache_write(self):
+        base_url = 'https://test.attask-ondemand.com/attask/api/v4.0'
+        session = Session('test', api_version='v4.0')
+        self.server.add(
+            url=base_url+'/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=dict(objects=dict(
+                SomeThing=dict(objCode='SMTHING', name='SomeThing')
+            ))))
+        )
+        expected = dict(
+            objCode='SMTHING',
+            name='SomeThing',
+            stuff='a value'
+        )
+        self.server.add(
+            url=base_url+'/smthing/metadata',
+            params='method=GET',
+            response=json.dumps(dict(data=expected))
+        )
+        compare(decorated_object_types(session, self.dir.path),
+                expected=[('SomeThing', 'SMTHING', expected)])
+        self.dir.compare(expected=[
+            'v4.0_metadata.json', 'v4.0_smthing_metadata.json'
+        ])
+        compare(
+            json.loads(self.dir.read('v4.0_metadata.json').decode('ascii')),
+            expected=dict(objects=dict(
+                SomeThing=dict(objCode='SMTHING', name='SomeThing')
+            )))
+        compare(
+            json.loads(
+                self.dir.read('v4.0_smthing_metadata.json').decode('ascii')
+            ),
+            expected=expected
+        )
+
+    def test_cache_read(self):
+        expected = dict(
+            objCode='SMTHING',
+            name='SomeThing',
+            stuff='a value'
+        )
+
+        self.dir.write('v4.0_metadata.json', json.dumps(dict(objects=dict(
+                SomeThing=dict(objCode='SMTHING', name='SomeThing')
+        ))), encoding='ascii')
+
+        self.dir.write('v4.0_smthing_metadata.json',
+                       json.dumps(expected),
+                       encoding='ascii')
+
+        session = Session('test', api_version='v4.0')
+        compare(decorated_object_types(session, self.dir.path),
                 expected=[('SomeThing', 'SMTHING', expected)])
 
     def test_unsupported(self):
@@ -135,7 +195,7 @@ class TestDecoratedObjectTypes(MockOpenHelper, TestCase):
             params='method=GET',
             response=json.dumps(dict(data=expected))
         )
-        compare(decorated_object_types(session),
+        compare(decorated_object_types(session, None),
                 expected=[('SomeThing', 'SMTHING', expected)])
 
     def test_name_override(self):
@@ -158,7 +218,7 @@ class TestDecoratedObjectTypes(MockOpenHelper, TestCase):
             params='method=GET',
             response=json.dumps(dict(data=expected))
         )
-        compare(decorated_object_types(session),
+        compare(decorated_object_types(session, None),
                 expected=[('Issue', 'OPTASK', expected)])
 
 

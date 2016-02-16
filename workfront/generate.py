@@ -3,6 +3,11 @@ Foo bar
 
 asda as da  asd a das ad
 """
+import json
+
+import os
+
+from os.path import expanduser
 
 import re
 from logging import getLogger
@@ -71,14 +76,33 @@ def prepare_target(session):
     return path.join(target, 'generated.py')
 
 
-def decorated_object_types(session):
+def get_with_cache(session, cache, path):
+    if cache:
+        cache_path = os.path.join(
+            cache,
+            session.api.version+path.replace('/', '_')+'.json'
+        )
+        if os.path.exists(cache_path):
+            with open(cache_path) as source:
+                return json.load(source)
+
+    result = session.get(path)
+
+    if cache:
+        with open(cache_path, 'w') as dest:
+            json.dump(result, dest)
+
+    return result
+
+
+def decorated_object_types(session, cache):
     for name, object_type in sorted(
-        session.get('/metadata')['objects'].items()
+        get_with_cache(session, cache, '/metadata')['objects'].items()
     ):
         code =  object_type['objCode']
         # this works around the broken urls Workfront serve for the
         # 'unsupported' api:
-        detail = session.get('/'+code.lower()+'/metadata')
+        detail = get_with_cache(session, cache, '/'+code.lower()+'/metadata')
         class_name = CLASS_NAME_OVERRIDE.get(code, detail['name'])
         yield class_name, code, detail
 
@@ -128,13 +152,15 @@ class ClassWriter(object):
         ))
 
 
-def generate(session, output_path):
+def generate(session, cache, output_path):
     with open(output_path, 'w') as output:
 
         output.write(HEADER.format(url=session.url,
                                    version=session.api.version))
 
-        for class_name, code, details in sorted(decorated_object_types(session)):
+        for class_name, code, details in sorted(
+            decorated_object_types(session, cache)
+        ):
 
             writer = ClassWriter(class_name, code, output)
             writer.write_header()
@@ -148,9 +174,12 @@ def generate(session, output_path):
 
 def main():
     parser = parser_with_standard_args('generate', __doc__)
+    parser.add_argument('--cache',
+                        help='directory in which to cache metadata downloads',
+                        type=expanduser)
     args, session = script_setup(parser)
     path = prepare_target(session)
-    generate(session, path)
+    generate(session, args.cache, path)
 
 
 if __name__ == '__main__':  # pragma: no cover
