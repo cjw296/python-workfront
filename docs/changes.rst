@@ -6,7 +6,7 @@ Changes
 
 - Documentation added.
 
-0.7.0 (12 February 2016)
+0.7.0 (17 February 2016)
 ------------------------
 
 - Add Quickstart and API documentation.
