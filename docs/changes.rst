@@ -6,6 +6,18 @@ Changes
 
 - Documentation added.
 
+0.7.0 (12 February 2016)
+------------------------
+
+- Add Quickstart and API documentation.
+
+- Add actions to the reflected object model.
+
+- Add a caching later to ``workfront.generate`` for faster repeated generation
+  of the reflected object model.
+
+- Simplify the package and module structure of the reflected object model.
+
 0.6.1 (12 February 2016)
 ------------------------
 
