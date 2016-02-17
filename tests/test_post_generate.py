@@ -1,12 +1,13 @@
+# NB: python -m workfront.generate MUST be run for all API versions before
+#     these tests will be meaningful!
+from testfixtures import Comparison as C, Replacer, compare
 from unittest import TestCase
 
-from testfixtures import Comparison as C, Replacer, compare
-
-from tests.helpers import MockOpenHelper, MockOpen
+from tests.helpers import MockOpen
 from workfront.session import Session
 
 
-class TestV40Mixins(TestCase):
+class TestV40Specials(TestCase):
 
     api_version = 'v4.0'
 
@@ -114,6 +115,6 @@ class TestV40Mixins(TestCase):
             strict=False))
 
 
-class TestVunsupportedMixins(TestV40Mixins):
+class TestVunsupportedMixins(TestV40Specials):
 
     api_version = 'unsupported'
