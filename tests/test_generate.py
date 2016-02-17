@@ -219,7 +219,7 @@ class TestClassWriter(TestCase):
         """)
         self.log.check(
             ('workfront.generate', 'ERROR',
-             "FooBar has duplicate member name: "
+             "FooBar (FOOB) has duplicate member name: "
              "'foo_bar', first from 'FooBAR', current from 'fooBar'")
         )
 

@@ -209,9 +209,9 @@ class ClassWriter(object):
 
             if python_name in self.members:
                 logger.error(
-                    '{} has duplicate member name: '
+                    '{} ({}) has duplicate member name: '
                     '{!r}, first from {!r}, current from {!r}'.format(
-                        self.class_name,
+                        self.class_name, self.code,
                         python_name, self.members[python_name], workfront_name
                     ))
             self.members[python_name] = workfront_name
