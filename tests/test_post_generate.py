@@ -114,6 +114,36 @@ class TestV40Specials(TestCase):
             fields={u'ID': u'zzz', u"objCode": u"TASK"},
             strict=False))
 
+    def test_action_full(self):
+        obj = self.api.Schedule(self.session, ID='xxx')
+        self.server.add(
+            url='/SCHED/xxx/getNextCompletionDate',
+            params='method=PUT&date=2001-01-01&costInMinutes=24',
+            response='{"data": {"result": "yyy"}}'
+        )
+        result = obj.get_next_completion_date('2001-01-01', 24)
+        compare(result, expected='yyy')
+
+    def test_action_default_args(self):
+        obj = self.api.Schedule(self.session, ID='xxx')
+        self.server.add(
+            url='/SCHED/xxx/getNextCompletionDate',
+            params='method=PUT',
+            response='{"data": {"result": "yyy"}}'
+        )
+        result = obj.get_next_completion_date()
+        compare(result, expected='yyy')
+
+    def test_action_no_args_or_return(self):
+        obj = self.api.Project(self.session, ID='xxx')
+        self.server.add(
+            url='/PROJ/xxx/recallApproval',
+            params='method=PUT',
+            response='{"data": {}}'
+        )
+        result = obj.recall_approval()
+        compare(result, expected=None)
+
 
 class TestVunsupportedMixins(TestV40Specials):
 

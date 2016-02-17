@@ -40,6 +40,18 @@ CLASS_MEMBER_TEMPLATE = """\
     {python_name} = {type}('{workfront_name}')
 """
 
+CLASS_ACTION_TEMPLATE = '''
+    def {python_name}({arguments}):
+        """
+        {docstring}
+        """
+        params = {{}}
+        {store_params}
+        data = self.session.put(self.api_url()+'/{workfront_name}', params)
+        {return_clause}
+'''
+CLASS_ACTION_LINE_SEPERATOR = "\n        "
+
 CLASS_FOOTER_TEMPLATE = """\
 
 api.register({class_name})
@@ -173,8 +185,9 @@ def decorated_object_types(session, cache):
 class ClassWriter(object):
 
     name_overrides = {
-        ('Approval', 'url'): 'url_',
-        ('Work', 'url'): 'url_',
+        ('Approval', 'fields', 'url'): 'url_',
+        ('Work', 'fields', 'url'): 'url_',
+        ('Document', 'fields', 'createProof'): 'create_proof_flag',
     }
 
     method_overrides = {
@@ -197,10 +210,11 @@ class ClassWriter(object):
             obj_code=self.code
         ))
 
-    def write_members(self, type_, members):
+    def write_members(self, format_, details, key):
+        members = details[key]
         for workfront_name in sorted(members):
             python_name = self.name_overrides.get(
-                (self.class_name, workfront_name),
+                (self.class_name, key, workfront_name),
                 dehump(workfront_name)
             )
 
@@ -215,11 +229,68 @@ class ClassWriter(object):
                         python_name, self.members[python_name], workfront_name
                     ))
             self.members[python_name] = workfront_name
-            self.output.write(CLASS_MEMBER_TEMPLATE.format(
-                type=type_,
+            self.output.write(format_(
                 python_name=python_name,
-                workfront_name=workfront_name
+                workfront_name=workfront_name,
+                details=members[workfront_name],
             ))
+
+    def write_simple_members(self, type_, details, key):
+        def formatter(python_name, workfront_name, details):
+            return CLASS_MEMBER_TEMPLATE.format(
+                    type=type_,
+                    python_name=python_name,
+                    workfront_name=workfront_name
+                )
+        self.write_members(formatter, details, key)
+
+    @staticmethod
+    def format_action(python_name, workfront_name, details):
+
+        docstring = ['The ``{}`` action.'.format(workfront_name), '']
+        arguments = ['self']
+        store_params = []
+
+        for argument in details.get('arguments', ()):
+            workfront_arg = argument['name']
+            python_arg = dehump(workfront_arg)
+            docstring.append((
+                ':param {python_arg}: {workfront_arg} '
+                '(type: ``{type}``)'
+            ).format(
+                python_arg=python_arg,
+                workfront_arg=workfront_arg,
+                type=argument['type'],
+            ))
+            arguments.append(
+                '{python_arg}=None'.format(
+                    python_arg=python_arg
+                ))
+            store_params.append((
+                "if {python_arg} is not None: "
+                "params['{workfront_arg}'] = {python_arg}"
+            ).format(
+                python_arg=python_arg,
+                workfront_arg=workfront_arg,
+            ))
+
+        result_type = details.get('resultType')
+        if result_type:
+            docstring.append(':return: ``{result_type}``'.format(
+                result_type=result_type
+            ))
+            return_clause = "return data['result']"
+        else:
+            return_clause = ''
+
+        return CLASS_ACTION_TEMPLATE.format(
+            python_name=python_name,
+            workfront_name=workfront_name,
+            arguments=', '.join(arguments),
+            docstring=CLASS_ACTION_LINE_SEPERATOR.join(docstring),
+            store_params=CLASS_ACTION_LINE_SEPERATOR.join(store_params),
+            return_clause=return_clause,
+        )
 
     def write_footer(self):
         for class_name, method_name in sorted(self.method_overrides):
@@ -244,11 +315,12 @@ def generate(session, cache, output_path):
 
             writer = ClassWriter(class_name, code, output)
             writer.write_header()
-            writer.write_members('Field',
-                                 (name for name in details['fields']
-                                  if name != 'ID'))
-            writer.write_members('Reference', details['references'])
-            writer.write_members('Collection', details['collections'])
+            if 'ID' in details['fields']:
+                del details['fields']['ID']
+            writer.write_simple_members('Field', details, 'fields')
+            writer.write_simple_members('Reference', details, 'references')
+            writer.write_simple_members('Collection', details, 'collections')
+            writer.write_members(writer.format_action, details, 'actions')
             writer.write_footer()
 
 

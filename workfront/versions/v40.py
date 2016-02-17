@@ -664,6 +664,16 @@ class Company(Object):
     last_updated_by = Reference('lastUpdatedBy')
     rates = Collection('rates')
 
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
 api.register(Company)
 
 
@@ -681,6 +691,50 @@ class CustomEnum(Object):
     value_as_int = Field('valueAsInt')
     value_as_string = Field('valueAsString')
     customer = Reference('customer')
+
+    def get_default_op_task_priority_enum(self):
+        """
+        The ``getDefaultOpTaskPriorityEnum`` action.
+        
+        :return: ``java.lang.Integer``
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/getDefaultOpTaskPriorityEnum', params)
+        return data['result']
+
+    def get_default_project_status_enum(self):
+        """
+        The ``getDefaultProjectStatusEnum`` action.
+        
+        :return: ``string``
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/getDefaultProjectStatusEnum', params)
+        return data['result']
+
+    def get_default_severity_enum(self):
+        """
+        The ``getDefaultSeverityEnum`` action.
+        
+        :return: ``java.lang.Integer``
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/getDefaultSeverityEnum', params)
+        return data['result']
+
+    def get_default_task_priority_enum(self):
+        """
+        The ``getDefaultTaskPriorityEnum`` action.
+        
+        :return: ``java.lang.Integer``
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/getDefaultTaskPriorityEnum', params)
+        return data['result']
 
 api.register(CustomEnum)
 
@@ -871,6 +925,29 @@ class Document(Object):
     subscribers = Collection('subscribers')
     versions = Collection('versions')
 
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
+    def move(self, obj_id=None, doc_obj_code=None):
+        """
+        The ``move`` action.
+        
+        :param obj_id: objID (type: ``string``)
+        :param doc_obj_code: docObjCode (type: ``string``)
+        """
+        params = {}
+        if obj_id is not None: params['objID'] = obj_id
+        if doc_obj_code is not None: params['docObjCode'] = doc_obj_code
+        data = self.session.put(self.api_url()+'/move', params)
+        
+
 api.register(Document)
 
 
@@ -1021,6 +1098,29 @@ class Expense(Object):
     task = Reference('task')
     template = Reference('template')
     template_task = Reference('templateTask')
+
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
+    def move(self, obj_id=None, exp_obj_code=None):
+        """
+        The ``move`` action.
+        
+        :param obj_id: objID (type: ``string``)
+        :param exp_obj_code: expObjCode (type: ``string``)
+        """
+        params = {}
+        if obj_id is not None: params['objID'] = obj_id
+        if exp_obj_code is not None: params['expObjCode'] = exp_obj_code
+        data = self.session.put(self.api_url()+'/move', params)
+        
 
 api.register(Expense)
 
@@ -1291,6 +1391,171 @@ class Issue(Object):
     resolvables = Collection('resolvables')
     updates = Collection('updates')
 
+    def accept_work(self):
+        """
+        The ``acceptWork`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/acceptWork', params)
+        
+
+    def approve_approval(self, user_id=None, username=None, password=None, audit_note=None, audit_user_ids=None, send_note_as_email=None):
+        """
+        The ``approveApproval`` action.
+        
+        :param user_id: userID (type: ``string``)
+        :param username: username (type: ``string``)
+        :param password: password (type: ``string``)
+        :param audit_note: auditNote (type: ``string``)
+        :param audit_user_ids: auditUserIDs (type: ``string[]``)
+        :param send_note_as_email: sendNoteAsEmail (type: ``boolean``)
+        """
+        params = {}
+        if user_id is not None: params['userID'] = user_id
+        if username is not None: params['username'] = username
+        if password is not None: params['password'] = password
+        if audit_note is not None: params['auditNote'] = audit_note
+        if audit_user_ids is not None: params['auditUserIDs'] = audit_user_ids
+        if send_note_as_email is not None: params['sendNoteAsEmail'] = send_note_as_email
+        data = self.session.put(self.api_url()+'/approveApproval', params)
+        
+
+    def assign(self, obj_id=None, obj_code=None):
+        """
+        The ``assign`` action.
+        
+        :param obj_id: objID (type: ``string``)
+        :param obj_code: objCode (type: ``string``)
+        """
+        params = {}
+        if obj_id is not None: params['objID'] = obj_id
+        if obj_code is not None: params['objCode'] = obj_code
+        data = self.session.put(self.api_url()+'/assign', params)
+        
+
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
+    def mark_done(self, status=None):
+        """
+        The ``markDone`` action.
+        
+        :param status: status (type: ``string``)
+        """
+        params = {}
+        if status is not None: params['status'] = status
+        data = self.session.put(self.api_url()+'/markDone', params)
+        
+
+    def mark_not_done(self, assignment_id=None):
+        """
+        The ``markNotDone`` action.
+        
+        :param assignment_id: assignmentID (type: ``string``)
+        """
+        params = {}
+        if assignment_id is not None: params['assignmentID'] = assignment_id
+        data = self.session.put(self.api_url()+'/markNotDone', params)
+        
+
+    def move(self, project_id=None):
+        """
+        The ``move`` action.
+        
+        :param project_id: projectID (type: ``string``)
+        """
+        params = {}
+        if project_id is not None: params['projectID'] = project_id
+        data = self.session.put(self.api_url()+'/move', params)
+        
+
+    def move_to_task(self, project_id=None, parent_id=None):
+        """
+        The ``moveToTask`` action.
+        
+        :param project_id: projectID (type: ``string``)
+        :param parent_id: parentID (type: ``string``)
+        """
+        params = {}
+        if project_id is not None: params['projectID'] = project_id
+        if parent_id is not None: params['parentID'] = parent_id
+        data = self.session.put(self.api_url()+'/moveToTask', params)
+        
+
+    def recall_approval(self):
+        """
+        The ``recallApproval`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/recallApproval', params)
+        
+
+    def reject_approval(self, user_id=None, username=None, password=None, audit_note=None, audit_user_ids=None, send_note_as_email=None):
+        """
+        The ``rejectApproval`` action.
+        
+        :param user_id: userID (type: ``string``)
+        :param username: username (type: ``string``)
+        :param password: password (type: ``string``)
+        :param audit_note: auditNote (type: ``string``)
+        :param audit_user_ids: auditUserIDs (type: ``string[]``)
+        :param send_note_as_email: sendNoteAsEmail (type: ``boolean``)
+        """
+        params = {}
+        if user_id is not None: params['userID'] = user_id
+        if username is not None: params['username'] = username
+        if password is not None: params['password'] = password
+        if audit_note is not None: params['auditNote'] = audit_note
+        if audit_user_ids is not None: params['auditUserIDs'] = audit_user_ids
+        if send_note_as_email is not None: params['sendNoteAsEmail'] = send_note_as_email
+        data = self.session.put(self.api_url()+'/rejectApproval', params)
+        
+
+    def reply_to_assignment(self, note_text=None, commit_date=None):
+        """
+        The ``replyToAssignment`` action.
+        
+        :param note_text: noteText (type: ``string``)
+        :param commit_date: commitDate (type: ``dateTime``)
+        """
+        params = {}
+        if note_text is not None: params['noteText'] = note_text
+        if commit_date is not None: params['commitDate'] = commit_date
+        data = self.session.put(self.api_url()+'/replyToAssignment', params)
+        
+
+    def unaccept_work(self):
+        """
+        The ``unacceptWork`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/unacceptWork', params)
+        
+
+    def unassign(self, user_id=None):
+        """
+        The ``unassign`` action.
+        
+        :param user_id: userID (type: ``string``)
+        """
+        params = {}
+        if user_id is not None: params['userID'] = user_id
+        data = self.session.put(self.api_url()+'/unassign', params)
+        
+
     def add_comment(self, text):
         """
         Add a comment to the current object containing the supplied text.
@@ -1428,6 +1693,26 @@ class JournalEntry(Object):
     timesheet = Reference('timesheet')
     user = Reference('user')
     replies = Collection('replies')
+
+    def like(self):
+        """
+        The ``like`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/like', params)
+        
+
+    def unlike(self):
+        """
+        The ``unlike`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/unlike', params)
+        
 
 api.register(JournalEntry)
 
@@ -1589,6 +1874,26 @@ class Note(Object):
     replies = Collection('replies')
     tags = Collection('tags')
 
+    def like(self):
+        """
+        The ``like`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/like', params)
+        
+
+    def unlike(self):
+        """
+        The ``unlike`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/unlike', params)
+        
+
     def add_comment(self, text):
         """
         Add a comment to this comment.
@@ -1717,6 +2022,16 @@ class Portfolio(Object):
     programs = Collection('programs')
     projects = Collection('projects')
 
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
 api.register(Portfolio)
 
 
@@ -1765,6 +2080,29 @@ class Program(Object):
     access_rules = Collection('accessRules')
     documents = Collection('documents')
     projects = Collection('projects')
+
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
+    def move(self, portfolio_id=None, options=None):
+        """
+        The ``move`` action.
+        
+        :param portfolio_id: portfolioID (type: ``string``)
+        :param options: options (type: ``string[]``)
+        """
+        params = {}
+        if portfolio_id is not None: params['portfolioID'] = portfolio_id
+        if options is not None: params['options'] = options
+        data = self.session.put(self.api_url()+'/move', params)
+        
 
 api.register(Program)
 
@@ -1973,6 +2311,118 @@ class Project(Object):
     routing_rules = Collection('routingRules')
     tasks = Collection('tasks')
     updates = Collection('updates')
+
+    def approve_approval(self, user_id=None, approval_username=None, approval_password=None, audit_note=None, audit_user_ids=None, send_note_as_email=None):
+        """
+        The ``approveApproval`` action.
+        
+        :param user_id: userID (type: ``string``)
+        :param approval_username: approvalUsername (type: ``string``)
+        :param approval_password: approvalPassword (type: ``string``)
+        :param audit_note: auditNote (type: ``string``)
+        :param audit_user_ids: auditUserIDs (type: ``string[]``)
+        :param send_note_as_email: sendNoteAsEmail (type: ``boolean``)
+        """
+        params = {}
+        if user_id is not None: params['userID'] = user_id
+        if approval_username is not None: params['approvalUsername'] = approval_username
+        if approval_password is not None: params['approvalPassword'] = approval_password
+        if audit_note is not None: params['auditNote'] = audit_note
+        if audit_user_ids is not None: params['auditUserIDs'] = audit_user_ids
+        if send_note_as_email is not None: params['sendNoteAsEmail'] = send_note_as_email
+        data = self.session.put(self.api_url()+'/approveApproval', params)
+        
+
+    def attach_template(self, template_id=None, predecessor_task_id=None, parent_task_id=None, exclude_template_task_ids=None, options=None):
+        """
+        The ``attachTemplate`` action.
+        
+        :param template_id: templateID (type: ``string``)
+        :param predecessor_task_id: predecessorTaskID (type: ``string``)
+        :param parent_task_id: parentTaskID (type: ``string``)
+        :param exclude_template_task_ids: excludeTemplateTaskIDs (type: ``string[]``)
+        :param options: options (type: ``string[]``)
+        :return: ``string``
+        """
+        params = {}
+        if template_id is not None: params['templateID'] = template_id
+        if predecessor_task_id is not None: params['predecessorTaskID'] = predecessor_task_id
+        if parent_task_id is not None: params['parentTaskID'] = parent_task_id
+        if exclude_template_task_ids is not None: params['excludeTemplateTaskIDs'] = exclude_template_task_ids
+        if options is not None: params['options'] = options
+        data = self.session.put(self.api_url()+'/attachTemplate', params)
+        return data['result']
+
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
+    def calculate_finance(self):
+        """
+        The ``calculateFinance`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateFinance', params)
+        
+
+    def calculate_timeline(self):
+        """
+        The ``calculateTimeline`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateTimeline', params)
+        
+
+    def recall_approval(self):
+        """
+        The ``recallApproval`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/recallApproval', params)
+        
+
+    def reject_approval(self, user_id=None, approval_username=None, approval_password=None, audit_note=None, audit_user_ids=None, send_note_as_email=None):
+        """
+        The ``rejectApproval`` action.
+        
+        :param user_id: userID (type: ``string``)
+        :param approval_username: approvalUsername (type: ``string``)
+        :param approval_password: approvalPassword (type: ``string``)
+        :param audit_note: auditNote (type: ``string``)
+        :param audit_user_ids: auditUserIDs (type: ``string[]``)
+        :param send_note_as_email: sendNoteAsEmail (type: ``boolean``)
+        """
+        params = {}
+        if user_id is not None: params['userID'] = user_id
+        if approval_username is not None: params['approvalUsername'] = approval_username
+        if approval_password is not None: params['approvalPassword'] = approval_password
+        if audit_note is not None: params['auditNote'] = audit_note
+        if audit_user_ids is not None: params['auditUserIDs'] = audit_user_ids
+        if send_note_as_email is not None: params['sendNoteAsEmail'] = send_note_as_email
+        data = self.session.put(self.api_url()+'/rejectApproval', params)
+        
+
+    def set_budget_to_schedule(self):
+        """
+        The ``setBudgetToSchedule`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/setBudgetToSchedule', params)
+        
 
 api.register(Project)
 
@@ -2233,6 +2683,56 @@ class Schedule(Object):
     group = Reference('group')
     non_work_days = Collection('nonWorkDays')
     other_groups = Collection('otherGroups')
+
+    def get_earliest_work_time_of_day(self, date=None):
+        """
+        The ``getEarliestWorkTimeOfDay`` action.
+        
+        :param date: date (type: ``dateTime``)
+        :return: ``dateTime``
+        """
+        params = {}
+        if date is not None: params['date'] = date
+        data = self.session.put(self.api_url()+'/getEarliestWorkTimeOfDay', params)
+        return data['result']
+
+    def get_latest_work_time_of_day(self, date=None):
+        """
+        The ``getLatestWorkTimeOfDay`` action.
+        
+        :param date: date (type: ``dateTime``)
+        :return: ``dateTime``
+        """
+        params = {}
+        if date is not None: params['date'] = date
+        data = self.session.put(self.api_url()+'/getLatestWorkTimeOfDay', params)
+        return data['result']
+
+    def get_next_completion_date(self, date=None, cost_in_minutes=None):
+        """
+        The ``getNextCompletionDate`` action.
+        
+        :param date: date (type: ``dateTime``)
+        :param cost_in_minutes: costInMinutes (type: ``int``)
+        :return: ``dateTime``
+        """
+        params = {}
+        if date is not None: params['date'] = date
+        if cost_in_minutes is not None: params['costInMinutes'] = cost_in_minutes
+        data = self.session.put(self.api_url()+'/getNextCompletionDate', params)
+        return data['result']
+
+    def get_next_start_date(self, date=None):
+        """
+        The ``getNextStartDate`` action.
+        
+        :param date: date (type: ``dateTime``)
+        :return: ``dateTime``
+        """
+        params = {}
+        if date is not None: params['date'] = date
+        data = self.session.put(self.api_url()+'/getNextStartDate', params)
+        return data['result']
 
 api.register(Schedule)
 
@@ -2520,6 +3020,209 @@ class Task(Object):
     successors = Collection('successors')
     updates = Collection('updates')
 
+    def accept_work(self):
+        """
+        The ``acceptWork`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/acceptWork', params)
+        
+
+    def approve_approval(self, user_id=None, username=None, password=None, audit_note=None, audit_user_ids=None, send_note_as_email=None):
+        """
+        The ``approveApproval`` action.
+        
+        :param user_id: userID (type: ``string``)
+        :param username: username (type: ``string``)
+        :param password: password (type: ``string``)
+        :param audit_note: auditNote (type: ``string``)
+        :param audit_user_ids: auditUserIDs (type: ``string[]``)
+        :param send_note_as_email: sendNoteAsEmail (type: ``boolean``)
+        """
+        params = {}
+        if user_id is not None: params['userID'] = user_id
+        if username is not None: params['username'] = username
+        if password is not None: params['password'] = password
+        if audit_note is not None: params['auditNote'] = audit_note
+        if audit_user_ids is not None: params['auditUserIDs'] = audit_user_ids
+        if send_note_as_email is not None: params['sendNoteAsEmail'] = send_note_as_email
+        data = self.session.put(self.api_url()+'/approveApproval', params)
+        
+
+    def assign(self, obj_id=None, obj_code=None):
+        """
+        The ``assign`` action.
+        
+        :param obj_id: objID (type: ``string``)
+        :param obj_code: objCode (type: ``string``)
+        """
+        params = {}
+        if obj_id is not None: params['objID'] = obj_id
+        if obj_code is not None: params['objCode'] = obj_code
+        data = self.session.put(self.api_url()+'/assign', params)
+        
+
+    def bulk_copy(self, task_ids=None, project_id=None, parent_id=None, options=None):
+        """
+        The ``bulkCopy`` action.
+        
+        :param task_ids: taskIDs (type: ``string[]``)
+        :param project_id: projectID (type: ``string``)
+        :param parent_id: parentID (type: ``string``)
+        :param options: options (type: ``string[]``)
+        :return: ``string[]``
+        """
+        params = {}
+        if task_ids is not None: params['taskIDs'] = task_ids
+        if project_id is not None: params['projectID'] = project_id
+        if parent_id is not None: params['parentID'] = parent_id
+        if options is not None: params['options'] = options
+        data = self.session.put(self.api_url()+'/bulkCopy', params)
+        return data['result']
+
+    def bulk_move(self, task_ids=None, project_id=None, parent_id=None, options=None):
+        """
+        The ``bulkMove`` action.
+        
+        :param task_ids: taskIDs (type: ``string[]``)
+        :param project_id: projectID (type: ``string``)
+        :param parent_id: parentID (type: ``string``)
+        :param options: options (type: ``string[]``)
+        """
+        params = {}
+        if task_ids is not None: params['taskIDs'] = task_ids
+        if project_id is not None: params['projectID'] = project_id
+        if parent_id is not None: params['parentID'] = parent_id
+        if options is not None: params['options'] = options
+        data = self.session.put(self.api_url()+'/bulkMove', params)
+        
+
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
+    def mark_done(self, status=None):
+        """
+        The ``markDone`` action.
+        
+        :param status: status (type: ``string``)
+        """
+        params = {}
+        if status is not None: params['status'] = status
+        data = self.session.put(self.api_url()+'/markDone', params)
+        
+
+    def mark_not_done(self, assignment_id=None):
+        """
+        The ``markNotDone`` action.
+        
+        :param assignment_id: assignmentID (type: ``string``)
+        """
+        params = {}
+        if assignment_id is not None: params['assignmentID'] = assignment_id
+        data = self.session.put(self.api_url()+'/markNotDone', params)
+        
+
+    def move(self, project_id=None, parent_id=None, options=None):
+        """
+        The ``move`` action.
+        
+        :param project_id: projectID (type: ``string``)
+        :param parent_id: parentID (type: ``string``)
+        :param options: options (type: ``string[]``)
+        """
+        params = {}
+        if project_id is not None: params['projectID'] = project_id
+        if parent_id is not None: params['parentID'] = parent_id
+        if options is not None: params['options'] = options
+        data = self.session.put(self.api_url()+'/move', params)
+        
+
+    def recall_approval(self):
+        """
+        The ``recallApproval`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/recallApproval', params)
+        
+
+    def reject_approval(self, user_id=None, username=None, password=None, audit_note=None, audit_user_ids=None, send_note_as_email=None):
+        """
+        The ``rejectApproval`` action.
+        
+        :param user_id: userID (type: ``string``)
+        :param username: username (type: ``string``)
+        :param password: password (type: ``string``)
+        :param audit_note: auditNote (type: ``string``)
+        :param audit_user_ids: auditUserIDs (type: ``string[]``)
+        :param send_note_as_email: sendNoteAsEmail (type: ``boolean``)
+        """
+        params = {}
+        if user_id is not None: params['userID'] = user_id
+        if username is not None: params['username'] = username
+        if password is not None: params['password'] = password
+        if audit_note is not None: params['auditNote'] = audit_note
+        if audit_user_ids is not None: params['auditUserIDs'] = audit_user_ids
+        if send_note_as_email is not None: params['sendNoteAsEmail'] = send_note_as_email
+        data = self.session.put(self.api_url()+'/rejectApproval', params)
+        
+
+    def reply_to_assignment(self, note_text=None, commit_date=None):
+        """
+        The ``replyToAssignment`` action.
+        
+        :param note_text: noteText (type: ``string``)
+        :param commit_date: commitDate (type: ``dateTime``)
+        """
+        params = {}
+        if note_text is not None: params['noteText'] = note_text
+        if commit_date is not None: params['commitDate'] = commit_date
+        data = self.session.put(self.api_url()+'/replyToAssignment', params)
+        
+
+    def unaccept_work(self):
+        """
+        The ``unacceptWork`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/unacceptWork', params)
+        
+
+    def unassign(self, user_id=None):
+        """
+        The ``unassign`` action.
+        
+        :param user_id: userID (type: ``string``)
+        """
+        params = {}
+        if user_id is not None: params['userID'] = user_id
+        data = self.session.put(self.api_url()+'/unassign', params)
+        
+
+    def unassign_occurrences(self, user_id=None):
+        """
+        The ``unassignOccurrences`` action.
+        
+        :param user_id: userID (type: ``string``)
+        :return: ``string[]``
+        """
+        params = {}
+        if user_id is not None: params['userID'] = user_id
+        data = self.session.put(self.api_url()+'/unassignOccurrences', params)
+        return data['result']
+
     def add_comment(self, text):
         """
         Add a comment to the current object containing the supplied text.
@@ -2653,6 +3356,16 @@ class Template(Object):
     template_user_roles = Collection('templateUserRoles')
     template_users = Collection('templateUsers')
 
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
 api.register(Template)
 
 
@@ -2782,6 +3495,31 @@ class TemplateTask(Object):
     expenses = Collection('expenses')
     predecessors = Collection('predecessors')
     successors = Collection('successors')
+
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
+    def move(self, template_id=None, parent_id=None, options=None):
+        """
+        The ``move`` action.
+        
+        :param template_id: templateID (type: ``string``)
+        :param parent_id: parentID (type: ``string``)
+        :param options: options (type: ``string[]``)
+        """
+        params = {}
+        if template_id is not None: params['templateID'] = template_id
+        if parent_id is not None: params['parentID'] = parent_id
+        if options is not None: params['options'] = options
+        data = self.session.put(self.api_url()+'/move', params)
+        
 
 api.register(TemplateTask)
 
@@ -3115,6 +3853,56 @@ class User(Object):
     user_pref_values = Collection('userPrefValues')
     work_items = Collection('workItems')
 
+    def assign_user_token(self):
+        """
+        The ``assignUserToken`` action.
+        
+        :return: ``string``
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/assignUserToken', params)
+        return data['result']
+
+    def calculate_data_extension(self):
+        """
+        The ``calculateDataExtension`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/calculateDataExtension', params)
+        
+
+    def complete_user_registration(self, first_name=None, last_name=None, token=None, title=None, new_password=None):
+        """
+        The ``completeUserRegistration`` action.
+        
+        :param first_name: firstName (type: ``string``)
+        :param last_name: lastName (type: ``string``)
+        :param token: token (type: ``string``)
+        :param title: title (type: ``string``)
+        :param new_password: newPassword (type: ``string``)
+        """
+        params = {}
+        if first_name is not None: params['firstName'] = first_name
+        if last_name is not None: params['lastName'] = last_name
+        if token is not None: params['token'] = token
+        if title is not None: params['title'] = title
+        if new_password is not None: params['newPassword'] = new_password
+        data = self.session.put(self.api_url()+'/completeUserRegistration', params)
+        
+
+    def send_invitation_email(self):
+        """
+        The ``sendInvitationEmail`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/sendInvitationEmail', params)
+        
+
 api.register(User)
 
 
@@ -3384,6 +4172,17 @@ class Work(Object):
     successors = Collection('successors')
     updates = Collection('updates')
 
+    def team_requests_count(self):
+        """
+        The ``teamRequestsCount`` action.
+        
+        :return: ``map``
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/teamRequestsCount', params)
+        return data['result']
+
 api.register(Work)
 
 
@@ -3414,5 +4213,15 @@ class WorkItem(Object):
     project = Reference('project')
     task = Reference('task')
     user = Reference('user')
+
+    def mark_viewed(self):
+        """
+        The ``markViewed`` action.
+        
+        """
+        params = {}
+        
+        data = self.session.put(self.api_url()+'/markViewed', params)
+        
 
 api.register(WorkItem)

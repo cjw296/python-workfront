@@ -190,7 +190,8 @@ class TestClassWriter(TestCase):
         self.addCleanup(self.log.uninstall)
 
     def check_output(self, expected):
-        compare(expected=dedent(expected), actual=self.output.getvalue())
+        compare(expected=dedent(expected), actual=self.output.getvalue(),
+                trailing_whitespace=False)
 
     def test_write_header(self):
         self.writer.write_header()
@@ -202,7 +203,9 @@ class TestClassWriter(TestCase):
 
     def test_write_members(self):
         self.output.write('class TestClass(Object):\n')
-        self.writer.write_members('Field', ['fooBar', 'BazBob'])
+        self.writer.write_simple_members(
+            'Field', {'fields': {'fooBar': {}, 'BazBob': {}}}, 'fields'
+        )
         self.check_output("""\
         class TestClass(Object):
             baz_bob = Field('BazBob')
@@ -211,7 +214,9 @@ class TestClassWriter(TestCase):
 
     def test_write_duplicate_members(self):
         self.output.write('class TestClass(Object):\n')
-        self.writer.write_members('Field', ['fooBar', 'FooBAR'])
+        self.writer.write_simple_members(
+            'Field', {'fields': {'fooBar': {}, 'FooBAR': {}}},'fields'
+        )
         self.check_output("""\
         class TestClass(Object):
             foo_bar = Field('FooBAR')
@@ -226,7 +231,9 @@ class TestClassWriter(TestCase):
     def test_member_name_override(self):
         self.output.write('class Approval(Object):\n')
         writer = ClassWriter('Approval', 'TEST', self.output)
-        writer.write_members('Field', ['URL', 'url'])
+        writer.write_simple_members(
+            'Field', {'fields': {'URL': {}, 'url': {}}}, 'fields'
+        )
         self.check_output("""\
         class Approval(Object):
             url = Field('URL')
@@ -244,6 +251,54 @@ class TestClassWriter(TestCase):
 
         api.register(FooBar)
         """)
+
+    def test_action_no_arguments(self):
+        self.output.write('class FooBar(Object):\n    foo = "bar"\n')
+        self.writer.write_members(self.writer.format_action, {
+            'actions': {"doSomething": {
+                    "resultType": "string",
+                }
+            }}, 'actions')
+        self.check_output('''\
+        class FooBar(Object):
+            foo = "bar"
+            def do_something(self):
+                """
+                The ``doSomething`` action.
+
+                :return: ``string``
+                """
+                params = {}
+                data = self.session.put(self.api_url()+'/doSomething', params)
+                return data['result']
+        ''')
+
+    def test_action_no_returns(self):
+        self.output.write('class FooBar(Object):\n    foo = "bar"\n')
+        self.writer.write_members(self.writer.format_action, {
+            'actions': {"doSomething": {
+                    "arguments": [
+                        {
+                            "name": "anOption",
+                            "type": "Task"
+                        },
+                    ],
+                }
+            }}, 'actions')
+        self.check_output('''\
+        class FooBar(Object):
+            foo = "bar"
+
+            def do_something(self, an_option=None):
+                """
+                The ``doSomething`` action.
+
+                :param an_option: anOption (type: ``Task``)
+                """
+                params = {}
+                if an_option is not None: params['anOption'] = an_option
+                data = self.session.put(self.api_url()+'/doSomething', params)
+        ''')
 
 
 class FunctionalTest(MockOpenHelper, TestCase):
@@ -280,6 +335,7 @@ class FunctionalTest(MockOpenHelper, TestCase):
                 fields={"ID": {}, "anotherField": {}},
                 references={},
                 collections={},
+                actions={},
             )))
         )
 
@@ -292,6 +348,20 @@ class FunctionalTest(MockOpenHelper, TestCase):
                 fields={"ID": {}, "theField": {}},
                 references={"accessRules": {}},
                 collections={"assignedTo": {}},
+                actions={"doSomething": {
+                    "arguments": [
+                        {
+                            "name": "anOption",
+                            "type": "Task"
+                        },
+                        {
+                            "name": "options",
+                            "type": "string[]"
+                        }
+                    ],
+                    "resultType": "string",
+                    "label": "doSomething"
+                }}
             )))
         )
 
@@ -303,7 +373,7 @@ class FunctionalTest(MockOpenHelper, TestCase):
 
         self.dir.compare(expected=['unsupported.py'])
 
-        compare(self.dir.read('unsupported.py'), expected=b"""\
+        compare(self.dir.read('unsupported.py').decode('ascii'), expected=u'''\
 # generated from https://api-cl01.attask-ondemand.com/attask/api/unsupported/metadata
 from ..meta import APIVersion, Object, Field, Reference, Collection
 
@@ -323,5 +393,20 @@ class SomeThing(Object):
     access_rules = Reference('accessRules')
     assigned_to = Collection('assignedTo')
 
+    def do_something(self, an_option=None, options=None):
+        """
+        The ``doSomething`` action.
+
+        :param an_option: anOption (type: ``Task``)
+        :param options: options (type: ``string[]``)
+        :return: ``string``
+        """
+        params = {}
+        if an_option is not None: params['anOption'] = an_option
+        if options is not None: params['options'] = options
+        data = self.session.put(self.api_url()+'/doSomething', params)
+        return data['result']
+
 api.register(SomeThing)
-""")
+''',
+                trailing_whitespace=False)
