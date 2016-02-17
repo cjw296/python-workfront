@@ -1,16 +1,5 @@
 v4.0 API Reference
 ==================
 
-Classes generated from API Metadata
------------------------------------
-
-.. automodule:: workfront.versions.v40.generated
-  :members:
-  :exclude-members: Issue, Note, Task, Update
-
-Classes with added functionality
---------------------------------
-
 .. automodule:: workfront.versions.v40
   :members:
-  :inherited-members:
