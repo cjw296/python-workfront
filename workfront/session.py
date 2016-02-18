@@ -73,7 +73,9 @@ class Session(object):
         under Python 3.4, support exists in Python 2.7 and Python 3.5 onwards.
     """
 
+    #: The session identifier if using session-base authentication.
     session_id = None
+    #: The UUID of the user if using session-base authentication.
     user_id = None
 
     version_registry = {}
@@ -90,9 +92,9 @@ class Session(object):
         )
         self.api_key = api_key
         self.ssl_context = ssl_context
+        self.api_version = api_version
         #: The :class:`~workfront.meta.APIVersion` for the ``api_version``
         #: specified.
-        self.api_version = api_version
         self.api = self.version_registry.get(api_version)
         if self.api is None:
             warn('No APIVersion for {}, only basic requests possible'.format(
@@ -241,7 +243,7 @@ class Session(object):
         type.
 
         :param object_type: The type of object to search for. Should be obtained
-                            from the :class:`workfront.Session.api`.
+                            from the :class:`Session.api`.
         :param fields: Additional fields to :meth:`~workfront.meta.Object.load`
                        on the returned objects.
                        Nested Object field specifications are supported.
@@ -267,7 +269,7 @@ class Session(object):
         UUID.
         
         :param object_type: The type of object to search for. Should be obtained
-                            from the :class:`workfront.Session.api`.
+                            from the :class:`Session.api`.
         :param id_or_ids: A string, when a single object is to be loaded, or a
                           sequence of strings when multiple objects are to be
                           loaded.

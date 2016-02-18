@@ -1,9 +1,13 @@
 API Reference
 =============
 
-.. autoclass:: workfront.Session
+.. currentmodule:: workfront
+
+.. autoclass:: Session
   :members:
   :member-order: bysource
+
+.. currentmodule:: workfront.session
 
 .. automodule:: workfront.session
   :members:
