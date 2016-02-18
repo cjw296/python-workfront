@@ -1,7 +1,6 @@
 """
-Foo bar
-
-asda as da  asd a das ad
+This is used to generate a reflected object model for a particular version of
+the Workfront API using the metadata provided for that API version.
 """
 import json
 
