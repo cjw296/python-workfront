@@ -1,9 +1,11 @@
 # NB: python -m workfront.generate MUST be run for all API versions before
 #     these tests will be meaningful!
-from testfixtures import Comparison as C, Replacer, compare
+import re
+from testfixtures import Comparison as C, Replacer, compare, Replace
 from unittest import TestCase
 
 from tests.helpers import MockOpen
+from workfront.generate import ClassWriter
 from workfront.session import Session
 
 
@@ -148,3 +150,36 @@ class TestV40Specials(TestCase):
 class TestVunsupportedMixins(TestV40Specials):
 
     api_version = 'unsupported'
+
+
+class TestGeneratedMethod(TestCase):
+
+    def methods_to_test(self):
+        for api in Session.version_registry.values():
+            for type_ in api.by_code.values():
+                for name, obj in type_.__dict__.items():
+                    key = (type_.__name__, name)
+                    not_override = key not in ClassWriter.method_overrides
+                    if callable(obj) and not_override:
+                        yield api.version, type_, name
+
+    def test_generated_methods(self):
+        for api_version, type_, name in self.methods_to_test():
+            session = Session('test', api_version=api_version)
+            obj = type_(session, ID='xxx')
+            method = getattr(obj, name)
+            workfront_name = re.search('``(.+?)``', method.__doc__).group(1)
+
+            server = MockOpen(
+                'https://test.attask-ondemand.com/attask/api/'+api_version
+            )
+            server.add(
+                url='/{}/xxx/{}'.format(type_.code, workfront_name),
+                params='method=PUT',
+                response='{"data": {"result": null}}'
+            )
+
+            with Replace('workfront.six.moves.urllib.request.urlopen', server):
+                method()
+
+

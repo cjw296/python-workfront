@@ -1,11 +1,10 @@
 import json
-from textwrap import dedent
-from unittest import TestCase
-
 from mock import Mock
 from testfixtures import (
     TempDirectory, Replacer, compare, LogCapture, OutputCapture
 )
+from textwrap import dedent
+from unittest import TestCase
 
 from tests.helpers import MockOpenHelper
 from workfront import Session
@@ -13,7 +12,6 @@ from workfront.generate import (
     prepare_target, decorated_object_types, ClassWriter,
     main
 )
-
 from workfront.six import StringIO
 
 
@@ -299,6 +297,31 @@ class TestClassWriter(TestCase):
                 if an_option is not None: params['anOption'] = an_option
                 data = self.session.put(self.api_url()+'/doSomething', params)
         ''')
+
+    def test_method_override(self):
+        writer = ClassWriter('Update', '???', self.output)
+        writer.write_header()
+        writer.write_members(self.writer.format_action,
+                             {'actions': {"update_obj": {}}}, 'actions')
+        writer.write_footer()
+        self.check_output('''
+        class Update(Object):
+            code = '???'
+
+            @property
+            def update_obj(self):
+                """
+                The object referenced by this update.
+                """
+                return self.session.api.from_data(
+                    self.session, dict(
+                        ID=self.update_obj_id,
+                        objCode=self.update_obj_code
+                    ))
+        api.register(Update)
+        ''')
+
+
 
 
 class FunctionalTest(MockOpenHelper, TestCase):

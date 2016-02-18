@@ -39,9 +39,9 @@ class MockOpen(dict):
             if isinstance(value, list):
                 if len(value) == 1:
                     value = value[0]
-                else:
+                else: # pragma: no cover
                     value = tuple(value)
-            if isinstance(value, string_types) and value[0]=='{':
+            if isinstance(value, string_types) and value[0] == '{':
                 value = json.dumps(json.loads(value), sort_keys=True)
             bits.append((key, value))
         return tuple(sorted(bits))

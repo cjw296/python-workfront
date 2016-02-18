@@ -8871,7 +8871,7 @@ class Team(Object):
         if move_to_number is not None: params['moveToNumber'] = move_to_number
         if moving_task_ids is not None: params['movingTaskIDs'] = moving_task_ids
         data = self.session.put(self.api_url()+'/moveTasksOnTeamBacklog', params)
-        
+
 
 api.register(Team)
 
