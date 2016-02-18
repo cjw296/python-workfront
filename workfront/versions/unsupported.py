@@ -11078,12 +11078,12 @@ class WorkItem(Object):
     task = Reference('task')
     user = Reference('user')
 
-    def make_top_priority(self, obj_code=None, assignable_id =None, user_id=None):
+    def make_top_priority(self, obj_code=None, assignable_id=None, user_id=None):
         """
         The ``makeTopPriority`` action.
         
         :param obj_code: objCode (type: ``string``)
-        :param assignable_id : assignableID  (type: ``string``)
+        :param assignable_id: assignableID (type: ``string``)
         :param user_id: userID (type: ``string``)
         """
         params = {}
