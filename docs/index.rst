@@ -5,6 +5,8 @@ This is a Python client library for accessing the `Workfront`__ REST api.
 
 __ https://www.workfront.com
 
+.. _quickstart:
+
 Quickstart
 ----------
 
