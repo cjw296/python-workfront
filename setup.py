@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='python-workfront',
-    version='0.7.0',
+    version='0.8.0',
     author='Chris Withers',
     author_email='chris@withers.org',
     license='MIT',

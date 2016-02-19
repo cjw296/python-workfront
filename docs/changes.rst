@@ -1,10 +1,10 @@
 Changes
 =======
 
-0.8.0 (xx February 2016)
+0.8.0 (19 February 2016)
 ------------------------
 
-- Documentation added.
+- Narrative usage documentation added.
 
 0.7.0 (17 February 2016)
 ------------------------
