@@ -60,6 +60,8 @@ class MockOpen(dict):
                 raise AssertionError('\n'.join(parts))
             else:
                 raise KeyError(key)
+        else:
+            del self[key]
 
         self.calls += 1
         if isinstance(response, Exception):
