@@ -51,7 +51,7 @@ class SessionTests(MockOpenHelper, TestCase):
         self.server.base_url = ''
         session = Session('test', url_template=SANDBOX_TEMPLATE)
         self.server.add(
-            url='https://test.attasksandbox.com/attask/api/unsupported/login',
+            url='https://test.preview.workfront.com/attask/api/unsupported/login',
             params='method=GET',
             response='{"data": "foo"}'
         )
